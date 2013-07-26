@@ -1,15 +1,48 @@
-#ifndef _RISKEMU_LIBRARY_NETWORK_SERVER_H_
-#define _RISKEMU_LIBRARY_NETWORK_SERVER_H_
+#ifndef _RISKEMULIBRARY_NETWORK_SERVER_H_
+#define _RISKEMULIBRARY_NETWORK_SERVER_H_
 
 #include "stdtypes.h"
 
+#include <boost/asio.hpp>
+#include <boost/function.hpp>
+#include <boost/thread.hpp>
+
 #include <string>
+#include <list>
+
+using namespace boost::asio;
+using namespace boost::asio::ip;
+
+class Server;
+class Client;
+
+typedef boost::function<void(Server*, Client*)> ServerCallback;
 
 class Server
 {
 public:
-    virtual bool BindAndListen(std::string address, uint16 port) = 0;
-    virtual void Stop();
+    Server();
+    ~Server();
+    bool BindAndListen(std::string address, uint16 port);
+    inline void SetAcceptCallback(ServerCallback acceptCallback);
+    void HandleAccept(const boost::system::error_code& error);
+    void Initialize();
+    void Stop();
+    void InitAccept();
+private:
+    io_service ioservice;
+    tcp::acceptor acceptor;
+    std::list<Client*> clients;
+    ServerCallback acceptCallback;
+    io_service::work *work;
+    boost::thread thread;
+    tcp::socket *currentAcceptSocket;
+    bool runing;
 };
 
-#endif // _SHARE_LIBRARY_NETWORK_SERVER_H_
+void Server::SetAcceptCallback(ServerCallback acceptCallback)
+{
+    this->acceptCallback = acceptCallback;
+}
+
+#endif // _RISKEMULIBRARY_NETWORK_CLIENT_H_

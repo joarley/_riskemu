@@ -5,3 +5,4 @@ project(RiskEmu)
 include_directories(./shared)
 
 add_subdirectory(./shared)
+add_subdirectory(./gateway)
