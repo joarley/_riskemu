@@ -30,6 +30,7 @@ void Server::Initialize()
     {
         this->work = new io_service::work(this->ioservice);
         this->thread = boost::thread(boost::bind(&boost::asio::io_service::run, &this->ioservice));
+		this->runing = true;
     }
 }
 
@@ -39,13 +40,14 @@ void Server::Stop()
 
     BOOST_FOREACH(Client* client, this->clients) {client->Stop(); delete client;}
 
+	this->acceptor.close();
     if(this->work != NULL) {delete this->work; this->work = NULL;}
     if(!this->ioservice.stopped()) this->ioservice.stop();
     if(this->thread.joinable()) this->thread.join();
     if(this->currentAcceptSocket != NULL)
     {
         delete this->currentAcceptSocket;
-        //delete this->currentAcceptSocket = NULL;
+        this->currentAcceptSocket = NULL;
     }
 }
 
@@ -91,10 +93,13 @@ void Server::InitAccept()
 
 void Server::HandleAccept(const boost::system::error_code &ec)
 {
-    if(ec && this->runing)
+    if(ec)
     {
-        //error
-        return;
+		if(this->runing)
+		{
+			//error
+		}
+		else return;
     }
 
     Client *client = new Client(this->currentAcceptSocket, this);
@@ -104,4 +109,10 @@ void Server::HandleAccept(const boost::system::error_code &ec)
 
     InitAccept();
 }
+
+void Server::RemoveClient(Client *client)
+{
+	this->clients.remove(client);
+}
+
 
