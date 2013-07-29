@@ -19,7 +19,7 @@ Client::Client(tcp::socket *socket, Server *server):
 	server(server), socket(socket), ioservice(&socket->get_io_service()), work(NULL), runing(false)
 {
 	this->connected = true;
-	InitReceive();
+	InitReceiveHeader();
 }
 
 Client::~Client()
@@ -47,8 +47,19 @@ bool Client::Connect(std::string address, uint16 port)
     }
     
 	this->connected = true;
-	InitReceive();
+	InitReceiveHeader();
 	return true;
+}
+
+void Client::Initialize()
+{
+	Stop();
+	
+	this->ioservice = new io_service(); 
+	this->work = new io_service::work(*this->ioservice);
+	this->socket = new tcp::socket(*this->ioservice);		
+	this->thread = boost::thread(boost::bind(&boost::asio::io_service::run, this->ioservice));
+	this->runing = true;	
 }
 
 void Client::Stop()
@@ -91,23 +102,63 @@ void Client::Stop()
 	this->ioservice = NULL;
 }
 
-void Client::Initialize()
-{
-	Stop();
-	
-	this->ioservice = new io_service(); 
-	this->work = new io_service::work(*this->ioservice);
-	this->socket = new tcp::socket(*this->ioservice);		
-	this->thread = boost::thread(boost::bind(&boost::asio::io_service::run, this->ioservice));
-	this->runing = true;	
-}
-
-void Client::InitReceive()
+void Client::InitReceiveHeader()
 {
 	if(this->connected)
 	{
-		this->socket->async_receive(buffer(this->receiveBuffer, 1024), boost::bind(&Client::HandlerReceive, this,  placeholders::bytes_transferred, placeholders::error));
+		async_read(*this->socket, buffer(this->receivePackeHeaderBuffer, PacketBase::HeaderSize), 
+			boost::bind(&Client::HandlerReceiveHeader, this,  placeholders::bytes_transferred, placeholders::error));		
 	}
+}
+
+void Client::InitReceiveBody()
+{
+	if(this->connected)
+	{
+		size_t bsize = PacketBase::PacketBodySize(this->receivePackeHeaderBuffer);
+		this->receivePackeBuffer = new byte[bsize + PacketBase::HeaderSize];
+
+		async_read(*this->socket, buffer(this->receivePackeBuffer + PacketBase::HeaderSize, bsize), 
+			boost::bind(&Client::HandlerReceiveBody, this,  placeholders::bytes_transferred, placeholders::error));
+	}
+}
+
+void Client::HandlerReceiveHeader(std::size_t bytes_transferred, const boost::system::error_code& error)
+{
+	if(error || bytes_transferred != PacketBase::HeaderSize)
+	{
+		Stop();
+		if(this->desconectedCallback != NULL)
+			this->desconectedCallback(this, error);
+		return;
+	}
+
+	PacketBase::DecriptHeaderPacket(this->receivePackeHeaderBuffer);
+	InitReceiveBody();
+}
+
+void Client::HandlerReceiveBody(std::size_t bytes_transferred, const boost::system::error_code& error)
+{
+	if(error || PacketBase::PacketBodySize(this->receivePackeHeaderBuffer) != bytes_transferred)
+	{
+		delete this->receivePackeBuffer;
+
+		Stop();
+
+		if(this->desconectedCallback != NULL)
+			this->desconectedCallback(this, error);
+		return;
+	}
+
+	memcpy(this->receivePackeBuffer, this->receivePackeHeaderBuffer, PacketBase::HeaderSize);
+	PacketBase::DecriptBodyPacket(this->receivePackeBuffer);
+
+	if(this->packetReceivedCallback != NULL)
+	{
+		this->packetReceivedCallback(this->receivePackeBuffer);
+	}
+
+	InitReceiveHeader();
 }
 
 void Client::SendPacket(PacketBase &packet)
@@ -118,6 +169,8 @@ void Client::SendPacket(PacketBase &packet)
 void Client::SendBytes(byte* bytes, size_t size, bool delBytes)
 {
 	this->sendMutex.lock();
+
+	PacketBase::CryptPacket(bytes);
 
 	this->sendQueue.push(const_buffer(bytes, size));
 	this->deleteBytesSendQueue.push(delBytes);
@@ -152,19 +205,4 @@ void Client::HandlerSend(size_t bytes_transferred, const boost::system::error_co
 		async_write(*this->socket, buffer(this->sendQueue.front()), boost::bind(&Client::HandlerSend, this, placeholders::bytes_transferred, placeholders::error));
 
 	this->sendMutex.unlock();
-}
-
-void Client::HandlerReceive(std::size_t bytes_transferred, const boost::system::error_code& error)
-{
-	if(error)
-	{
-		Stop();
-		if(this->desconectedCallback != NULL)
-			this->desconectedCallback(this, error);
-		return;
-	}
-
-	if(this->bytesReceivedCallback) this->bytesReceivedCallback(this, receiveBuffer, bytes_transferred);
-
-	InitReceive();
 }

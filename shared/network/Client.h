@@ -8,15 +8,15 @@
 #include <queue>
 
 #include "stdtypes.h"
+#include "packet/PacketBase.h"
 
 using namespace boost::asio;
 using namespace boost::asio::ip;
 
 class Server;
 class Client;
-class PacketBase;
 
-typedef boost::function<void(Client*, byte*, size_t size)> ClientBytesReceivedCallback;
+typedef boost::function<void(byte *packet)> ClientPacketReceivedCallback;
 typedef boost::function<void(Client*, const boost::system::error_code& error)> ClientDesconectedCallback;
 
 class Client
@@ -28,12 +28,14 @@ public:
     bool Connect(std::string address, uint16 port);
     void Stop();
     void Initialize();
-	void InitReceive();
+	void InitReceiveHeader();
+	void InitReceiveBody();
 	void SendPacket(PacketBase &packet);
 	void SendBytes(byte* bytes, size_t size, bool delBytes = false);
 	void HandlerSend(std::size_t bytes_transferred, const boost::system::error_code& error);
-	void HandlerReceive(size_t bytes_transferred, const boost::system::error_code& error);
-	inline void SetBytesReceivedCallback(ClientBytesReceivedCallback bytesReceivedCallback);
+	void HandlerReceiveHeader(size_t bytes_transferred, const boost::system::error_code& error);
+	void HandlerReceiveBody(size_t bytes_transferred, const boost::system::error_code& error);
+	inline void SetPacketReceivedCallback(ClientPacketReceivedCallback packetReceivedCallback);
 private:
     tcp::socket *socket;
     Server *server;
@@ -45,14 +47,15 @@ private:
 	std::queue<const_buffer> sendQueue;
 	std::queue<bool> deleteBytesSendQueue;
 	boost::mutex sendMutex;
-	ClientBytesReceivedCallback bytesReceivedCallback;
+	ClientPacketReceivedCallback packetReceivedCallback;
 	ClientDesconectedCallback desconectedCallback;
-	byte receiveBuffer[1024];
+	byte receivePackeHeaderBuffer[PacketBase::HeaderSize];
+	byte *receivePackeBuffer;
 };
 
-void Client::SetBytesReceivedCallback(ClientBytesReceivedCallback bytesReceivedCallback)
+void Client::SetPacketReceivedCallback(ClientPacketReceivedCallback packetReceivedCallback)
 {
-	this->bytesReceivedCallback = bytesReceivedCallback;
+	this->packetReceivedCallback = packetReceivedCallback;
 }
 
 #endif // _RISKEMULIBRARY_NETWORK_CLIENT_H_

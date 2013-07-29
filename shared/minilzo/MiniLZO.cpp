@@ -2,11 +2,24 @@
 #include "stdtypes.h"
 #include <vector>
 
+#ifdef MINILZO_USE_ORIGINAL_C_LIBRARY
+#include "oberhumer\minilzo.h"
+#endif
+
 bool MiniLZO::Compress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
 {
-    size_t tmp;
-    *dstLen = (srcLen + (srcLen / 16) + 64 + 3);
+	*dstLen = (srcLen + (srcLen / 16) + 64 + 3);
     *dst = new byte[*dstLen];
+
+#ifdef MINILZO_USE_ORIGINAL_C_LIBRARY
+	if (lzo_init() != LZO_E_OK) return false;
+	byte work[LZO1X_1_MEM_COMPRESS];
+	lzo_uint tmp = *dstLen;
+	int ret = lzo1x_1_compress(src, srcLen, *dst, &tmp, work);
+	*dstLen = tmp;
+	return ret == LZO_E_OK;
+#else
+    size_t tmp;
 
     if (srcLen <= M2_MAX_LEN + 5)
     {
@@ -15,9 +28,9 @@ bool MiniLZO::Compress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
     } 
 	else
     {
-        byte *workmem = new byte[DICT_SIZE];
+        byte workmem[DICT_SIZE];
 
-        byte **dict = (byte**)workmem;
+        byte **dict = (byte**)&workmem;
         byte *in_end = src + srcLen;
         byte *ip_end = src + srcLen - M2_MAX_LEN - 5;
         byte *ii = src;
@@ -165,7 +178,7 @@ bool MiniLZO::Compress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
             if (ip >= ip_end)
                 break;
         }
-        *dstLen = (uint32) (op - &(*dst)[0]);
+        *dstLen = (uint32) (op - *dst);
         tmp = (uint32) (in_end - ii);
 
     }
@@ -202,13 +215,19 @@ bool MiniLZO::Compress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
     (*dst)[(*dstLen)++] = 0;
 
     return true;
+#endif
 }
 
 bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
 {
-	*dstLen = (uint32) srcLen * 2;
+	*dstLen = srcLen * 20;
     *dst = new byte[*dstLen];
-
+#ifdef MINILZO_USE_ORIGINAL_C_LIBRARY
+	lzo_uint tmp = *dstLen;
+	int ret = lzo1x_decompress(src, srcLen, *dst, &tmp, NULL);
+	*dstLen = tmp;
+	return ret == LZO_E_OK;
+#else
     uint32 t = 0;
     byte* input = src;
     byte* output = *dst;
@@ -533,4 +552,5 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
 
 	*dstLen = op - output;
     return true;
+#endif
 }
