@@ -106,7 +106,7 @@ void Client::InitReceiveHeader()
 {
 	if(this->connected)
 	{
-		async_read(*this->socket, buffer(this->receivePackeHeaderBuffer, PacketBase::HeaderSize), 
+		async_read(*this->socket, buffer(this->receivePackeHeaderBuffer, PacketBase::PACKET_HEADER_SIZE), 
 			boost::bind(&Client::HandlerReceiveHeader, this,  placeholders::bytes_transferred, placeholders::error));		
 	}
 }
@@ -116,16 +116,16 @@ void Client::InitReceiveBody()
 	if(this->connected)
 	{
 		size_t bsize = PacketBase::PacketBodySize(this->receivePackeHeaderBuffer);
-		this->receivePackeBuffer = new byte[bsize + PacketBase::HeaderSize];
+		this->receivePackeBuffer = new byte[bsize + PacketBase::PACKET_HEADER_SIZE];
 
-		async_read(*this->socket, buffer(this->receivePackeBuffer + PacketBase::HeaderSize, bsize), 
+		async_read(*this->socket, buffer(this->receivePackeBuffer + PacketBase::PACKET_HEADER_SIZE, bsize), 
 			boost::bind(&Client::HandlerReceiveBody, this,  placeholders::bytes_transferred, placeholders::error));
 	}
 }
 
 void Client::HandlerReceiveHeader(std::size_t bytes_transferred, const boost::system::error_code& error)
 {
-	if(error || bytes_transferred != PacketBase::HeaderSize)
+	if(error || bytes_transferred != PacketBase::PACKET_HEADER_SIZE)
 	{
 		Stop();
 		if(this->desconectedCallback != NULL)
@@ -150,7 +150,7 @@ void Client::HandlerReceiveBody(std::size_t bytes_transferred, const boost::syst
 		return;
 	}
 
-	memcpy(this->receivePackeBuffer, this->receivePackeHeaderBuffer, PacketBase::HeaderSize);
+	memcpy(this->receivePackeBuffer, this->receivePackeHeaderBuffer, PacketBase::PACKET_HEADER_SIZE);
 	PacketBase::DecriptBodyPacket(this->receivePackeBuffer);
 
 	if(this->packetReceivedCallback != NULL)

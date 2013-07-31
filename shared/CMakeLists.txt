@@ -6,6 +6,7 @@ set(RISKEMULIBRARY_SRC
 	"./packet/PacketBase.h" "./packet/PacketBase.cpp"
 	"./minilzo/MiniLZO.h" "./minilzo/MiniLZO.cpp"
 	"./crc/CRC32.h" "./crc/CRC32.tab"
+	"./Buffer.h" "./Packable.h"
 )
 
 if(MINILZO_USE_ORIGINAL_C_LIBRARY)

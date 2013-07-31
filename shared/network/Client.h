@@ -49,7 +49,7 @@ private:
 	boost::mutex sendMutex;
 	ClientPacketReceivedCallback packetReceivedCallback;
 	ClientDesconectedCallback desconectedCallback;
-	byte receivePackeHeaderBuffer[PacketBase::HeaderSize];
+	byte receivePackeHeaderBuffer[PacketBase::PACKET_HEADER_SIZE];
 	byte *receivePackeBuffer;
 };
 

@@ -1,9 +1,8 @@
-#include <network/Client.h>
-#include <network/Server.h>
+#include <Buffer.h>
+
 int main()
 {
-	while(true){
-		boost::this_thread::sleep(boost::posix_time::seconds(10));
-		printf("receive client %d\n", a);
-	}
+	Buffer b;
+
+	b << 1 << (uint16)2 << "3" << std::string("4");
 };
