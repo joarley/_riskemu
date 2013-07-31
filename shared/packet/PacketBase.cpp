@@ -33,6 +33,6 @@ size_t PacketBase::IsValidsPacket(byte* bytes)
 size_t PacketBase::PacketBodySize(byte* bytes)
 {
 	return ((uint16)(bytes[2]) & 
-		~(PacketBase::PACKET_TYPE_COMPRESSED || PacketBase::PACKET_TYPE_NORMAL)) - 
+		~(PacketBase::PACKET_TYPE_COMPRESSED | PacketBase::PACKET_TYPE_NORMAL)) - 
 		PacketBase::PACKET_HEADER_SIZE;
 }

@@ -21,6 +21,20 @@ typedef boost::shared_ptr<Buffer> Buffer_ptr;
 
 class Buffer : public boost::enable_shared_from_this<Buffer> {
 public:
+	struct Bytes
+	{
+		Bytes(void*& value, size_t size): value(value), size(size){}
+		void*& value;
+		size_t size;
+	};
+
+	template<class T> struct Offset
+	{
+		Offset(T& value, size_t offset):value(value), offset(offset) {}
+		size_t offset;
+		T& value;
+	};
+public:
     Buffer(size_t maxLength = 4096) : m_buffer(maxLength) {
         m_maxLength = maxLength;
         m_length = 0;
@@ -88,14 +102,14 @@ public:
 	template<class T> inline typename boost::enable_if<boost::is_fundamental<T>, Buffer&>::type operator<<(T value)
 	{
 		size_t size = sizeof(T);
-		if(Add(value, m_writerOffset))
+		if(AddNumber(value, m_writerOffset))
 			m_writerOffset += size;
 		return *this;
 	}
 
 	inline Buffer& operator<<(Packable& value)
 	{
-		value.Pack(shared_from_this());
+		AddPack(value);
 		return *this;
 	}
 
@@ -107,73 +121,22 @@ public:
 	inline Buffer& operator<<(const char* value)
 	{
 		size_t size = strlen(value) + 1;
-		if(AddStringSizeFixed(value, size, m_writerOffset))
+		if(AddString(value, size, m_writerOffset))
 			m_writerOffset += size;
 		return *this;
-	}
+	}	
 
-	template<class T> inline typename boost::enable_if<boost::is_fundamental<T>, bool>::type Add(T value, size_t offset) {
-        size_t size = sizeof(T);
-        if (offset + size > m_maxLength) {
-            return false;
-        }
-        *(T*)&m_buffer[offset] = value;
-        m_length = offset + size > m_length ? offset + size : m_length;
-        return true;
-    }
-
-    inline bool AddPack(Packable& value, size_t offset) {
-		size_t writeof = m_writerOffset;
-        SetWriteOffset(offset);
-        value.Pack(shared_from_this());
-        SetWriteOffset(writeof);
-        return true;
-    }
-
-    inline bool AddStringSizeFixed(const char* value, size_t size, size_t offset) {
-        if (offset + size > m_maxLength) {
-            return false;
-        }
-
-        size_t stringSize = strlen(value);
-        size_t paddingSize = size > stringSize ? size - stringSize : 0;
-
-        memcpy(&m_buffer[offset], value, size - paddingSize);
-        memset(&m_buffer[offset + size - paddingSize], 0, paddingSize);
-
-        m_length = offset + size > m_length ? offset + size : m_length;
-        return true;
-	}
-
-    inline bool AddBytes(void* pvalue, size_t size) {
-        if (m_writerOffset + size > m_maxLength) {
-            return false;
-        }
-        AddBytes(pvalue, size, m_writerOffset);
-        m_writerOffset += size;
-        return true;
-    }
-
-    inline bool AddBytes(void* pvalue, size_t size, size_t offset) {
-        if (offset + size > m_maxLength) {
-            return false;
-        }
-        memcpy(&m_buffer[offset], pvalue, size);
-        m_length = offset + size > m_length ? offset + size : m_length;
-        return true;
-    }
-
-	template<class T> inline typename boost::enable_if<boost::is_fundamental<T>, Buffer&>::type operator>>(T value)
+	template<class T> inline typename boost::enable_if<boost::is_fundamental<T>, Buffer&>::type operator>>(T& value)
 	{
 		size_t size = sizeof(T);
-		if(Get(value, m_writerOffset))
+		if(GetNumber(value, m_readerOffset))
 			m_readerOffset += size;
 		return *this;
 	}
 
 	inline Buffer& operator>>(Packable& value)
 	{
-		value.Unpack(shared_from_this());
+		GetPack(value);
 		return *this;
 	}
 
@@ -189,27 +152,35 @@ public:
 	inline Buffer& operator>>(char*& value)
 	{
 		size_t size = strlen((char*)&m_buffer[m_readerOffset]) + 1;
-		if(GetStringSizeFixed(value, size, m_readerOffset))
+		if(GetString(value, size, m_readerOffset))
 			m_readerOffset += size;
 		return *this;
 	}
-
-	template<class T> inline typename boost::enable_if<boost::is_fundamental<T>, bool>::type Get(T value, size_t offset) {
+private:
+	template<class T> inline bool AddNumber(T value, size_t offset) {
         size_t size = sizeof(T);
-        if (offset + size > m_maxLength) return false;
-        value = *(T*)&m_buffer[offset];
+        if (offset + size > m_maxLength) {
+            return false;
+        }
+        *(T*)&m_buffer[offset] = value;
+        m_length = offset + size > m_length ? offset + size : m_length;
         return true;
     }
 
-	inline bool GetPack(Packable& value, size_t offset) {
-		size_t readof = m_writerOffset;
-        SetReaderOffset(offset);
-        value.Unpack(shared_from_this());
-        SetReaderOffset(readof);
+	inline bool AddPack(Packable& value) {
+		value.Pack(shared_from_this());        
+        return true;
+	}
+
+    inline bool AddPack(Packable& value, size_t offset) {
+		size_t writeof = m_writerOffset;
+        SetWriteOffset(offset);
+        value.Pack(shared_from_this());
+        SetWriteOffset(writeof);
         return true;
     }
 
-	inline bool GetStringSizeFixed(char*& value, size_t size, size_t offset) {
+	inline bool AddString(const char* value, size_t size, size_t offset) {
         if (offset + size > m_maxLength) {
             return false;
         }
@@ -223,6 +194,58 @@ public:
         m_length = offset + size > m_length ? offset + size : m_length;
         return true;
 	}
+
+    inline bool AddBytes(void* value, size_t size, size_t offset) {
+        if (offset + size > m_maxLength) {
+            return false;
+        }
+        memcpy(&m_buffer[offset], value, size);
+        m_length = offset + size > m_length ? offset + size : m_length;
+        return true;
+    }
+
+	template<class T> inline bool GetNumber(T &value, size_t offset) {
+        size_t size = sizeof(T);
+        if (offset + size > m_length) return false;
+        value = *(T*)&m_buffer[offset];
+        return true;
+    }
+
+	inline bool GetPack(Packable& value) {
+		value.Unpack(shared_from_this());
+        return true;
+    }
+
+	inline bool GetPack(Packable& value, size_t offset) {
+		size_t readof = m_readerOffset;
+        SetReaderOffset(offset);
+        value.Unpack(shared_from_this());
+        SetReaderOffset(readof);
+        return true;
+    }
+
+	inline bool GetString(char*& value, size_t size, size_t offset) {
+        if (offset + size > m_length) {
+            return false;
+        }
+
+		value = m_buffer[offset + size - 1] != '\0'? new char[size + 1]: new char[size];
+		
+
+		memcpy(value, &m_buffer[offset], size);
+
+		if(m_buffer[offset + size] != '\0') value[size] = '\0';
+
+        return true;
+	}
+
+	inline bool GetBytes(void*& value, size_t size, size_t offset) {
+        if (offset + size > m_length) {
+            return false;
+        }
+        memcpy(value, &m_buffer[offset], size);
+        return true;
+    }
 protected:
     vector<byte> m_buffer;
     size_t m_maxLength;
