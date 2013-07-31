@@ -21,19 +21,49 @@ typedef boost::shared_ptr<Buffer> Buffer_ptr;
 
 class Buffer : public boost::enable_shared_from_this<Buffer> {
 public:
-	struct Bytes
+	template<class T> struct SizedValue
 	{
-		Bytes(void*& value, size_t size): value(value), size(size){}
-		void*& value;
+		SizedValue(T value, size_t size): value(value), size(size){}
+		T value;
 		size_t size;
 	};
 
-	template<class T> struct Offset
+	template<class T> struct PositionedValue
 	{
-		Offset(T& value, size_t offset):value(value), offset(offset) {}
-		size_t offset;
+		PositionedValue(T& value, size_t position): value(value), position(position){}
 		T& value;
+		size_t position;
 	};
+
+	template<class T> static SizedValue<void*> Bytes(T* value, size_t size)
+	{
+		return SizedValue<void*>((void*)value, size);
+	}
+
+	static SizedValue<string&> StringSizeFixed(string& value, size_t size)
+	{
+		return SizedValue<string&>(value, size);
+	}
+
+	static SizedValue<char*&> StringSizeFixed(char*& value, size_t size)
+	{
+		return SizedValue<char*&>(value, size);
+	}
+
+	static SizedValue<const char*> StringSizeFixed(const char* value, size_t size)
+	{
+		return SizedValue<const char*>(value, size);
+	}
+
+	template<class T> static PositionedValue<T> Position(T& value, size_t position)
+	{
+		return PositionedValue<T>(value, position);
+	}
+
+	template<class T> static PositionedValue<T> Position(const T value, size_t position)
+	{
+		return PositionedValue<const T>(value, position);
+	}
 public:
     Buffer(size_t maxLength = 4096) : m_buffer(maxLength) {
         m_maxLength = maxLength;
@@ -99,7 +129,7 @@ public:
         return m_writerOffset;
     }
 
-	template<class T> inline typename boost::enable_if<boost::is_fundamental<T>, Buffer&>::type operator<<(T value)
+	template<class T> inline typename boost::enable_if<boost::is_fundamental<T>, Buffer&>::type operator<<(const T value)
 	{
 		size_t size = sizeof(T);
 		if(AddNumber(value, m_writerOffset))
@@ -124,9 +154,37 @@ public:
 		if(AddString(value, size, m_writerOffset))
 			m_writerOffset += size;
 		return *this;
-	}	
+	}
 
-	template<class T> inline typename boost::enable_if<boost::is_fundamental<T>, Buffer&>::type operator>>(T& value)
+	inline Buffer& operator<<(SizedValue<const char*>& value)
+	{
+		if(AddString(value.value, value.size, m_writerOffset))
+			m_writerOffset += value.size;
+		return *this;
+	}
+
+	inline Buffer& operator<<(SizedValue<string&>& value)
+	{
+		return *this << StringSizeFixed(value.value.c_str(), value.size);
+	}
+
+	inline Buffer& operator<<(SizedValue<void*>& value)
+	{
+		if(AddBytes(value.value, value.size, m_writerOffset))
+			m_writerOffset += value.size;
+		return *this;
+	}
+
+	template<class T> inline Buffer& operator<<(PositionedValue<T>& value)
+	{
+		size_t pos = GetWriteOffset();
+		SetWriteOffset(value.position);
+		*this << value.value;
+		SetWriteOffset(pos);
+		return *this;
+	}
+
+	template<class T> inline typename boost::enable_if_c<boost::is_fundamental<T>::value && !boost::is_const<T>::value, Buffer&>::type operator>>(T& value)
 	{
 		size_t size = sizeof(T);
 		if(GetNumber(value, m_readerOffset))
@@ -140,7 +198,7 @@ public:
 		return *this;
 	}
 
-	inline Buffer& operator>>(string& value)
+	inline Buffer& operator>>(string &value)
 	{
 		char *str;
 		*this >> str;
@@ -149,13 +207,48 @@ public:
 		return *this;
 	}
 
-	inline Buffer& operator>>(char*& value)
+	inline Buffer& operator>>(char *&value)
 	{
 		size_t size = strlen((char*)&m_buffer[m_readerOffset]) + 1;
 		if(GetString(value, size, m_readerOffset))
-			m_readerOffset += size;
+			m_readerOffset += size;			
 		return *this;
 	}
+
+
+
+	inline Buffer& operator>>(SizedValue<char*&>& value)
+	{
+		if(GetString(value.value, value.size, m_readerOffset))
+			m_readerOffset += value.size;
+		return *this;
+	}
+
+	inline Buffer& operator>>(SizedValue<string&>& value)
+	{
+		char* str;
+		if(GetString(str, value.size, m_readerOffset))
+			m_readerOffset += value.size;
+		value.value = str;
+		delete str;
+		return *this;
+	}
+
+	inline Buffer& operator>>(SizedValue<void*&>& value)
+	{
+		if(GetBytes(value.value, value.size, m_readerOffset))
+			m_readerOffset += value.size;
+		return *this;
+	}
+
+	template<class T> inline Buffer& operator>>(PositionedValue<T>& value)
+	{
+		size_t pos = GetReaderOffset();
+		SetReaderOffset(value.position);
+		*this >> value.value;
+		SetReaderOffset(pos);
+		return *this;
+	}	
 private:
 	template<class T> inline bool AddNumber(T value, size_t offset) {
         size_t size = sizeof(T);
@@ -224,18 +317,21 @@ private:
         return true;
     }
 
-	inline bool GetString(char*& value, size_t size, size_t offset) {
+	inline bool GetString(char *&value, size_t size, size_t offset) {
         if (offset + size > m_length) {
             return false;
         }
 
-		value = m_buffer[offset + size - 1] != '\0'? new char[size + 1]: new char[size];
-		
+		if(m_buffer[offset + size - 1] != '\0')
+			value = new char[size + 1];		
+		else
+			value = new char[size];
 
 		memcpy(value, &m_buffer[offset], size);
 
-		if(m_buffer[offset + size] != '\0') value[size] = '\0';
-
+		if(m_buffer[offset + size - 1] != '\0')
+			value[size] = '\0';
+		
         return true;
 	}
 
@@ -253,119 +349,5 @@ protected:
     size_t m_readerOffset;
     size_t m_writerOffset;
 };
-
-//using namespace math;
-//
-//template<> inline Buffer& Buffer::Add(Half value) {
-//    return Add((uint16)value);
-//}
-//
-//template<> inline Buffer& Buffer::Add(Half value, size_t offset) {
-//    return Add((uint16)value, offset);
-//}
-//
-//template<> inline Half Buffer::Get<Half>() {
-//    return Get<uint16>();
-//}
-//
-//template<> inline Half Buffer::Get<Half>(size_t offset) {
-//    return Get<uint16>(offset);
-//}
-
-//template<> inline char* Buffer::GetString<char*>() {
-//    if (m_readerOffset >= m_length) {
-//        return NULL;
-//    }
-//    size_t size = strlen((char*) &m_buffer[m_readerOffset]) + 1;
-//    if (m_readerOffset + size > m_length) {
-//        return NULL;
-//    }
-//    char* value = new char[size];
-//    strcpy(value, (char*) &m_buffer[m_readerOffset]);
-//    m_readerOffset += size;
-//    return value;
-//}
-//
-//template<> inline char* Buffer::GetString<char*>(size_t offset) {
-//    if (offset >= m_length) {
-//        return NULL;
-//    }
-//    size_t size = strlen((char*) &m_buffer[offset]) + 1;
-//    if (offset + size >= m_length) {
-//        return NULL;
-//    }
-//    char* value = new char[size];
-//    strcpy(value, (char*) &m_buffer[offset]);
-//    return value;
-//}
-//
-//template<> inline string Buffer::GetString() {
-//    char* vreturn = GetString<char*>();
-//    if (!vreturn) {
-//        return string();
-//    }
-//    string value(vreturn);
-//    delete[] vreturn;
-//    return value;
-//}
-//
-//template<> inline string Buffer::GetString(size_t offset) {
-//    char* vreturn = GetString<char*>(offset);
-//    if (!vreturn) {
-//        return string();
-//    }
-//    string value(vreturn);
-//    delete[] vreturn;
-//    return value;
-//}
-//
-//template<> inline char* Buffer::GetStringSizeFixed(size_t size) {
-//    if (m_readerOffset >= m_length) {
-//        return NULL;
-//    }
-//
-//    if (m_readerOffset + size > m_length) {
-//        return NULL;
-//    }
-//    char* value = new char[size + 1];
-//    memcpy(value, (char*) &m_buffer[m_readerOffset], size);
-//    value[size] = 0;
-//    m_readerOffset += size;
-//    return value;
-//}
-//
-//template<> inline char* Buffer::GetStringSizeFixed(size_t size, size_t offset) {
-//    if (offset >= m_length) {
-//        return NULL;
-//    }
-//
-//    if (offset + size >= m_length) {
-//        return NULL;
-//    }
-//    char* value = new char[size + 1];
-//    memcpy(value, (char*) &m_buffer[offset], size);
-//    value[size] = 0;
-//    return value;
-//}
-//
-//template<> inline string Buffer::GetStringSizeFixed(size_t size) {
-//    char* vreturn = GetStringSizeFixed<char*>(size);
-//    if (!vreturn) {
-//        return string();
-//    }
-//    string value(vreturn);
-//    delete[] vreturn;
-//    return value;
-//}
-//
-//template<> inline string Buffer::GetStringSizeFixed(size_t size, size_t offset) {
-//    char* vreturn = GetStringSizeFixed<char*>(size, offset);
-//    if (!vreturn) {
-//        return string();
-//    }
-//    string value(vreturn);
-//    delete[] vreturn;
-//    return value;
-//}
 
 #endif

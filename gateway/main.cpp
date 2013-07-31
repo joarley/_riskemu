@@ -1,14 +1,24 @@
 #include <Buffer.h>
 
 int main()
-{
+{	
 	Buffer b;
 
-	int a1 = 0;
-	uint16 a2 = 0;
-	char* a3 = 0;
-	std::string a4;
+	int8 a1 = 1;
+	int16 a2 = 2;
+	int32 a3 = 3;
+	int64 a4 = 4;
+	char* a5 = "55555";
+	std::string a6 = "666666";
 
-	b << 1 << (uint16)2 << "3" << std::string("4");
-	b >> a1 >> a2 >> a3 >> a4;
+	b << a1 << a2 << Buffer::Position(3, 25) << a4 << a5 << Buffer::Position(Buffer::StringSizeFixed(a6, 5), 30);
+
+	a1 = 0;
+	a2 = 0;
+	a3 = 0;
+	a4 = 0;
+	a5 = "";
+	a6 = "";
+
+	b >> a1 >> a2 >> Buffer::Position(a3, 25) >> a4 >> a5 >> Buffer::Position(Buffer::StringSizeFixed(a6, 5), 30);
 };
