@@ -1,5 +1,5 @@
-#ifndef _BUFFER_H_
-#define _BUFFER_H_
+#ifndef _RISKEMULIBRARY_BUFFER_H_
+#define _RISKEMULIBRARY_BUFFER_H_
 
 #include <boost/static_assert.hpp>
 #include <boost/type_traits.hpp>
@@ -28,10 +28,17 @@ public:
 		size_t size;
 	};
 
-	template<class T> struct PositionedValue
+	template<class T> struct FromPositionedValue
 	{
-		PositionedValue(T& value, size_t position): value(value), position(position){}
-		T& value;
+		FromPositionedValue(T value, size_t position): value(value), position(position){}
+		T value;
+		size_t position;
+	};
+
+	template<class T> struct ToPositionedValue
+	{
+		ToPositionedValue(T value, size_t position): value(value), position(position){}
+		T value;
 		size_t position;
 	};
 
@@ -55,14 +62,14 @@ public:
 		return SizedValue<const char*>(value, size);
 	}
 
-	template<class T> static PositionedValue<T> Position(T& value, size_t position)
+	template<class T> static FromPositionedValue<T&> FromPosition(T& value, size_t position)
 	{
-		return PositionedValue<T>(value, position);
+		return FromPositionedValue<T&>(value, position);
 	}
 
-	template<class T> static PositionedValue<T> Position(const T value, size_t position)
+	template<class T> static ToPositionedValue<T> ToPosition(T value, size_t position)
 	{
-		return PositionedValue<const T>(value, position);
+		return ToPositionedValue<T>(value, position);
 	}
 public:
     Buffer(size_t maxLength = 4096) : m_buffer(maxLength) {
@@ -175,7 +182,7 @@ public:
 		return *this;
 	}
 
-	template<class T> inline Buffer& operator<<(PositionedValue<T>& value)
+	template<class T> inline Buffer& operator<<(ToPositionedValue<T>& value)
 	{
 		size_t pos = GetWriteOffset();
 		SetWriteOffset(value.position);
@@ -241,7 +248,7 @@ public:
 		return *this;
 	}
 
-	template<class T> inline Buffer& operator>>(PositionedValue<T>& value)
+	template<class T> inline Buffer& operator>>(FromPositionedValue<T>& value)
 	{
 		size_t pos = GetReaderOffset();
 		SetReaderOffset(value.position);
@@ -350,4 +357,4 @@ protected:
     size_t m_writerOffset;
 };
 
-#endif
+#endif //_RISKEMULIBRARY_BUFFER_H_

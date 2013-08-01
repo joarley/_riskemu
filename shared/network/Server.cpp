@@ -55,7 +55,7 @@ bool Server::BindAndListen(std::string address, uint16 port)
 {
     if(!this->runing) Initialize();
 
-    error_code ec;
+    boost::system::error_code ec;
     tcp::resolver res(this->ioservice);
     std::ostringstream ss;
     ss << port;

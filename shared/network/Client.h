@@ -9,6 +9,7 @@
 
 #include "stdtypes.h"
 #include "packet/PacketBase.h"
+#include "Buffer.h"
 
 using namespace boost::asio;
 using namespace boost::asio::ip;
@@ -16,7 +17,7 @@ using namespace boost::asio::ip;
 class Server;
 class Client;
 
-typedef boost::function<void(byte *packet)> ClientPacketReceivedCallback;
+typedef boost::function<void(Buffer_ptr packet)> ClientPacketReceivedCallback;
 typedef boost::function<void(Client*, const boost::system::error_code& error)> ClientDesconectedCallback;
 
 class Client
@@ -30,8 +31,7 @@ public:
     void Initialize();
 	void InitReceiveHeader();
 	void InitReceiveBody();
-	void SendPacket(PacketBase &packet);
-	void SendBytes(byte* bytes, size_t size, bool delBytes = false);
+	void SendBuffer(Buffer_ptr buff);
 	void HandlerSend(std::size_t bytes_transferred, const boost::system::error_code& error);
 	void HandlerReceiveHeader(size_t bytes_transferred, const boost::system::error_code& error);
 	void HandlerReceiveBody(size_t bytes_transferred, const boost::system::error_code& error);
@@ -44,13 +44,12 @@ private:
     boost::thread thread;
 	bool runing;
 	bool connected;
-	std::queue<const_buffer> sendQueue;
-	std::queue<bool> deleteBytesSendQueue;
+	std::queue<Buffer_ptr> sendQueue;
 	boost::mutex sendMutex;
 	ClientPacketReceivedCallback packetReceivedCallback;
 	ClientDesconectedCallback desconectedCallback;
-	byte receivePackeHeaderBuffer[PacketBase::PACKET_HEADER_SIZE];
-	byte *receivePackeBuffer;
+	Buffer_ptr receivePackeHeaderBuffer;
+	Buffer_ptr receivePackeBuffer;
 };
 
 void Client::SetPacketReceivedCallback(ClientPacketReceivedCallback packetReceivedCallback)

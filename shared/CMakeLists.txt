@@ -3,10 +3,12 @@ option(MINILZO_USE_ORIGINAL_C_LIBRARY "Use Oberhumer Mini LZO" OFF)
 set(RISKEMULIBRARY_SRC 
 	"./stdtypes.h"
 	"./network/Client.h" "./network/Client.cpp" "./network/Server.h" "./network/Server.cpp"
-	"./packet/PacketBase.h" "./packet/PacketBase.cpp"
+	"./packet/PacketBase.h" "./Buffer.h" "./Packable.h"
 	"./minilzo/MiniLZO.h" "./minilzo/MiniLZO.cpp"
 	"./crc/CRC32.h" "./crc/CRC32.tab"
-	"./Buffer.h" "./Packable.h"
+	"./crypt/CryptEngine.h" "./crypt/CryptEngine.cpp" "./crypt/CryptEngine.tab"
+	"./crypt/seed.tab" "./crypt/SeedCipher.cpp" "./crypt/SeedCipher.h"
+	"./Utils.h"
 )
 
 if(MINILZO_USE_ORIGINAL_C_LIBRARY)

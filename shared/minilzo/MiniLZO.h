@@ -7,8 +7,8 @@
 class MiniLZO
 {
 public:
-    static bool Compress(byte *src, size_t srcLen, byte** dst, size_t *dstLen);
-    static bool Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen);
+    static bool Compress(byte *src, size_t srcLen, byte *&dst, size_t &dstLen);
+    static bool Decompress(byte *src, size_t srcLen, byte *&dst, size_t &dstLen);
 private:
     static const uint32 M2_MAX_LEN = 8;
     static const uint32 M3_MAX_LEN = 33;

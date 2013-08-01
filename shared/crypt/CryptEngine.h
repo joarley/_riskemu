@@ -1,20 +1,16 @@
-#ifndef _CRIPTENGINE_H_
-#define	_CRIPTENGINE_H_
+#ifndef _RISKEMULIBRARY_CRYPT_CRIPTENGINE_H_
+#define	_RISKEMULIBRARY_CRYPT_CRIPTENGINE_H_
 
 #include <cstdlib>
 
-#include "../typedef.h"
-#include "../Buffer.h"
-#include "../iPackable.h"
-#include "../iSingleton.h"
+#include "stdtypes.h"
+#include "Buffer.h"
+#include "Packable.h"
 #include "SeedCipher.h"
+#include <ctime>
 
-namespace Common {
-namespace crypto {
-
-class CryptEngine: public Singleton<CryptEngine>
+class CryptEngine
 {
-MAKE_SINGLETON(CryptEngine);
 public:
 	struct Cryptkey : Packable {
 	    uint8 Key1;
@@ -22,58 +18,45 @@ public:
 	    uint16 CodePage;
 	
 	    Cryptkey() {
-	        CryptEngine::GetInstance().InitKey(*this);
+			srand((uint32)time(0));
+			Key1 = rand() % 10;
+			while((Key2 = rand() % 10) == Key1);
+			CodePage = 1;
 	    }
 	
 	    void Pack(Buffer_ptr buffer) {
-	        buffer->Add(Key1);
-	        buffer->Add(Key2);
-	        buffer->Add(CodePage);
+	        *buffer << Key1 << Key2 << CodePage;
 	    }
 	
 	    void Unpack(Buffer_ptr buffer) {
-	        Key1 = buffer->Get<uint8>();
-	        Key2 = buffer->Get<uint8>();
-	        CodePage = buffer->Get<uint16>();
+	        *buffer >> Key1 >> Key2 >> CodePage;
 	    }
 	};
     enum GGError {
         GGERRO_Sucess,
         GGERRO_ClientKey,
         GGERRO_Checksum = 4
-    };
+    };    
 
+    static void SetGGCryptParams(byte* GGClientSeedKey, byte* GGServerSeedKey, byte* GGKey);
+
+    static void XorCrypt(Buffer_ptr buffer, Cryptkey& key);
+    static void XorDecrypt(Buffer_ptr buffer);
     
+    static void GGCrypt(Buffer_ptr buffer);
+    static GGError GGDecrypt(Buffer_ptr buffer);
 
-    void SetGGCryptParams(byte* GGClientSeedKey, byte* GGServerSeedKey, byte* GGKey);
-
-    void InitKey(Cryptkey& k);
-    void XorCrypt(Buffer_ptr buffer, Cryptkey& key);
-    void XorDecrypt(Buffer_ptr buffer);
-    
-    void GGCrypt(Buffer_ptr buffer);
-    GGError GGDecrypt(Buffer_ptr buffer);
-
-    void XorCryptPacketHeader(byte* bytes);
-    void XorCryptPacketBody(byte* bytes, size_t size, Cryptkey& key);
-    void XorDecryptPacketHeader(byte* bytes);
-    void XorDecryptPacketBody(byte* bytes, size_t size, Cryptkey& key);
+    static void XorCryptPacketHeader(byte* bytes);
+    static void XorCryptPacketBody(byte* bytes, size_t size, Cryptkey& key);
+    static void XorDecryptPacketHeader(byte* bytes);
+    static void XorDecryptPacketBody(byte* bytes, size_t size, Cryptkey& key);
 private:
-    CryptEngine();
-	~CryptEngine();
-
-    byte m_GGClientSeedKey[16];
-    byte m_GGServerSeedKey[16];
-    byte* m_GGKey;
-    SeedCipher::SeedParam m_GGServerSeedParam;
-    SeedCipher::SeedParam m_GGClientSeedParam;
-
-    byte m_codePageCount;
-    byte m_codePages[100];
+    static byte GGClientSeedKey[16];
+    static byte GGServerSeedKey[16];
+    static byte* GGKey;
+    static SeedCipher::SeedParam GGServerSeedParam;
+    static SeedCipher::SeedParam GGClientSeedParam;    
 };
 
-} //namespace crypt
-} //namespace common
-
-#endif	/* _CRIPTENGINE_H_ */
+#endif	//_RISKEMULIBRARY_CRYPT_CRIPTENGINE_H_
 

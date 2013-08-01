@@ -6,10 +6,10 @@
 #include "oberhumer\minilzo.h"
 #endif
 
-bool MiniLZO::Compress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
+bool MiniLZO::Compress(byte *src, size_t srcLen, byte *&dst, size_t &dstLen)
 {
-	*dstLen = (srcLen + (srcLen / 16) + 64 + 3);
-    *dst = new byte[*dstLen];
+	dstLen = (srcLen + (srcLen / 16) + 64 + 3);
+    dst = new byte[dstLen];
 
 #ifdef MINILZO_USE_ORIGINAL_C_LIBRARY
 	if (lzo_init() != LZO_E_OK) return false;
@@ -35,7 +35,7 @@ bool MiniLZO::Compress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
         byte *ip_end = src + srcLen - M2_MAX_LEN - 5;
         byte *ii = src;
         byte *ip = src + 4;
-        byte *op = *dst;
+        byte *op = dst;
         bool literal = false;
         bool match = false;
         uint32 offset;
@@ -178,50 +178,50 @@ bool MiniLZO::Compress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
             if (ip >= ip_end)
                 break;
         }
-        *dstLen = (uint32) (op - *dst);
+        dstLen = (uint32) (op - *dst);
         tmp = (uint32) (in_end - ii);
 
     }
     if (tmp > 0)
     {
 		uint32 ii = (uint32)srcLen - tmp;
-        if (*dstLen == 0 && tmp <= 238)
+        if (dstLen == 0 && tmp <= 238)
         {
-            (*dst)[(*dstLen)++] = (byte) (17 + tmp);
+            dst[dstLen++] = (byte) (17 + tmp);
         } else if (tmp <= 3)
         {
-            (*dst)[*dstLen - 2] |= (byte) (tmp);
+            dst[dstLen - 2] |= (byte) (tmp);
         } else if (tmp <= 18)
         {
-            (*dst)[(*dstLen)++] = (byte) (tmp - 3);
+            dst[dstLen++] = (byte) (tmp - 3);
         } else
         {
             uint32 tt = tmp - 18;
-            (*dst)[(*dstLen)++] = 0;
+            dst[dstLen++] = 0;
             while (tt > 255)
             {
                 tt -= 255;
-                (*dst)[(*dstLen)++] = 0;
+                dst[dstLen++] = 0;
             }
-            (*dst)[(*dstLen)++] = (byte) (tt);
+            dst[dstLen++] = (byte) (tt);
         }
         do
         {
-			(*dst)[(*dstLen)++] = src[ii++];
+			dst[dstLen++] = src[ii++];
         } while (--tmp > 0);
     }
-    (*dst)[(*dstLen)++] = M4_MARKER | 1;
-    (*dst)[(*dstLen)++] = 0;
-    (*dst)[(*dstLen)++] = 0;
+    dst[dstLen++] = M4_MARKER | 1;
+    dst[dstLen++] = 0;
+    dst[dstLen++] = 0;
 
     return true;
 #endif
 }
 
-bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
+bool MiniLZO::Decompress(byte *src, size_t srcLen, byte*& dst, size_t &dstLen)
 {
-	*dstLen = srcLen * 20;
-    *dst = new byte[*dstLen];
+	dstLen = srcLen * 20;
+    dst = new byte[dstLen];
 #ifdef MINILZO_USE_ORIGINAL_C_LIBRARY
 	lzo_uint tmp = *dstLen;
 	int ret = lzo1x_decompress(src, srcLen, *dst, &tmp, NULL);
@@ -230,10 +230,10 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
 #else
     uint32 t = 0;
     byte* input = src;
-    byte* output = *dst;
+    byte* output = dst;
     byte* pos = NULL;
     byte* ip_end = input + srcLen;
-    byte* op_end = output + *dstLen;
+    byte* op_end = output + dstLen;
     byte* ip = input;
     byte* op = output;
     bool match = false;
@@ -252,12 +252,12 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
         {
             if ((uint32) (op_end - op) < t)
             {
-                delete *dst;
+                delete dst;
                 return false;                
             }
             if ((uint32) (ip_end - ip) < t + 1)
             {
-                delete *dst;
+                delete dst;
                 return false;
             }
             do
@@ -280,7 +280,7 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
                 {
                     if ((ip_end - ip) < 1)
                     {
-                        delete *dst;
+                        delete dst;
 						return false;
                     }
                     while (*ip == 0)
@@ -289,7 +289,7 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
                         ++ip;
                         if ((ip_end - ip) < 1)
                         {
-                            delete *dst;
+                            delete dst;
 							return false;
                         }
                     }
@@ -297,12 +297,12 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
                 }
                 if ((uint32) (op_end - op) < t + 3)
                 {
-                    delete *dst;
+                    delete dst;
 					return false;
                 }
                 if ((uint32) (ip_end - ip) < t + 4)
                 {
-                    delete *dst;
+                    delete dst;
 					return false;
                 }
                 for (int x = 0; x < 4; ++x, ++op, ++ip)
@@ -348,12 +348,12 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
                 pos -= *ip++ << 2;
                 if (pos < output || pos >= op)
                 {
-                    delete *dst;
+                    delete dst;
 					return false;
                 }
                 if ((op_end - op) < 3)
                 {
-                    delete *dst;
+                    delete dst;
 					return false;
                 }
                 *op++ = *pos++;
@@ -373,12 +373,12 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
                 t = (t >> 5) - 1;
                 if (pos < output || pos >= op)
                 {
-                    delete *dst;
+                    delete dst;
 					return false;
                 }
                 if ((uint32) (op_end - op) < t + 2)
                 {
-                    delete *dst;
+                    delete dst;
 					return false;
                 }
                 copy_match = true;
@@ -389,7 +389,7 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
                 {
                     if ((ip_end - ip) < 1)
                     {
-                        delete *dst;
+                        delete dst;
 						return false;
                     }
                     while (*ip == 0)
@@ -398,7 +398,7 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
                         ++ip;
                         if ((ip_end - ip) < 1)
                         {
-                            delete *dst;
+                            delete dst;
 							return false;
                         }
                     }
@@ -417,7 +417,7 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
                 {
                     if ((ip_end - ip) < 1)
                     {
-                        delete *dst;
+                        delete dst;
 						return false;
                     }
                     while (*ip == 0)
@@ -426,7 +426,7 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
                         ++ip;
                         if ((ip_end - ip) < 1)
                         {
-                            delete *dst;
+                            delete dst;
 							return false;
                         }
                     }
@@ -445,12 +445,12 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
                 pos -= *ip++ << 2;
                 if (pos < output || pos >= op)
                 {
-                    delete *dst;
+                    delete dst;
 					return false;
                 }
                 if ((op_end - op) < 2)
                 {
-                    delete *dst;
+                    delete dst;
 					return false;
                 }
                 *op++ = *pos++;
@@ -461,12 +461,12 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
             {
                 if (pos < output || pos >= op)
                 {
-                    delete *dst;
+                    delete dst;
 					return false;
                 }
                 if ((uint32) (op_end - op) < t + 2)
                 {
-                    delete *dst;
+                    delete dst;
 					return false;
                 }
             }
@@ -514,12 +514,12 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
                 match_next = false;
                 if ((uint32) (op_end - op) < t)
                 {
-                    delete *dst;
+                    delete dst;
 					return false;
                 }
                 if ((uint32) (ip_end - ip) < t + 1)
                 {
-                    delete *dst;
+                    delete dst;
 					return false;
                 }
                 *op++ = *ip++;
@@ -535,22 +535,22 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte** dst, size_t *dstLen)
     }
     if (!eof_found)
     {
-        delete *dst;
+        delete dst;
 		return false;
     } else
     {
         if (ip > ip_end)
         {
-            delete *dst;
+            delete dst;
 			return false;
         } else if (ip < ip_end)
         {
-            delete *dst;
+            delete dst;
 			return false;
         }
     }
 
-	*dstLen = op - output;
+	dstLen = op - output;
     return true;
 #endif
 }

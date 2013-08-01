@@ -1,11 +1,11 @@
-#ifndef COM_VIDISOFTWARE_LIB_CRC32_H
-#define COM_VIDISOFTWARE_LIB_CRC32_H
+#ifndef _RISKEMULIBRARY_MINILZO_MINILZO_H_CRC_CRC32_H
+#define _RISKEMULIBRARY_MINILZO_MINILZO_H_CRC_CRC32_H
 
-#include <com/vidisoftware/common/stdtypes.hpp>
-
-namespace com {
-namespace vidisoftware {
-namespace lib {
+#include "stdtypes.h"
+namespace
+{
+	#include "CRC32.tab"
+}
 
 class CRC32
 {
@@ -20,12 +20,6 @@ public:
         return (crc ^ 0xffffffff);
     }
 private:
-#include "CRC32.tab"
 };
 
-} //namespace lib
-} //namespace vidisoftware
-} //namespace com
-
-
-#endif
+#endif //_RISKEMULIBRARY_MINILZO_MINILZO_H_CRC_CRC32_H

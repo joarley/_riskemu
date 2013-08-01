@@ -1,39 +1,17 @@
 #include "SeedCipher.h"
-#include "seed.tab"
-
-#include "../typedef.h"
-#include "../utils.h"
-
-namespace Common {
-namespace crypto {
-
-namespace {
-const uint32 KC0 = 0x9e3779b9;
-const uint32 KC1 = 0x3c6ef373;
-const uint32 KC2 = 0x78dde6e6;
-const uint32 KC3 = 0xf1bbcdcc;
-const uint32 KC4 = 0xe3779b99;
-const uint32 KC5 = 0xc6ef3733;
-const uint32 KC6 = 0x8dde6e67;
-const uint32 KC7 = 0x1bbcdccf;
-const uint32 KC8 = 0x3779b99e;
-const uint32 KC9 = 0x6ef3733c;
-const uint32 KC10 = 0xdde6e678;
-const uint32 KC11 = 0xbbcdccf1;
-const uint32 KC12 = 0x779b99e3;
-const uint32 KC13 = 0xef3733c6;
-const uint32 KC14 = 0xde6e678d;
-const uint32 KC15 = 0xbcdccf1b;
+namespace
+{
+	#include "seed.tab"
 }
 
-inline uint32 SeedCipher::XorSSBox(uint32 value) {
+ uint32 SeedCipher::XorSSBox(uint32 value) {
     return SS0[GetByte(value, 0)] ^
       SS1[GetByte(value, 1)] ^
       SS2[GetByte(value, 2)] ^
       SS3[GetByte(value, 3)];
 }
 
-inline void SeedCipher::Round(uint32& value0, uint32& value1, uint32& value2, uint32& value3, SeedParam keyparam, int posparam) {
+void SeedCipher::Round(uint32& value0, uint32& value1, uint32& value2, uint32& value3, SeedParam keyparam, int posparam) {
     uint32 aux1, aux2, aux3;
     aux1 = keyparam[posparam + 1] ^ value1;
     aux2 = keyparam[posparam] ^ value0 ^ aux1;
@@ -47,7 +25,7 @@ inline void SeedCipher::Round(uint32& value0, uint32& value1, uint32& value2, ui
     value3 ^= aux2;
 }
 
-inline void SeedCipher::RoundKey0(SeedParam keyparam, int posparam, uint32& value0, uint32& value1, uint32 value2, uint32 value3, uint32 kc) {
+void SeedCipher::RoundKey0(SeedParam keyparam, int posparam, uint32& value0, uint32& value1, uint32 value2, uint32 value3, uint32 kc) {
     uint32 aux1, aux2;
     aux1 = value0;
     value0 = (value0 >> 8) ^ (value1 << 24);
@@ -58,7 +36,7 @@ inline void SeedCipher::RoundKey0(SeedParam keyparam, int posparam, uint32& valu
     keyparam[posparam + 1] = XorSSBox(aux2);
 }
 
-inline void SeedCipher::RoundKey1(SeedParam keyparam, int posparam, uint32 value0, uint32 value1, uint32& value2, uint32& value3, uint32 kc) {
+void SeedCipher::RoundKey1(SeedParam keyparam, int posparam, uint32 value0, uint32 value1, uint32& value2, uint32& value3, uint32 kc) {
     uint32 aux1, aux2;
     aux1 = value2;
     value2 = (value2 << 8) ^ (value3 >> 24);
@@ -139,7 +117,6 @@ void SeedCipher::EncRoundKey(SeedParam keyparam, byte* key) {
     aux3 = EndianChange(((uint32 *) key)[2]);
     aux4 = EndianChange(((uint32 *) key)[3]);
 
-
     keyparam[0] = XorSSBox(aux1 + aux3 - KC0);
     keyparam[1] = XorSSBox(aux2 - aux4 + KC0);
 
@@ -159,6 +136,3 @@ void SeedCipher::EncRoundKey(SeedParam keyparam, byte* key) {
     RoundKey1(keyparam, 28, aux1, aux2, aux3, aux4, KC14);
     RoundKey0(keyparam, 30, aux1, aux2, aux3, aux4, KC15);
 }
-
-} //namespace crypt
-} //namespace common
