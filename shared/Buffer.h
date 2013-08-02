@@ -42,27 +42,27 @@ public:
 		size_t position;
 	};
 
-	template<class T> static SizedValue<void*> Bytes(T* value, size_t size)
+    template<class T> static SizedValue<void*> Bytes(T *value, size_t size)
 	{
 		return SizedValue<void*>((void*)value, size);
 	}
 
-	static SizedValue<string&> StringSizeFixed(string& value, size_t size)
+    static SizedValue<string&> StringSizeFixed(string &value, size_t size)
 	{
 		return SizedValue<string&>(value, size);
 	}
 
-	static SizedValue<char*&> StringSizeFixed(char*& value, size_t size)
+    static SizedValue<char*&> StringSizeFixed(char *&value, size_t size)
 	{
 		return SizedValue<char*&>(value, size);
 	}
 
-	static SizedValue<const char*> StringSizeFixed(const char* value, size_t size)
+    static SizedValue<const char*> StringSizeFixed(const char *value, size_t size)
 	{
 		return SizedValue<const char*>(value, size);
 	}
 
-	template<class T> static FromPositionedValue<T&> FromPosition(T& value, size_t position)
+    template<class T> static FromPositionedValue<T&> FromPosition(T &value, size_t position)
 	{
 		return FromPositionedValue<T&>(value, position);
 	}
@@ -72,38 +72,36 @@ public:
 		return ToPositionedValue<T>(value, position);
 	}
 public:
-    Buffer(size_t maxLength = 4096) : m_buffer(maxLength) {
-        m_maxLength = maxLength;
-        m_length = 0;
-        m_readerOffset = 0;
-        m_writerOffset = 0;
+    Buffer(size_t maxLength = 4096) : buffer(maxLength) {
+        this->length = 0;
+        this->readerOffset = 0;
+        this->writerOffset = 0;
     }
 
-    Buffer(byte* buffer, size_t length) : m_buffer(length) {
-        m_buffer.assign(buffer, buffer + length);
-        m_maxLength = length;
-        m_length = length;
-        m_readerOffset = 0;
-        m_writerOffset = length;
+    Buffer(byte* buffer, size_t length) : buffer(length) {
+        this->buffer.assign(buffer, buffer + length);
+        this->length = length;
+        this->readerOffset = 0;
+        this->writerOffset = length;
     }
 
     Buffer(const Buffer& b) {
-        m_buffer = b.m_buffer;
-        m_length = b.m_length;
-        m_readerOffset = b.m_readerOffset;
-        m_writerOffset = b.m_writerOffset;
+        this->buffer = b.buffer;
+        this->length = b.length;
+        this->readerOffset = b.readerOffset;
+        this->writerOffset = b.writerOffset;
     }
 
 	inline byte* Data() {
-        return &m_buffer[0];
+        return &this->buffer[0];
     }
 
     inline size_t Length() {
-        return m_length;
+        return this->length;
     }
 
     inline size_t MaxLength() {
-        return m_maxLength;
+        return buffer.size();
     }
 
 	inline void Clear()
@@ -112,45 +110,104 @@ public:
 	}
 
     inline void SetLength(size_t length) {
-        m_length = length < m_maxLength ? length : m_maxLength;
+		this->length = length < MaxLength() ? length : MaxLength();
     }
 
     inline void SetMaxLength(size_t length) {
-        m_buffer.resize(length);
-        m_maxLength = length;
+        this->buffer.resize(length);        
     }
 
     inline void SetReaderOffset(size_t offset) {
-        m_readerOffset = offset > m_maxLength ? m_maxLength : offset;
+		this->readerOffset = offset > MaxLength() ? MaxLength() : offset;
     }
 
     inline void SetWriteOffset(size_t offset) {
-        m_writerOffset = offset > m_maxLength ? m_maxLength : offset;
+		this->writerOffset = offset > MaxLength() ? MaxLength() : offset;
     }
     
     inline size_t GetReaderOffset() {
-        return m_readerOffset;
+        return this->readerOffset;
     }
 
     inline size_t GetWriteOffset() {
-        return m_writerOffset;
+        return this->writerOffset;
     }
 
-	template<class T> inline typename boost::enable_if<boost::is_fundamental<T>, Buffer&>::type operator<<(const T value)
+    inline Buffer& operator<<(const uint8 value)
 	{
-		size_t size = sizeof(T);
-		if(AddNumber(value, m_writerOffset))
-			m_writerOffset += size;
+		size_t size = sizeof(uint8);
+		if(AddNumber(value, this->writerOffset))
+			this->writerOffset += size;
+		return *this;
+	}
+	
+    inline Buffer& operator<<(const int8 value)
+	{
+		return *this << (uint8)value;
+	}
+	
+    inline Buffer& operator<<(const uint16 value)
+	{
+		size_t size = sizeof(uint16);
+		if(AddNumber(value, this->writerOffset))
+			this->writerOffset += size;
+		return *this;
+	}
+	
+    inline Buffer& operator<<(const int16 value)
+	{
+		return *this << (uint16)value;
+	}
+	
+    inline Buffer& operator<<(const uint32 value)
+	{
+		size_t size = sizeof(uint32);
+		if(AddNumber(value, this->writerOffset))
+			this->writerOffset += size;
+		return *this;
+	}
+	
+    inline Buffer& operator<<(const int32 value)
+	{
+		return *this << (uint32)value;
+	}
+	
+    inline Buffer& operator<<(const uint64 value)
+	{
+		size_t size = sizeof(uint64);
+		if(AddNumber(value, this->writerOffset))
+			this->writerOffset += size;
+		return *this;
+	}
+	
+    inline Buffer& operator<<(const int64 value)
+	{
+		return *this << (uint64)value;
+	}
+	
+    inline Buffer& operator<<(const f64 value)
+	{
+		size_t size = sizeof(f64);
+		if(AddNumber(value, this->writerOffset))
+			this->writerOffset += size;
+		return *this;
+	}
+	
+    inline Buffer& operator<<(const f32 value)
+	{
+		size_t size = sizeof(f32);
+		if(AddNumber(value, this->writerOffset))
+			this->writerOffset += size;
 		return *this;
 	}
 
-	inline Buffer& operator<<(Packable& value)
+    inline Buffer& operator<<(Packable &value)
 	{
 		AddPack(value);
 		return *this;
 	}
 
-	inline Buffer& operator<<(string& value)
+    inline Buffer& operator<<(const string &value)
 	{
 		return *this << value.c_str();		
 	}
@@ -158,31 +215,31 @@ public:
 	inline Buffer& operator<<(const char* value)
 	{
 		size_t size = strlen(value) + 1;
-		if(AddString(value, size, m_writerOffset))
-			m_writerOffset += size;
+		if(AddString(value, size, this->writerOffset))
+			this->writerOffset += size;
 		return *this;
 	}
 
-	inline Buffer& operator<<(SizedValue<const char*>& value)
+    inline Buffer& operator<<(SizedValue<const char*> &value)
 	{
-		if(AddString(value.value, value.size, m_writerOffset))
-			m_writerOffset += value.size;
+		if(AddString(value.value, value.size, this->writerOffset))
+			this->writerOffset += value.size;
 		return *this;
 	}
 
-	inline Buffer& operator<<(SizedValue<string&>& value)
+    inline Buffer& operator<<(SizedValue<string&> &value)
 	{
 		return *this << StringSizeFixed(value.value.c_str(), value.size);
 	}
 
-	inline Buffer& operator<<(SizedValue<void*>& value)
+	inline Buffer& operator<<(const SizedValue<void*>& value)
 	{
-		if(AddBytes(value.value, value.size, m_writerOffset))
-			m_writerOffset += value.size;
+		if(AddBytes(value.value, value.size, this->writerOffset))
+			this->writerOffset += value.size;
 		return *this;
 	}
 
-	template<class T> inline Buffer& operator<<(ToPositionedValue<T>& value)
+    template<class T> inline Buffer& operator<<(const ToPositionedValue<T> value)
 	{
 		size_t pos = GetWriteOffset();
 		SetWriteOffset(value.position);
@@ -191,11 +248,71 @@ public:
 		return *this;
 	}
 
-	template<class T> inline typename boost::enable_if_c<boost::is_fundamental<T>::value && !boost::is_const<T>::value, Buffer&>::type operator>>(T& value)
+		inline Buffer& operator>>(uint8& value)
 	{
-		size_t size = sizeof(T);
-		if(GetNumber(value, m_readerOffset))
-			m_readerOffset += size;
+		size_t size = sizeof(uint8);
+		if(GetNumber(value, this->readerOffset))
+			this->readerOffset += size;
+		return *this;
+	}
+	
+	inline Buffer& operator>>(int8& value)
+	{
+		return *this >> (uint8&)value;
+	}
+	
+	inline Buffer& operator>>(uint16& value)
+	{
+		size_t size = sizeof(uint16);
+		if(GetNumber(value, this->readerOffset))
+			this->readerOffset += size;
+		return *this;
+	}
+	
+	inline Buffer& operator>>(int16& value)
+	{
+		return *this >> (uint16&)value;
+	}
+	
+	inline Buffer& operator>>(uint32& value)
+	{
+		size_t size = sizeof(uint32);
+		if(GetNumber(value, this->readerOffset))
+			this->readerOffset += size;
+		return *this;
+	}
+	
+	inline Buffer& operator>>(int32& value)
+	{
+		return *this >> (uint32&)value;
+	}
+	
+	inline Buffer& operator>>(uint64& value)
+	{
+		size_t size = sizeof(uint64);
+		if(GetNumber(value, this->readerOffset))
+			this->readerOffset += size;
+		return *this;
+	}
+	
+	inline Buffer& operator>>(int64& value)
+	{
+		return *this >> (uint64&)value;
+	}
+	
+	inline Buffer& operator>>(f32& value)
+	{
+		size_t size = sizeof(f32);
+		if(GetNumber(value, this->readerOffset))
+			this->readerOffset += size;
+		return *this;
+	}
+	
+	inline Buffer& operator>>(f64& value)
+	{
+		size_t size = sizeof(f64);
+		if(GetNumber(value, this->readerOffset))
+			this->readerOffset += size;
 		return *this;
 	}
 
@@ -216,9 +333,9 @@ public:
 
 	inline Buffer& operator>>(char *&value)
 	{
-		size_t size = strlen((char*)&m_buffer[m_readerOffset]) + 1;
-		if(GetString(value, size, m_readerOffset))
-			m_readerOffset += size;			
+		size_t size = strlen((char*)&this->buffer[this->readerOffset]) + 1;
+		if(GetString(value, size, this->readerOffset))
+			this->readerOffset += size;			
 		return *this;
 	}
 
@@ -226,16 +343,16 @@ public:
 
 	inline Buffer& operator>>(SizedValue<char*&>& value)
 	{
-		if(GetString(value.value, value.size, m_readerOffset))
-			m_readerOffset += value.size;
+		if(GetString(value.value, value.size, this->readerOffset))
+			this->readerOffset += value.size;
 		return *this;
 	}
 
 	inline Buffer& operator>>(SizedValue<string&>& value)
 	{
 		char* str;
-		if(GetString(str, value.size, m_readerOffset))
-			m_readerOffset += value.size;
+		if(GetString(str, value.size, this->readerOffset))
+			this->readerOffset += value.size;
 		value.value = str;
 		delete str;
 		return *this;
@@ -243,8 +360,8 @@ public:
 
 	inline Buffer& operator>>(SizedValue<void*&>& value)
 	{
-		if(GetBytes(value.value, value.size, m_readerOffset))
-			m_readerOffset += value.size;
+		if(GetBytes(value.value, value.size, this->readerOffset))
+			this->readerOffset += value.size;
 		return *this;
 	}
 
@@ -257,15 +374,53 @@ public:
 		return *this;
 	}	
 private:
-	template<class T> inline bool AddNumber(T value, size_t offset) {
-        size_t size = sizeof(T);
-        if (offset + size > m_maxLength) {
-            return false;
-        }
-        *(T*)&m_buffer[offset] = value;
-        m_length = offset + size > m_length ? offset + size : m_length;
-        return true;
-    }
+	inline bool AddNumber(const uint8 value, size_t offset) {
+        size_t size = sizeof(uint8);
+		if (offset + size > MaxLength()) return false;
+        *(uint8*)&this->buffer[offset] = value;
+        this->length = offset + size > this->length ? offset + size : this->length;
+		return true;
+	}
+	
+	inline bool AddNumber(const uint16 value, size_t offset) {
+        size_t size = sizeof(uint16);
+		if (offset + size > MaxLength()) return false;
+        *(uint16*)&this->buffer[offset] = value;
+        this->length = offset + size > this->length ? offset + size : this->length;
+		return true;
+	}
+	
+	inline bool AddNumber(const uint32 value, size_t offset) {
+        size_t size = sizeof(uint32);
+		if (offset + size > MaxLength()) return false;
+        *(uint32*)&this->buffer[offset] = value;
+        this->length = offset + size > this->length ? offset + size : this->length;
+		return true;
+	}
+	
+	inline bool AddNumber(const uint64 value, size_t offset) {
+        size_t size = sizeof(uint64);
+		if (offset + size > MaxLength()) return false;
+        *(uint64*)&this->buffer[offset] = value;
+        this->length = offset + size > this->length ? offset + size : this->length;
+		return true;
+	}
+	
+	inline bool AddNumber(const f64 value, size_t offset) {
+        size_t size = sizeof(f64);
+		if (offset + size > MaxLength()) return false;
+        *(f64*)&this->buffer[offset] = value;
+        this->length = offset + size > this->length ? offset + size : this->length;
+		return true;
+	}
+	
+	inline bool AddNumber(const f32 value, size_t offset) {
+        size_t size = sizeof(f32);
+		if (offset + size > MaxLength()) return false;
+        *(f32*)&this->buffer[offset] = value;
+        this->length = offset + size > this->length ? offset + size : this->length;
+		return true;
+	}
 
 	inline bool AddPack(Packable& value) {
 		value.Pack(shared_from_this());        
@@ -273,7 +428,7 @@ private:
 	}
 
     inline bool AddPack(Packable& value, size_t offset) {
-		size_t writeof = m_writerOffset;
+		size_t writeof = this->writerOffset;
         SetWriteOffset(offset);
         value.Pack(shared_from_this());
         SetWriteOffset(writeof);
@@ -281,43 +436,78 @@ private:
     }
 
 	inline bool AddString(const char* value, size_t size, size_t offset) {
-        if (offset + size > m_maxLength) {
+		if (offset + size > MaxLength()) {
             return false;
         }
 
         size_t stringSize = strlen(value);
         size_t paddingSize = size > stringSize ? size - stringSize : 0;
 
-        memcpy(&m_buffer[offset], value, size - paddingSize);
-        memset(&m_buffer[offset + size - paddingSize], 0, paddingSize);
+        memcpy(&this->buffer[offset], value, size - paddingSize);
+        memset(&this->buffer[offset + size - paddingSize], 0, paddingSize);
 
-        m_length = offset + size > m_length ? offset + size : m_length;
+        this->length = offset + size > this->length ? offset + size : this->length;
         return true;
 	}
 
-    inline bool AddBytes(void* value, size_t size, size_t offset) {
-        if (offset + size > m_maxLength) {
+    inline bool AddBytes(const void* value, size_t size, size_t offset) {
+		if (offset + size > MaxLength()) {
             return false;
         }
-        memcpy(&m_buffer[offset], value, size);
-        m_length = offset + size > m_length ? offset + size : m_length;
+        memcpy(&this->buffer[offset], value, size);
+        this->length = offset + size > this->length ? offset + size : this->length;
         return true;
     }
 
-	template<class T> inline bool GetNumber(T &value, size_t offset) {
-        size_t size = sizeof(T);
-        if (offset + size > m_length) return false;
-        value = *(T*)&m_buffer[offset];
+	inline bool GetNumber(uint8 &value, size_t offset) {
+        size_t size = sizeof(uint8);
+        if (offset + size > this->length) return false;
+        value = *(uint8*)&this->buffer[offset];
+        return true;
+    }
+	
+	inline bool GetNumber(uint16 &value, size_t offset) {
+        size_t size = sizeof(uint16);
+        if (offset + size > this->length) return false;
+        value = *(uint16*)&this->buffer[offset];
+        return true;
+    }
+	
+	inline bool GetNumber(uint64 &value, size_t offset) {
+        size_t size = sizeof(uint64);
+        if (offset + size > this->length) return false;
+        value = *(uint64*)&this->buffer[offset];
+        return true;
+    }
+	
+	inline bool GetNumber(uint32 &value, size_t offset) {
+        size_t size = sizeof(uint32);
+        if (offset + size > this->length) return false;
+        value = *(uint32*)&this->buffer[offset];
+        return true;
+    }
+	
+	inline bool GetNumber(f64 &value, size_t offset) {
+        size_t size = sizeof(f64);
+        if (offset + size > this->length) return false;
+        value = *(f64*)&this->buffer[offset];
+        return true;
+    }
+	
+	inline bool GetNumber(f32 &value, size_t offset) {
+        size_t size = sizeof(f32);
+        if (offset + size > this->length) return false;
+        value = *(f32*)&this->buffer[offset];
         return true;
     }
 
-	inline bool GetPack(Packable& value) {
+	inline bool GetPack(Packable &value) {
 		value.Unpack(shared_from_this());
         return true;
     }
 
-	inline bool GetPack(Packable& value, size_t offset) {
-		size_t readof = m_readerOffset;
+	inline bool GetPack(Packable &value, size_t offset) {
+		size_t readof = this->readerOffset;
         SetReaderOffset(offset);
         value.Unpack(shared_from_this());
         SetReaderOffset(readof);
@@ -325,36 +515,35 @@ private:
     }
 
 	inline bool GetString(char *&value, size_t size, size_t offset) {
-        if (offset + size > m_length) {
+        if (offset + size > this->length) {
             return false;
         }
 
-		if(m_buffer[offset + size - 1] != '\0')
+		if(this->buffer[offset + size - 1] != '\0')
 			value = new char[size + 1];		
 		else
 			value = new char[size];
 
-		memcpy(value, &m_buffer[offset], size);
+		memcpy(value, &this->buffer[offset], size);
 
-		if(m_buffer[offset + size - 1] != '\0')
+		if(this->buffer[offset + size - 1] != '\0')
 			value[size] = '\0';
 		
         return true;
 	}
 
-	inline bool GetBytes(void*& value, size_t size, size_t offset) {
-        if (offset + size > m_length) {
+	inline bool GetBytes(void *&value, size_t size, size_t offset) {
+        if (offset + size > this->length) {
             return false;
         }
-        memcpy(value, &m_buffer[offset], size);
-        return true;
+        memcpy(value, &this->buffer[offset], size);
+        return true;		
     }
 protected:
-    vector<byte> m_buffer;
-    size_t m_maxLength;
-    size_t m_length;
-    size_t m_readerOffset;
-    size_t m_writerOffset;
+    vector<byte> buffer;
+    size_t length;
+    size_t readerOffset;
+    size_t writerOffset;
 };
 
 #endif //_RISKEMULIBRARY_BUFFER_H_

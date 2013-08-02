@@ -11,11 +11,11 @@ class PacketBase
 public:
 	inline PacketBase(uint8 command, uint32 status, uint16 paketLength);
     inline PacketBase(uint8 command, uint32 status);
-    inline PacketBase(Buffer_ptr buffer);	
-	inline Buffer_ptr GetBuffer(bool compress);
+    inline PacketBase(Buffer_ptr buffer);
+	virtual Buffer_ptr GetBuffer() = 0;
 protected:
-	Buffer_ptr buffer;
-	
+	inline Buffer_ptr GetBuffer(bool compress);
+	Buffer_ptr buffer;	
 public:
 	static const size_t PACKET_HEADER_SIZE = 12;
 	static const uint16 PACKET_TYPE_NORMAL = 0x8000;
@@ -31,16 +31,17 @@ public:
 
 PacketBase::PacketBase(uint8 command, uint32 status, uint16 paketLength): buffer(new Buffer(paketLength))
 {
-	*buffer << PACKET_START_BIT << command << (uint16)0
-		<< CryptEngine::Cryptkey() << status;
+    *buffer << PACKET_START_BIT << command << (uint16)0
+            << CryptEngine::Cryptkey() << status;
 	buffer->SetWriteOffset(PACKET_HEADER_SIZE);
 	buffer->SetReaderOffset(PACKET_HEADER_SIZE);
 }
 
 PacketBase::PacketBase(uint8 command, uint32 status): buffer(new Buffer())
 {
+
 	*buffer << PACKET_START_BIT << command << (uint16)0
-		<< CryptEngine::Cryptkey() << status;
+            << CryptEngine::Cryptkey() << status;
 	buffer->SetWriteOffset(PACKET_HEADER_SIZE);
 	buffer->SetReaderOffset(PACKET_HEADER_SIZE);
 }
@@ -48,7 +49,7 @@ PacketBase::PacketBase(uint8 command, uint32 status): buffer(new Buffer())
 PacketBase::PacketBase(Buffer_ptr buffer): buffer(buffer)
 {
 	uint16 packetSize;
-	*buffer >> Buffer::FromPosition(packetSize, 2);
+    *buffer >> Buffer::FromPosition(packetSize, 2);
 	if(packetSize & PACKET_TYPE_COMPRESSED)
 	{
 		byte *bytes;
@@ -105,7 +106,7 @@ void PacketBase::DecriptBodyPacket(Buffer_ptr buff)
 	if(buff->Length() > PACKET_HEADER_SIZE)
 	{
 		CryptEngine::Cryptkey key;
-		*buff >> Buffer::FromPosition(key, 4);
+        *buff >> Buffer::FromPosition(key, 4);
 		CryptEngine::XorDecryptPacketBody(buff->Data(), buff->Length(), key);
 	}
 }

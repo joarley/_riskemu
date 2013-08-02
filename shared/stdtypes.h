@@ -14,6 +14,5 @@ typedef boost::uint64_t uint64;
 typedef uint8 byte;
 typedef double f64;
 typedef float f32;
-typedef float f16;
 
 #endif // _RISKEMU_LIBRARY_STDTYPES_H_
