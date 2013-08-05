@@ -9,17 +9,18 @@ set(RISKEMULIBRARY_SRC
 	"./crypt/CryptEngine.h" "./crypt/CryptEngine.cpp" "./crypt/CryptEngine.tab"
 	"./crypt/seed.tab" "./crypt/SeedCipher.cpp" "./crypt/SeedCipher.h"
 	"./Utils.h"
-)
+	"./packet/PktPing.h"
+	"./script/ScriptContext.h" "./script/scriptstdstring/scriptstdstring.cpp" 
+	"./script/scriptstdstring/scriptstdstring.h" "./script/scriptstdstring/scriptstdstring_utils.cpp"
+	"./script/scriptarray/scriptarray.cpp" "./script/scriptarray/scriptarray.h")
 
 if(MINILZO_USE_ORIGINAL_C_LIBRARY)
 	add_definitions(-DMINILZO_USE_ORIGINAL_C_LIBRARY)
-
 	set(RISKEMULIBRARY_SRC ${RISKEMULIBRARY_SRC}
 		"./minilzo/oberhumer/lzoconf.h" "./minilzo/oberhumer/lzodefs.h"
-		"./minilzo/oberhumer/minilzo.c" "./minilzo/oberhumer/minilzo.h"
-	)
+		"./minilzo/oberhumer/minilzo.c" "./minilzo/oberhumer/minilzo.h")
 endif()
 
 
 add_library(RiskEmuLibrary ${RISKEMULIBRARY_SRC})
-target_link_libraries(RiskEmuLibrary ${Boost_LIBRARIES})
+target_link_libraries(RiskEmuLibrary ${Boost_LIBRARIES} ${AngelScript_LIBRARIES})

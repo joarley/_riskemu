@@ -12,21 +12,23 @@ public:
 	inline PacketBase(uint8 command, uint32 status, uint16 paketLength);
     inline PacketBase(uint8 command, uint32 status);
     inline PacketBase(Buffer_ptr buffer);
-	virtual Buffer_ptr GetBuffer() = 0;
+	inline uint32 GetStatus();
+	inline virtual Buffer_ptr GetBuffer() = 0;
 protected:
-	inline Buffer_ptr GetBuffer(bool compress);
-	Buffer_ptr buffer;	
+	inline virtual Buffer_ptr ProcessBuffer(bool compress);
+	Buffer_ptr buffer;
 public:
 	static const size_t PACKET_HEADER_SIZE = 12;
 	static const uint16 PACKET_TYPE_NORMAL = 0x8000;
 	static const uint16 PACKET_TYPE_COMPRESSED = 0x4000;
 	static const byte PACKET_START_BIT = 0xFF;
 
-	inline static void DecriptHeaderPacket(Buffer_ptr bytes);
-	inline static void DecriptBodyPacket(Buffer_ptr bytes);
-	inline static void CryptPacket(Buffer_ptr bytes);
-	inline static size_t IsValidPacket(Buffer_ptr bytes);
-	inline static size_t PacketBodySize(Buffer_ptr bytes);
+	inline static void DecriptHeaderPacket(Buffer_ptr buff);
+	inline static void DecriptBodyPacket(Buffer_ptr buff);
+	inline static void CryptPacket(Buffer_ptr buff);
+	inline static size_t IsValidPacket(Buffer_ptr buff);
+	inline static size_t PacketBodySize(Buffer_ptr buff);
+	inline static uint8 PacketCmd(Buffer_ptr buff);
 };
 
 PacketBase::PacketBase(uint8 command, uint32 status, uint16 paketLength): buffer(new Buffer(paketLength))
@@ -65,7 +67,14 @@ PacketBase::PacketBase(Buffer_ptr buffer): buffer(buffer)
     this->buffer->SetReaderOffset(PACKET_HEADER_SIZE);
 }
 
-Buffer_ptr PacketBase::GetBuffer(bool compress)
+uint32 PacketBase::GetStatus()
+{
+	uint32 ret;
+	*this->buffer >> Buffer::FromPosition(ret, 8);
+	return ret;
+}
+
+Buffer_ptr PacketBase::ProcessBuffer(bool compress)
 {
 	uint16 size = 0;
 	if(compress)
@@ -134,6 +143,13 @@ size_t PacketBase::PacketBodySize(Buffer_ptr buff)
 	return (size & 
 		~(PacketBase::PACKET_TYPE_COMPRESSED | PacketBase::PACKET_TYPE_NORMAL)) - 
 		PacketBase::PACKET_HEADER_SIZE;
+}
+
+inline static uint8 PacketCmd(Buffer_ptr buff)
+{
+	uint8 ret;
+	*buff >> Buffer::FromPosition(ret, 1);
+	return ret;
 }
 
 #endif //_RISKEMULIBRARY_PACKET_PACKETBASE_H_
