@@ -178,7 +178,7 @@ bool MiniLZO::Compress(byte *src, size_t srcLen, byte *&dst, size_t &dstLen)
             if (ip >= ip_end)
                 break;
         }
-        dstLen = (uint32) (op - *dst);
+        dstLen = (uint32) (op - dst);
         tmp = (uint32) (in_end - ii);
 
     }
