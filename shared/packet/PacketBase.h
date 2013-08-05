@@ -31,25 +31,24 @@ public:
 
 PacketBase::PacketBase(uint8 command, uint32 status, uint16 paketLength): buffer(new Buffer(paketLength))
 {
-    *buffer << PACKET_START_BIT << command << (uint16)0
+	*this->buffer << PACKET_START_BIT << command << (uint16)0
             << CryptEngine::Cryptkey() << status;
-	buffer->SetWriteOffset(PACKET_HEADER_SIZE);
-	buffer->SetReaderOffset(PACKET_HEADER_SIZE);
+    this->buffer->SetWriteOffset(PACKET_HEADER_SIZE);
+    this->buffer->SetReaderOffset(PACKET_HEADER_SIZE);
 }
 
 PacketBase::PacketBase(uint8 command, uint32 status): buffer(new Buffer())
 {
-
-	*buffer << PACKET_START_BIT << command << (uint16)0
+	*this->buffer << PACKET_START_BIT << command << (uint16)0
             << CryptEngine::Cryptkey() << status;
-	buffer->SetWriteOffset(PACKET_HEADER_SIZE);
-	buffer->SetReaderOffset(PACKET_HEADER_SIZE);
+    this->buffer->SetWriteOffset(PACKET_HEADER_SIZE);
+    this->buffer->SetReaderOffset(PACKET_HEADER_SIZE);
 }
 
 PacketBase::PacketBase(Buffer_ptr buffer): buffer(buffer)
 {
 	uint16 packetSize;
-    *buffer >> Buffer::FromPosition(packetSize, 2);
+    *this->buffer >> Buffer::FromPosition(packetSize, 2);
 	if(packetSize & PACKET_TYPE_COMPRESSED)
 	{
 		byte *bytes;
@@ -62,8 +61,8 @@ PacketBase::PacketBase(Buffer_ptr buffer): buffer(buffer)
 		delete bytes;
 	}
 
-	buffer->SetWriteOffset(PACKET_HEADER_SIZE);
-	buffer->SetReaderOffset(PACKET_HEADER_SIZE);
+    this->buffer->SetWriteOffset(PACKET_HEADER_SIZE);
+    this->buffer->SetReaderOffset(PACKET_HEADER_SIZE);
 }
 
 Buffer_ptr PacketBase::GetBuffer(bool compress)
@@ -86,11 +85,11 @@ Buffer_ptr PacketBase::GetBuffer(bool compress)
 		size = PACKET_TYPE_NORMAL;
 	}
 	
-	size |= buffer->Length();
+    size |= this->buffer->Length();
 	
-	*buffer << Buffer::ToPosition(size, 2);
+    *this->buffer << Buffer::ToPosition(size, 2);
 
-	return buffer;
+    return this->buffer;
 }
 
 void PacketBase::DecriptHeaderPacket(Buffer_ptr buff)

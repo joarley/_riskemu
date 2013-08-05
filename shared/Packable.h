@@ -12,7 +12,7 @@ typedef boost::shared_ptr<Buffer> Buffer_ptr;
 
 class Packable {
 public:
-    virtual void Pack(Buffer_ptr buffer) = 0;
+    virtual void Pack(Buffer_ptr buffer) const = 0;
     virtual void Unpack(Buffer_ptr buffer) = 0;
 };
 

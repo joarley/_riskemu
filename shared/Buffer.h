@@ -42,32 +42,32 @@ public:
 		size_t position;
 	};
 
-    template<class T> static SizedValue<void*> Bytes(T *value, size_t size)
+    template<class T> static const SizedValue<void*> Bytes(T *value, size_t size)
 	{
-		return SizedValue<void*>((void*)value, size);
+        return SizedValue<void*>(value, size);
 	}
 
-    static SizedValue<string&> StringSizeFixed(string &value, size_t size)
+    static const SizedValue<string&> StringSizeFixed(string &value, size_t size)
 	{
 		return SizedValue<string&>(value, size);
 	}
 
-    static SizedValue<char*&> StringSizeFixed(char *&value, size_t size)
+    static const SizedValue<char*&> StringSizeFixed(char *&value, size_t size)
 	{
 		return SizedValue<char*&>(value, size);
 	}
 
-    static SizedValue<const char*> StringSizeFixed(const char *value, size_t size)
+    static const SizedValue<const char*> StringSizeFixed(const char *value, size_t size)
 	{
 		return SizedValue<const char*>(value, size);
 	}
 
-    template<class T> static FromPositionedValue<T&> FromPosition(T &value, size_t position)
+    template<class T> static const FromPositionedValue<T&> FromPosition(T &value, size_t position)
 	{
 		return FromPositionedValue<T&>(value, position);
 	}
 
-	template<class T> static ToPositionedValue<T> ToPosition(T value, size_t position)
+	template<class T> static const ToPositionedValue<T> ToPosition(T value, size_t position)
 	{
 		return ToPositionedValue<T>(value, position);
 	}
@@ -201,7 +201,7 @@ public:
 		return *this;
 	}
 
-    inline Buffer& operator<<(Packable &value)
+    inline Buffer& operator<<(const Packable &value)
 	{
 		AddPack(value);
 		return *this;
@@ -220,19 +220,19 @@ public:
 		return *this;
 	}
 
-    inline Buffer& operator<<(SizedValue<const char*> &value)
+    inline Buffer& operator<<(const SizedValue<const char*> value)
 	{
 		if(AddString(value.value, value.size, this->writerOffset))
 			this->writerOffset += value.size;
 		return *this;
 	}
 
-    inline Buffer& operator<<(SizedValue<string&> &value)
+    inline Buffer& operator<<(const SizedValue<const string&> &value)
 	{
-		return *this << StringSizeFixed(value.value.c_str(), value.size);
+        return *this << StringSizeFixed(value.value.c_str(), value.size);
 	}
 
-	inline Buffer& operator<<(const SizedValue<void*>& value)
+    inline Buffer& operator<<(const SizedValue<void*> value)
 	{
 		if(AddBytes(value.value, value.size, this->writerOffset))
 			this->writerOffset += value.size;
@@ -341,14 +341,14 @@ public:
 
 
 
-	inline Buffer& operator>>(SizedValue<char*&>& value)
+	inline Buffer& operator>>(const SizedValue<char*&>& value)
 	{
 		if(GetString(value.value, value.size, this->readerOffset))
 			this->readerOffset += value.size;
 		return *this;
 	}
 
-	inline Buffer& operator>>(SizedValue<string&>& value)
+	inline Buffer& operator>>(const SizedValue<string&>& value)
 	{
 		char* str;
 		if(GetString(str, value.size, this->readerOffset))
@@ -358,14 +358,14 @@ public:
 		return *this;
 	}
 
-	inline Buffer& operator>>(SizedValue<void*&>& value)
+	inline Buffer& operator>>(const SizedValue<void*&>& value)
 	{
 		if(GetBytes(value.value, value.size, this->readerOffset))
 			this->readerOffset += value.size;
 		return *this;
 	}
 
-	template<class T> inline Buffer& operator>>(FromPositionedValue<T>& value)
+	template<class T> inline Buffer& operator>>(const FromPositionedValue<T>& value)
 	{
 		size_t pos = GetReaderOffset();
 		SetReaderOffset(value.position);
@@ -422,7 +422,7 @@ private:
 		return true;
 	}
 
-	inline bool AddPack(Packable& value) {
+	inline bool AddPack(const Packable& value) {
 		value.Pack(shared_from_this());        
         return true;
 	}

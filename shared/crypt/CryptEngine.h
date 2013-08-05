@@ -24,11 +24,13 @@ public:
 			CodePage = 1;
 	    }
 	
-	    void Pack(Buffer_ptr buffer) {
+	    virtual void Pack(Buffer_ptr buffer) const
+		{
 	        *buffer << Key1 << Key2 << CodePage;
 	    }
 	
-	    void Unpack(Buffer_ptr buffer) {
+	    virtual void Unpack(Buffer_ptr buffer)
+		{
 	        *buffer >> Key1 >> Key2 >> CodePage;
 	    }
 	};
