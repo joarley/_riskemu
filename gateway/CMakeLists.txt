@@ -1,6 +1,5 @@
-set(RISKEMUGATEWAY_HDR "")
-set(RISKEMUGATEWAY_SRC "main.cpp")
+set(RISKEMUGATEWAY_SRC
+	"Gateway.h" "Gateway.cpp")
 
-
-add_executable(RiskEmuGateway ${RISKEMUGATEWAY_SRC} ${RISKEMUGATEWAY_HDR})
+add_executable(RiskEmuGateway ${RISKEMUGATEWAY_SRC})
 target_link_libraries(RiskEmuGateway RiskEmuLibrary)

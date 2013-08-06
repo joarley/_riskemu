@@ -16,6 +16,7 @@ public:
 	inline bool LoadScript(std::string fileName);
 	inline bool Bind();
 	template<class T> inline bool GetVariableValue(std::string name, T &value);
+	inline std::string GetLastMessage();
 private:
 	inline void LoadScriptFile(std::string fileName, std::string &script);
 	static inline void MessageCallback(const asSMessageInfo *msg, void *param);
@@ -23,7 +24,7 @@ private:
 private:
 	asIScriptEngine *engine;
 	asIScriptModule *module;
-	asSMessageInfo outputMessage;
+	std::string lastMessage;
 	asIScriptContext *context;
 	bool binded;
 };
@@ -38,13 +39,18 @@ ScriptContext::ScriptContext()
 
 	this->engine->RegisterGlobalFunction("string FormatCurrentDateTime(string format)", asFUNCTION(ScriptContext::FormatCurrentDateTime), asCALL_CDECL);
 
-	this->binded = false;
+	this->binded = false;	
 }
 
 ScriptContext::~ScriptContext()
 {	
 	this->context->Release();
 	this->engine->Release();
+}
+
+std::string ScriptContext::GetLastMessage()
+{
+	return this->lastMessage;	
 }
 
 void ScriptContext::LoadScriptFile(std::string fileName, std::string &script)
@@ -62,7 +68,18 @@ void ScriptContext::LoadScriptFile(std::string fileName, std::string &script)
 
 void ScriptContext::MessageCallback(const asSMessageInfo *msg, void *param)
 {
-	((ScriptContext*)param)->outputMessage = *msg;
+	ScriptContext* pthis = ((ScriptContext*)param);
+	const char *type = "ERR ";
+	if( msg->type == asMSGTYPE_WARNING ) 
+		type = "WARN";
+	else if( msg->type == asMSGTYPE_INFORMATION ) 
+		type = "INFO";
+	
+	char tmp[2048];
+	sprintf(tmp, "%s (%d, %d) : %s : %s", msg->section, 
+		msg->row, msg->col, type, msg->message);
+
+	pthis->lastMessage = tmp;
 }
 
 bool ScriptContext::LoadScript(std::string fileName)
