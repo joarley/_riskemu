@@ -17,7 +17,7 @@ using namespace boost::asio::ip;
 class Server;
 class Client;
 
-typedef boost::function<void(Buffer_ptr packet)> ClientPacketReceivedCallback;
+typedef boost::function<void(Client*, Buffer_ptr packet)> ClientPacketReceivedCallback;
 typedef boost::function<void(Client*, const boost::system::error_code& error)> ClientDesconectedCallback;
 
 class Client
