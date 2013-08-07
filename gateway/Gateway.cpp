@@ -45,8 +45,6 @@ bool Gateway::LoadConfig()
 
 	LOG->AddObserver(LOG->CreateLogFile(pathLogfile.c_str(), false));
 
-	LOG->ShowError("teste\n");
-
 	return true;
 }
 

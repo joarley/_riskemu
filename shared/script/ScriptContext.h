@@ -101,7 +101,22 @@ bool ScriptContext::Bind()
 template<class T> bool ScriptContext::GetVariableValue(std::string name, T &value)
 {
 	int idx = this->module->GetGlobalVarIndexByDecl(name.c_str());
-	void* addr = this->module->GetAddressOfGlobalVar(idx);
+	if(idx == asERROR)
+	{
+		this->lastMessage = "The module was not built successfully";
+		return false;
+	}
+	if(idx == asNO_GLOBAL_VAR)
+	{
+		this->lastMessage = "No matching global variable was found";
+		return false;
+	}
+	if(idx == asINVALID_DECLARATION)
+	{
+		this->lastMessage = "The given declaration is invalid";
+		return false;
+	}
+	void* addr = this->module->GetAddressOfGlobalVar(idx);	
 	if(addr == NULL) return false;
 	value =  *(T*)addr;
 	return true;
