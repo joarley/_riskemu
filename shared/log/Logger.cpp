@@ -158,50 +158,38 @@ void Logger::printString(LogFile_ptr file, const char* typeStr, const char* fmt,
 		GetCurrentDateTime(time);
 	}
 
-    m_DefaultLogFile->lock();
-	cprintf(m_DefaultLogFile,
-		"%s"CL_RESET"[%s]: ", typeStr, time);
-    cprintf(m_DefaultLogFile, fmt, argptr);
-    m_DefaultLogFile->unlock();
-
-    vector<LogFile_ptr>::iterator begin = m_Observers.begin();
-    vector<LogFile_ptr>::iterator end = m_Observers.end();
-    while (begin != end)
-	{
-		(*begin)->lock();
-        cprintf(*begin,
-			CL_RED"[%s]"CL_RESET"[%s]: ", typeStr, time);
-        cprintf(*begin, fmt, argptr);
-        (*begin)->unlock();
-        begin++;
-    }
+    file->lock();
+	cprintf(file,
+		CL_RESET"[%s"CL_RESET"][%s]: ", typeStr, time);
+    cprintf(file, fmt, argptr);
+    file->unlock();
 }
 
 void Logger::ShowError(const char* fmt, ...) {
     va_list argptr;
     va_start(argptr, fmt);    
-	printString(CL_RED"[Error]", fmt, argptr);
+	printString(CL_RED"Error", fmt, argptr);
 	va_end(argptr);
 }
 
 void Logger::ShowInfo(const char* fmt, ...) {
     va_list argptr;
     va_start(argptr, fmt);    
-	printString(CL_WHITE"[Info]", fmt, argptr);
+	printString(CL_WHITE"Info", fmt, argptr);
 	va_end(argptr);
 }
 
 void Logger::ShowNotice(const char* fmt, ...) {
     va_list argptr;
     va_start(argptr, fmt);    
-	printString(CL_WHITE"[Notice]", fmt, argptr);
+	printString(CL_WHITE"Notice", fmt, argptr);
 	va_end(argptr);
 }
 
 void Logger::ShowWarning(const char* fmt, ...) {
     va_list argptr;
     va_start(argptr, fmt);    
-	printString(CL_YELLOW"[Warning]", fmt, argptr);
+	printString(CL_YELLOW"Warning", fmt, argptr);
 	va_end(argptr);	
 }
 
@@ -228,28 +216,28 @@ void Logger::ShowMessage(const char* fmt, ...) {
 void Logger::ShowError(LogFile_ptr file, const char* fmt, ...) {
     va_list argptr;
     va_start(argptr, fmt);    
-	printString(file, CL_RED"[Error]", fmt, argptr);
+	printString(file, CL_RED"Error", fmt, argptr);
 	va_end(argptr);	
 }
 
 void Logger::ShowInfo(LogFile_ptr file, const char* fmt, ...) {
     va_list argptr;
     va_start(argptr, fmt);    
-	printString(file, CL_WHITE"[Info]", fmt, argptr);
+	printString(file, CL_WHITE"Info", fmt, argptr);
 	va_end(argptr);
 }
 
 void Logger::ShowNotice(LogFile_ptr file, const char* fmt, ...) {
     va_list argptr;
     va_start(argptr, fmt);    
-	printString(file, CL_WHITE"[Notice]", fmt, argptr);
+	printString(file, CL_WHITE"Notice", fmt, argptr);
 	va_end(argptr);
 }
 
 void Logger::ShowWarning(LogFile_ptr file, const char* fmt, ...) {
 	va_list argptr;
     va_start(argptr, fmt);    
-	printString(file, CL_YELLOW"[Warning]", fmt, argptr);
+	printString(file, CL_YELLOW"Warning", fmt, argptr);
 	va_end(argptr);
 }
 

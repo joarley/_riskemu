@@ -97,27 +97,32 @@ using namespace std;
 class Logger : public Singleton<Logger> {
 public:
     MAKE_SINGLETON(Logger);
-
-    class LogFile : public boost::enable_shared_from_this<LogFile> {
+    class LogFile : public boost::enable_shared_from_this<LogFile>
+	{
     public:
         friend class Logger;
 
-        ~LogFile() {
+        ~LogFile()
+		{
         }
 
-        void Release() {
+        void Release()
+		{
             Logger::GetInstance().ReleaseLogFile(shared_from_this());
         }
 
-        void SetFileDescriptor(LOGFILEDESCRIPTOR fileDescriptor) {
+        void SetFileDescriptor(LOGFILEDESCRIPTOR fileDescriptor)
+		{
             m_fileDescriptor = fileDescriptor;
         }
 
-        LOGFILEDESCRIPTOR GetFileDescriptor() {
+        LOGFILEDESCRIPTOR GetFileDescriptor()
+		{
             return m_fileDescriptor;
         }
 
-        void lock() {
+        void lock()
+		{
             m_Mutex.lock();
         }
 
@@ -125,8 +130,8 @@ public:
             m_Mutex.unlock();
         }
     private:
-
-        LogFile() {
+        LogFile()
+		{
             m_fileDescriptor = INVALID_FILEDESCRIPTOR;
         }
 
@@ -158,9 +163,7 @@ public:
     void ShowInfo(LogFile_ptr file, const char* fmt, ...);
     void ShowNotice(LogFile_ptr file, const char* fmt, ...);
     void ShowWarning(LogFile_ptr file, const char* fmt, ...);
-    void ShowMessage(LogFile_ptr file, const char* fmt, ...);
-
-	
+    void ShowMessage(LogFile_ptr file, const char* fmt, ...);	
 private:
     Logger();
     ~Logger();

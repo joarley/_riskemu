@@ -19,7 +19,7 @@ bool Gateway::LoadConfig()
 	{
 		LOG->ShowError("Error Load \"config/global.config\"\n");
 		LOG->ShowError(context.GetLastMessage().c_str());
-		return false;		
+		return false;
 	}
 	if(!context.LoadScript("config/Gateway.config"))
 	{
@@ -34,6 +34,18 @@ bool Gateway::LoadConfig()
 		LOG->ShowError("%s\n", context.GetLastMessage().c_str());
 		return false;
 	}
+
+	std::string pathLogfile;
+	if(!context.GetVariableValue("string Gateway::Logfile", pathLogfile))
+	{
+		LOG->ShowError("Error get variable Gateway::Logfile\n");
+		LOG->ShowError("%s\n", context.GetLastMessage().c_str());
+		return false;
+	}
+
+	LOG->AddObserver(LOG->CreateLogFile(pathLogfile.c_str(), false));
+
+	LOG->ShowError("teste\n");
 
 	return true;
 }
