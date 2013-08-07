@@ -1,3 +1,4 @@
-AS_DEBUG/**/* 
+AS_DEBUG/**/*
+cache/**/*
+log/**/*
 *.txt.user
-cache/**/* 
