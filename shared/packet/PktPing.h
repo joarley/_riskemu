@@ -7,34 +7,33 @@
 Packet struct
 uint32 PingValue;
 **/
-class PktPing: public PacketBase
+struct PktPing: public PacketBase
 {
-public:
     static const uint8 PktCmd = 0x59;
     static const uint16 PktLen = 16;
 
-	inline PktPing(Buffer_ptr buff, uint32 *pingValue = NULL);
+	inline PktPing(Buffer_ptr buff);
 	inline PktPing(uint32 pingValue);
     inline virtual Buffer_ptr GetBuffer();
+
+	uint32 PingValue;
 };
 
-PktPing::PktPing(Buffer_ptr buff, uint32 *pingValue): 
+PktPing::PktPing(Buffer_ptr buff): 
 	PacketBase(buff)
-{
-	if(pingValue != NULL)
-	{
-		*this->buffer >> *pingValue;
-	}
+{	
+	*this->buffer >> PingValue;
 }
 
 PktPing::PktPing(uint32 pingValue):
-	PacketBase(PktCmd, 0, PktLen)
-{
-	*this->buffer >> pingValue;
+	PacketBase(PktCmd, PktLen), PingValue(pingValue)
+{	
 }
 
 Buffer_ptr PktPing::GetBuffer()
 {
+	this->buffer->SetWriteOffset(PacketBase::PACKET_HEADER_SIZE);
+	*this->buffer << PingValue;
 	return this->ProcessBuffer(false);
 }
 

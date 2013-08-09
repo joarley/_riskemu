@@ -9,6 +9,7 @@
 
 #include "stdtypes.h"
 #include "Packable.h"
+#include "Utils.h"
 
 #include <vector>
 #include <string>
@@ -333,7 +334,7 @@ public:
 
 	inline Buffer& operator>>(char *&value)
 	{
-		size_t size = strlen((char*)&this->buffer[this->readerOffset]) + 1;
+		size_t size = strlen_secure((char*)&this->buffer[this->readerOffset], this->length - this->readerOffset) + 1;
 		if(GetString(value, size, this->readerOffset))
 			this->readerOffset += size;			
 		return *this;

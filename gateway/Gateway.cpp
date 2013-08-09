@@ -1,6 +1,7 @@
 #include "Gateway.h"
 
 #include <script/ScriptContext.h>
+#include "AuthServer.h"
 
 #define STARTUP_CLASS Gateway
 #define MODULE_NAME "Gateway"
@@ -45,9 +46,7 @@ bool Gateway::LoadConfig()
 
 	LOG->AddObserver(LOG->CreateLogFile(pathLogfile.c_str(), false));
 
-
-	this->authListen.SetAcceptCallback(boost::bind(&Gateway::AcceptClient, this, _1, _2));
-	this->laucherListen.SetAcceptCallback(boost::bind(&Gateway::AcceptClient, this, _1, _2));
+	//this->laucherListen.SetAcceptCallback(boost::bind(&Gateway::LaucherAccept, this, _1, _2));
 
 	return true;
 }
@@ -57,16 +56,7 @@ int Gateway::Start()
 	return 0;
 }
 
-void Gateway::AcceptClient(Server *server, Client *client)
+bool Gateway::ValidateUserPass(std::string &user, std::string &pass)
 {
-	if(&this->authListen == server)
-	{
-		client->SetPacketReceivedCallback(
-		this->authClietNotValidated[client].State = AuthClietNotValidated::WaitPing;
-		this->authClietNotValidated[client].ConnectedTime = boost::posix_time::second_clock::local_time();
-	}
-	else
-	{
-
-	}
+	return true;
 }

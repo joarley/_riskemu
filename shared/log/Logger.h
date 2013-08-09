@@ -178,4 +178,6 @@ private:
     vector<LogFile_ptr> m_Observers;
 };
 
+Logger* LOG = Logger::GetInstance_ptr();
+
 #endif //_RISKEMULIBRARY_LOG_LOGGER_H_

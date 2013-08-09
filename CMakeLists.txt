@@ -17,7 +17,7 @@ if(WIN32)
 	add_definitions(-D_WIN32_WINNT=0x0600)
 endif()
 if(MSVC)
-	add_definitions(-D_CRT_SECURE_NO_WARNINGS -DBOOST_ALL_NO_LIB)
+	add_definitions(-DBOOST_ALL_NO_LIB)
 endif()
 
 add_subdirectory(./shared)

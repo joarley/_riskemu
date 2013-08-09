@@ -129,7 +129,7 @@ void Logger::GetCurrentDateTime(char str[])
 	std::basic_stringstream<char> ss;
 	ss.imbue(loc);
 	ss << now;
-	strcpy(str, ss.str().c_str());
+	strcpy_secure(str, ss.str().length() + 1, ss.str().c_str());
 }
 
 void Logger::printString(const char* typeStr, const char* fmt, va_list argptr)
@@ -269,10 +269,10 @@ int Logger::cprintf(LogFile_ptr logfile, const char *fmt, va_list argptr) {
     }
 
     // Print everything to the buffer
-    vsprintf(tempbuf, fmt, argptr);
+	vsprintf_secure(tempbuf, sizeof(tempbuf), fmt, argptr);
 #if defined(_WIN32) || defined(_WIN64)
     if (!is_console(file) && m_PrintAnsiSeq) {
-        WriteFile(file, tempbuf, (DWORD) strlen(tempbuf), &written, 0);
+        WriteFile(file, tempbuf, (DWORD) strlen_secure(tempbuf, sizeof(tempbuf)), &written, 0);
         return 0;
     }
 #else
@@ -501,8 +501,8 @@ int Logger::cprintf(LogFile_ptr logfile, const char *fmt, va_list argptr) {
         }
     }
     if (*p) // write the rest of the buffer
-        if (0 == WriteConsoleA(file, p, (DWORD) strlen(p), &written, 0))
-            WriteFile(file, p, (DWORD) strlen(p), &written, 0);
+        if (0 == WriteConsoleA(file, p, (DWORD) strlen_secure(p, sizeof(tempbuf)), &written, 0))
+            WriteFile(file, p, (DWORD) strlen_secure(p, sizeof(tempbuf)), &written, 0);
 #else
     while ((q = strchr(p, 0x1b)) != NULL) { // find the escape character
         fprintf(file, "%.*s", (int) (q - p), p); // write up to the escape

@@ -30,8 +30,9 @@ void CryptEngine::SetGGCryptParams(byte* ClientSeedKey, byte* ServerSeedKey, byt
 	{
 		delete[] GGKey;
 	}
-	GGKey = new byte[strlen((char*)Key) + 1];
-    strcpy((char*)GGKey, (char*)Key);
+	size_t keylen = strlen_secure((char*)Key, 100) + 1;
+	GGKey = new byte[];
+	strcpy_secure((char*)GGKey, keylen, (char*)Key);
 
 	for (int i = 0; GGKey[i]; i++) 
 	{

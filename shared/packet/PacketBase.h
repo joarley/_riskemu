@@ -9,10 +9,11 @@
 class PacketBase
 {
 public:
-	inline PacketBase(uint8 command, uint32 status, uint16 paketLength);
-    inline PacketBase(uint8 command, uint32 status);
+	inline PacketBase(uint8 command, uint16 paketLength);
+    inline PacketBase(uint8 command);
     inline PacketBase(Buffer_ptr buffer);
 	inline uint32 GetStatus();
+	inline void  SetStatus(uint32 status);
 	inline virtual Buffer_ptr GetBuffer() = 0;
 protected:
 	inline virtual Buffer_ptr ProcessBuffer(bool compress);
@@ -31,18 +32,18 @@ public:
 	inline static uint8 PacketCmd(Buffer_ptr buff);
 };
 
-PacketBase::PacketBase(uint8 command, uint32 status, uint16 paketLength): buffer(new Buffer(paketLength))
+PacketBase::PacketBase(uint8 command, uint16 paketLength): buffer(new Buffer(paketLength))
 {
 	*this->buffer << PACKET_START_BIT << command << (uint16)0
-            << CryptEngine::Cryptkey() << status;
+            << CryptEngine::Cryptkey() << (uint32)0;
     this->buffer->SetWriteOffset(PACKET_HEADER_SIZE);
     this->buffer->SetReaderOffset(PACKET_HEADER_SIZE);
 }
 
-PacketBase::PacketBase(uint8 command, uint32 status): buffer(new Buffer())
+PacketBase::PacketBase(uint8 command): buffer(new Buffer())
 {
 	*this->buffer << PACKET_START_BIT << command << (uint16)0
-            << CryptEngine::Cryptkey() << status;
+            << CryptEngine::Cryptkey() << (uint32)0;
     this->buffer->SetWriteOffset(PACKET_HEADER_SIZE);
     this->buffer->SetReaderOffset(PACKET_HEADER_SIZE);
 }
@@ -72,6 +73,11 @@ uint32 PacketBase::GetStatus()
 	uint32 ret;
 	*this->buffer >> Buffer::FromPosition(ret, 8);
 	return ret;
+}
+
+void  PacketBase::SetStatus(uint32 status)
+{
+	*this->buffer << Buffer::ToPosition(status, 8);
 }
 
 Buffer_ptr PacketBase::ProcessBuffer(bool compress)

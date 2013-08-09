@@ -15,13 +15,9 @@
 #include <string>
 #include <vector>
 
-Logger* LOG;
-
 #ifdef STARTUP_CLASS
 
 int main(int argc, char *argv[]) {
-	LOG = Logger::GetInstance_ptr();
-
 	LOG->ClearDefaultLogFile();
     LOG->ShowMessage(Splash, MODULE_NAME, 0);
 

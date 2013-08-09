@@ -2,6 +2,7 @@
 #define _RISKEMULIBRARY_NETWORK_SERVER_H_
 
 #include "stdtypes.h"
+#include "ServiceContainer.h"
 
 #include <boost/asio.hpp>
 #include <boost/function.hpp>
@@ -25,18 +26,14 @@ public:
     ~Server();
     bool BindAndListen(std::string address, uint16 port);
     inline void SetAcceptCallback(ServerCallback acceptCallback);
-	void RemoveClient(Client *client);
-    void HandleAccept(const boost::system::error_code& error);
+	void HandleAccept(const boost::system::error_code& error);
     void Initialize();
     void Stop();
     void InitAccept();
 private:
-    io_service ioservice;
-    tcp::acceptor acceptor;
-    std::list<Client*> clients;
-    ServerCallback acceptCallback;
-    io_service::work *work;
-    boost::thread thread;
+	ServiceContainer_Ptr service;
+	tcp::acceptor *acceptor;
+	ServerCallback acceptCallback;
     tcp::socket *currentAcceptSocket;
     bool runing;
 };
