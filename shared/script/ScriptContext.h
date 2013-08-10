@@ -4,6 +4,7 @@
 #include <angelscript.h>
 #include "stdtypes.h"
 #include "scriptstdstring/scriptstdstring.h"
+#include "Utils.h"
 #include <boost/date_time.hpp>
 
 #include <string>
@@ -16,6 +17,7 @@ public:
 	inline bool LoadScript(std::string fileName);
 	inline bool Bind();
 	template<class T> inline bool GetVariableValue(std::string name, T &value);
+	inline bool CheckExistVariables(std::vector<const char*> &vars);
 	inline std::string GetLastMessage();
 private:
 	inline void LoadScriptFile(std::string fileName, std::string &script);
@@ -56,7 +58,8 @@ std::string ScriptContext::GetLastMessage()
 void ScriptContext::LoadScriptFile(std::string fileName, std::string &script)
 {
 	script = "";
-	FILE *f = fopen(fileName.c_str(), "rb");
+	FILE *f = NULL;
+	fopen_secure(f, fileName.c_str(), "rb");
 	if(f == NULL) return;
 	fseek(f, 0, SEEK_END);
 	int len = ftell(f);
@@ -76,7 +79,7 @@ void ScriptContext::MessageCallback(const asSMessageInfo *msg, void *param)
 		type = "INFO";
 	
 	char tmp[2048];
-	sprintf(tmp, "%s (%d, %d) : %s : %s", msg->section, 
+	sprintf_secure(tmp, sizeof(tmp),"%s (%d, %d) : %s : %s", msg->section, 
 		msg->row, msg->col, type, msg->message);
 
 	pthis->lastMessage = tmp;
@@ -132,6 +135,26 @@ std::string ScriptContext::FormatCurrentDateTime(std::string format)
 	ss.imbue(loc);
 	ss << now;
 	return ss.str();
+}
+
+bool ScriptContext::CheckExistVariables(std::vector<const char*> &vars)
+{
+	std::vector<const char*>::iterator it = vars.begin();
+	std::string msg;
+
+	while(it != vars.end())
+	{
+		int idx = this->module->GetGlobalVarIndexByDecl(*it);
+		if(idx == asERROR)
+			msg += std::string("\n")  + *it + " -> The module was not built successfully";
+		else if(idx == asNO_GLOBAL_VAR)
+			msg += std::string("\n")  + *it + " -> No matching global variable was found";
+		else if(idx == asINVALID_DECLARATION)
+			msg += std::string("\n")  + *it + " -> The given declaration is invalid";
+		it++;
+	}
+	this->lastMessage = msg;
+	return this->lastMessage.empty();
 }
 
 

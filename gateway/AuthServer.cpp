@@ -4,35 +4,43 @@
 
 #include "Gateway.h"
 
-AuthServer::AuthServer()
+AuthServer::AuthServer(ScriptContext *configuration):
+	configuration(configuration)
 {
-	this->authListen.SetAcceptCallback(boost::bind(&AuthServer::AuthAccept, this, _1, _2));
+	this->authListen.SetAcceptCallback(boost::bind(&AuthServer::UnauthorizedAuthAccept, this, _1, _2));
 }
 
-void AuthServer::AuthAccept(Server *server, Client *client)
+bool AuthServer::Start()
+{
+	uint16 port;
+	std::string address;
+
+	this->configuration->GetVariableValue("string Gateway::AuthServerListen::Address", address);
+	this->configuration->GetVariableValue("uint16 Gateway::AuthServerListen::Port", port);
+
+	return this->authListen.BindAndListen(address, port);
+}
+
+void AuthServer::UnauthorizedAuthAccept(Server *server, Client *client)
 {
 	client->SetPacketReceivedCallback(boost::bind(&AuthServer::UnauthorizedAuthPacketReceive, this, _1, _2));
 	client->SetDesconectedCallback(boost::bind(&AuthServer::UnauthorizedAuthDesconnect, this, _1, _2, _3));
-	this->unauthorizedAuths[client].State = UnauthorizedAuthDetails::WaitPing;
+	this->unauthorizedAuths[client].State = UnauthorizedAuthStatus::WaitPing;
 	this->unauthorizedAuths[client].ConnectionTime = boost::posix_time::second_clock::local_time();	
 }
 
 void AuthServer::UnauthorizedAuthPacketReceive(Client* client, Buffer_ptr packet)
 {
-	switch (PacketBase::PacketCmd(packet))
-	{
-	case PktPing::PktCmd:		
-		UnauthorizedAuthPacketParse_PktPing(client, PktPing(packet));
-	case PktAuthServer::PktCmd:
-		UnauthorizedAuthPacketParse_PktAuthServer(client, PktAuthServer(packet));
-	default:
-		LOG->ShowWarning("Desconnected Unauthorized Auth(%s) error Protocol(Packet %#.2X not expected)",
-				PacketBase::PacketCmd(packet));
-		
-		this->unauthorizedAuths.erase(client);
-		delete client;
-		break;
-	}
+#define FINALIZE BLOCK(INVOKE(this->unauthorizedAuths.erase, client), delete client)
+	PARSE_PACKET(packet)
+		PARSE_CASE(packet, PktPing, ping, "Auth", client, FINALIZE)
+			UnauthorizedAuthPacketParse_PktPing(client, ping);
+		END_PARSE_CASE()
+		PARSE_CASE(packet, PktAuthServer, authServer, "Auth", client, FINALIZE)
+			UnauthorizedAuthPacketParse_PktAuthServer(client, authServer);
+		END_PARSE_CASE()
+	END_PARSE_PACKET(packet, "Auth", client, FINALIZE)
+#undef FINALIZE
 }
 
 void AuthServer::UnauthorizedAuthDesconnect(Client* client, bool error, const std::string& msg)
@@ -49,10 +57,10 @@ void AuthServer::UnauthorizedAuthDesconnect(Client* client, bool error, const st
 
 void AuthServer::UnauthorizedAuthPacketParse_PktPing(Client* client, PktPing &packet)
 {
-	if(this->unauthorizedAuths[client].State == UnauthorizedAuthDetails::WaitPing)
+	if(this->unauthorizedAuths[client].State == UnauthorizedAuthStatus::WaitPing)
 	{
 		client->SendBuffer(PktPing(0).GetBuffer());
-		this->unauthorizedAuths[client].State = UnauthorizedAuthDetails::WaitAuth;
+		this->unauthorizedAuths[client].State = UnauthorizedAuthStatus::WaitAuth;
 	}
 	else
 	{
@@ -66,18 +74,21 @@ void AuthServer::UnauthorizedAuthPacketParse_PktPing(Client* client, PktPing &pa
 
 void AuthServer::UnauthorizedAuthPacketParse_PktAuthServer(Client* client, PktAuthServer &packet)
 {
-	if(this->unauthorizedAuths[client].State == UnauthorizedAuthDetails::WaitAuth)
+	if(this->unauthorizedAuths[client].State == UnauthorizedAuthStatus::WaitAuth)
 	{
 		PktAuthServerAck retPkt;
 
-		if(!this->gateway->ValidateUserPass(packet.User, packet.Pass))
+		if(ValidateUserPass(packet.User, packet.Pass))
 			retPkt.Status = PktAuthServerAck::UserPassIncorrect;			
-		else if(connectedAuths.size() >= 10)
+		else if(this->onlineAuths.size() >= GetMaxAuthConnections())
 			retPkt.Status = PktAuthServerAck::ServerFull;
 		else
 		{
 			retPkt.Status = PktAuthServerAck::Sucess;
 			retPkt.SlotNum = GetFreeSlot(packet.SlotNum);
+
+			this->unauthorizedAuths.erase(client);
+			this->onlineAuths.push_back(new OnlineAuth(client, this));
 		}
 
 		client->SendBuffer(retPkt.GetBuffer());
@@ -86,44 +97,93 @@ void AuthServer::UnauthorizedAuthPacketParse_PktAuthServer(Client* client, PktAu
 
 uint8 AuthServer::GetFreeSlot(uint8 slot)
 {
-	std::list<ConnectedAuth>::iterator it = this->connectedAuths.begin();
-
-	bool found = false;
-
-	while(it != this->connectedAuths.end())
-	{
-		if(it->GetSlot() == slot)
-		{
-			found = true;
-			break;
-		}
-		it++;
+#define FIND_SLOT() \
+	it = this->onlineAuths.begin(); \
+	bool found = false; \
+	while(it != this->onlineAuths.end()) \
+	{ \
+		if((*it)->GetSlot() == slot) \
+		{ \
+			found = true; \
+			break; \
+		} \
+		it++; \
 	}
 
+	std::list<OnlineAuth*>::iterator it;		
+	FIND_SLOT()
 	if(found)
 	{
 		slot = 0;
-
 		while(slot < 10)
-		{
-			it = this->connectedAuths.begin();
-			found = false;
-
-			while(it != this->connectedAuths.end())
-			{
-				if(it->GetSlot() == slot)
-				{
-					found = true;
-					break;
-				}
-				it++;
-			}
-
+		{			
+			FIND_SLOT()
 			if(!found) break;
-
 			slot++;
 		}
 	}
-
 	return slot;
+#undef FIND_SLOT
+}
+
+bool AuthServer::ValidateUserPass(std::string &user, std::string &pass)  const
+{
+	std::string u, p;
+	this->configuration->GetVariableValue("string Global::User", u);
+	this->configuration->GetVariableValue("string Global::Pass", p);	
+	return user == u && pass == p;
+}
+
+uint32 AuthServer::GetMaxAuthConnections() const
+{
+	uint32 max;
+	this->configuration->GetVariableValue("uint32 Gateway::AuthServerListen::MaxAuthConnections", max);
+	return max;
+}
+
+OnlineAuth::OnlineAuth(Client* client, AuthServer *authServer):
+	client(client), authServer(authServer)
+{
+	this->client->SetPacketReceivedCallback(boost::bind(&OnlineAuth::PacketReceive, this, _1, _2));
+	this->client->SetDesconectedCallback(boost::bind(&OnlineAuth::Desconnect, this, _1, _2, _3));
+	this->status = OnlineAuthStatus::WaitDetails;
+}
+
+void OnlineAuth::PacketReceive(Client* client, Buffer_ptr packet)
+{
+	PARSE_PACKET(packet)
+		PARSE_CASE(packet, PktServerDetail, detail, "Auth", client, INVOKE(Close))
+			this->group = detail.Group;
+			this->name = detail.Name;
+			this->address = detail.Address;
+			this->status = OnlineAuthStatus::Connected;
+		END_PARSE_CASE()
+	END_PARSE_PACKET(packet, "Auth", client, INVOKE(Close))
+}
+
+void OnlineAuth::Desconnect(Client* client, bool error, const std::string& msg)
+{
+	if(error)
+	{
+		LOG->ShowError("Auth disconnected with error: %s", msg.c_str());
+	}
+
+	Close();
+}
+
+OnlineAuth::~OnlineAuth()
+{
+	delete this->client;
+}
+
+void OnlineAuth::Close()
+{
+	this->client->Stop();
+	this->authServer->ReleaseAuth(this);
+}
+
+void AuthServer::ReleaseAuth(OnlineAuth *auth)
+{
+	this->onlineAuths.remove(auth);
+	delete auth;
 }

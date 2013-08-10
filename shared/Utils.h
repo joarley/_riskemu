@@ -3,6 +3,7 @@
 
 #include "stdtypes.h"
 #include <cstring>
+#include <cstdio>
 
 static inline uint32 RotateL(uint32 value, int shift) {
 	return (value << shift) | (value >> (sizeof (uint32) * 8 - shift));
@@ -22,6 +23,8 @@ static inline uint32 EndianChange(uint32 value) {
 #define strcpy_secure(dst,size,src) strcpy_s(dst, size, src)
 #define strlen_secure(str, max) strnlen_s(str, max)
 #define vsprintf_secure(dst, size, format, ...) vsprintf_s(dst, size, format, __VA_ARGS__)
+#define sprintf_secure(dst, size, format, ...) sprintf_s(dst, size, format, __VA_ARGS__)
+#define fopen_secure(file, filename, mode) fopen_s(&file, filename, mode)
 #else
 
 #endif

@@ -79,6 +79,7 @@
 #define CL_SPACE                "           "   // space aquivalent of the print messages
 
 #define ISDIGIT(c) (isdigit((unsigned char)(c)))
+#define LOG Logger::GetInstance_ptr()
 
 #if defined(_WIN32) || defined(_WIN64)
 #define is_console(handle) (FILE_TYPE_CHAR==GetFileType(handle))
@@ -177,7 +178,5 @@ private:
     bool m_PrintAnsiSeq;
     vector<LogFile_ptr> m_Observers;
 };
-
-Logger* LOG = Logger::GetInstance_ptr();
 
 #endif //_RISKEMULIBRARY_LOG_LOGGER_H_

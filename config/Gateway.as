@@ -12,6 +12,7 @@ namespace Gateway
 	{
 		string Address = "localhost";
 		uint16 Port = 1808;
+		uint32 MaxAuthConnections = 10;
 	}
 	
 	string Logfile = "./log/LoginServer_" + FormatCurrentDateTime("%Y%m%d%H%M%S") + ".log";

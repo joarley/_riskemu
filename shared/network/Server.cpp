@@ -28,19 +28,12 @@ Server::~Server()
 void Server::Stop()
 {
     this->runing = false;
-
-	this->acceptor->close();    
-    if(this->currentAcceptSocket != NULL)
-    {
-        delete this->currentAcceptSocket;
-        this->currentAcceptSocket = NULL;
-    }
+	this->acceptor->close();
 }
 
 bool Server::BindAndListen(std::string address, uint16 port)
 {
-    if(!this->runing) Initialize();
-
+	Stop();
     boost::system::error_code ec;
     tcp::resolver res(this->service->ioservice);
     std::ostringstream ss;
@@ -65,7 +58,8 @@ bool Server::BindAndListen(std::string address, uint16 port)
 
     this->acceptor->listen(100, ec);
     if(ec) return false;
-    InitAccept();
+	this->runing = true;
+	InitAccept();
     return true;
 }
 

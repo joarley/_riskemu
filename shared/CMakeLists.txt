@@ -11,6 +11,7 @@ set(RISKEMULIBRARY_SRC
 	"./crypt/seed.tab" "./crypt/SeedCipher.cpp" "./crypt/SeedCipher.h"
 	"./Utils.h"
 	"./packet/PktPing.h" "./packet/PktAuthServer.h" "./packet/PktAuthServerAck.h"
+	"./packet/PktServerDetail.h"
 	"./script/ScriptContext.h" "./script/scriptstdstring/scriptstdstring.cpp" 
 	"./script/scriptstdstring/scriptstdstring.h" "./script/scriptstdstring/scriptstdstring_utils.cpp"
 	"./script/scriptarray/scriptarray.cpp" "./script/scriptarray/scriptarray.h"

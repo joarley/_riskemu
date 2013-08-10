@@ -3,33 +3,54 @@
 
 #include <network/Server.h>
 #include <network/Client.h>
+#include <script/ScriptContext.h>
 
 #include <packet/PktPing.h>
 #include <packet/PktAuthServer.h>
 #include <packet/PktAuthServerAck.h>
+#include <packet/PktServerDetail.h>
 
 #include <boost/date_time.hpp>
 
 #include <map>
 #include <list>
 
-class Gateway;
+class AuthServer;
 
-class ConnectedAuth
+namespace OnlineAuthStatus
+{
+	enum Type {
+		Connected,
+		WaitDetails
+	};
+}
+
+namespace UnauthorizedAuthStatus
+{
+	enum Type {
+		WaitPing, WaitAuth
+	};
+}
+
+class OnlineAuth
 {
 public:
-	enum Status {
-		ASS_OK,
-		ASS_WAIT_DETAILS
-	};
+	OnlineAuth(Client* client, AuthServer *authServer);
+	~OnlineAuth();
 
-	void AuthPacketReceive(Client* client, Buffer_ptr packet);
-	void AuthDesconnect(Client* client, bool error, const std::string& msg);
+	void PacketReceive(Client* client, Buffer_ptr packet);
+	void Desconnect(Client* client, bool error, const std::string& msg);
+	void Close();
 
-	inline int8 GetSlot() const;
+	inline OnlineAuthStatus::Type GetStatus() const;
+	inline uint8 GetGroup() const;
+	inline std::string GetName() const;
+	inline uint32 GetAddress() const;
+	inline uint8 GetSlot() const;
 private:
 	Client* client;
-	Status status;
+	AuthServer *authServer;
+	OnlineAuthStatus::Type status;
 	uint8 group;
     string name;
     uint32 address;
@@ -41,36 +62,53 @@ class AuthServer
 public:
 	struct UnauthorizedAuthDetails
 	{
-		enum ClientState
-		{
-			WaitPing, WaitAuth
-		};
-
-		ClientState State;
+		UnauthorizedAuthStatus::Type State;
 		boost::posix_time::ptime ConnectionTime;
 	};
 
-	AuthServer();
+	AuthServer(ScriptContext *configuration);
+	bool Start();
+	void ReleaseAuth(OnlineAuth *auth);
 private:
-	void AuthAccept(Server *server, Client *client);	
+	void UnauthorizedAuthAccept(Server *server, Client *client);	
 	void UnauthorizedAuthPacketReceive(Client* client, Buffer_ptr packet);
 	void UnauthorizedAuthDesconnect(Client* client, bool error, const std::string& msg);
-
 	void UnauthorizedAuthPacketParse_PktPing(Client* client, PktPing &packet);
 	void UnauthorizedAuthPacketParse_PktAuthServer(Client* client, PktAuthServer &packet);	
-
-
+	
+	bool ValidateUserPass(std::string &user, std::string &pass)  const;
+	uint32 GetMaxAuthConnections() const;
 	uint8 GetFreeSlot(uint8 slot);
 
 	Server authListen;
-	std::list<ConnectedAuth> connectedAuths;
+	std::list<OnlineAuth*> onlineAuths;
 	std::map<Client*, UnauthorizedAuthDetails> unauthorizedAuths;	
-	Gateway *gateway;
+	ScriptContext *configuration;
 };
 
-int8 ConnectedAuth::GetSlot() const
+uint8 OnlineAuth::GetSlot() const
 {
 	return this->slot;
+}
+
+OnlineAuthStatus::Type OnlineAuth::GetStatus() const
+{
+	return this->status;
+}
+
+uint8 OnlineAuth::GetGroup() const
+{
+	return this->group;
+}
+
+std::string OnlineAuth::GetName() const
+{
+	return this->name;
+}
+
+uint32 OnlineAuth::GetAddress() const
+{
+	return this->address;
 }
 
 

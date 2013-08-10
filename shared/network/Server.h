@@ -27,7 +27,6 @@ public:
     bool BindAndListen(std::string address, uint16 port);
     inline void SetAcceptCallback(ServerCallback acceptCallback);
 	void HandleAccept(const boost::system::error_code& error);
-    void Initialize();
     void Stop();
     void InitAccept();
 private:

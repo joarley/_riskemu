@@ -61,7 +61,9 @@ void Client::SetDesconectedCallback(ClientDesconectedCallback clientDesconectedC
 
 std::string Client::GetRemoteAddress()
 {
-	return this->socket->remote_endpoint().address().to_string();
+	if(runing)
+		return this->socket->remote_endpoint().address().to_string();
+	return "";
 }
 
 #endif // _RISKEMULIBRARY_NETWORK_CLIENT_H_

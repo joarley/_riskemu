@@ -15,9 +15,11 @@ public:
 	inline uint32 GetStatus();
 	inline void  SetStatus(uint32 status);
 	inline virtual Buffer_ptr GetBuffer() = 0;
+	inline bool HasErrorParse() const;
 protected:
 	inline virtual Buffer_ptr ProcessBuffer(bool compress);
 	Buffer_ptr buffer;
+	bool hasErrorParse;
 public:
 	static const size_t PACKET_HEADER_SIZE = 12;
 	static const uint16 PACKET_TYPE_NORMAL = 0x8000;
@@ -32,7 +34,8 @@ public:
 	inline static uint8 PacketCmd(Buffer_ptr buff);
 };
 
-PacketBase::PacketBase(uint8 command, uint16 paketLength): buffer(new Buffer(paketLength))
+PacketBase::PacketBase(uint8 command, uint16 paketLength): 
+	buffer(new Buffer(paketLength)), hasErrorParse(false)
 {
 	*this->buffer << PACKET_START_BIT << command << (uint16)0
             << CryptEngine::Cryptkey() << (uint32)0;
@@ -40,7 +43,8 @@ PacketBase::PacketBase(uint8 command, uint16 paketLength): buffer(new Buffer(pak
     this->buffer->SetReaderOffset(PACKET_HEADER_SIZE);
 }
 
-PacketBase::PacketBase(uint8 command): buffer(new Buffer())
+PacketBase::PacketBase(uint8 command):
+	buffer(new Buffer()), hasErrorParse(false)
 {
 	*this->buffer << PACKET_START_BIT << command << (uint16)0
             << CryptEngine::Cryptkey() << (uint32)0;
@@ -48,7 +52,8 @@ PacketBase::PacketBase(uint8 command): buffer(new Buffer())
     this->buffer->SetReaderOffset(PACKET_HEADER_SIZE);
 }
 
-PacketBase::PacketBase(Buffer_ptr buffer): buffer(buffer)
+PacketBase::PacketBase(Buffer_ptr buffer): 
+	buffer(buffer), hasErrorParse(false)
 {
 	uint16 packetSize;
     *this->buffer >> Buffer::FromPosition(packetSize, 2);
@@ -151,11 +156,48 @@ size_t PacketBase::PacketBodySize(Buffer_ptr buff)
 		PacketBase::PACKET_HEADER_SIZE;
 }
 
-inline static uint8 PacketCmd(Buffer_ptr buff)
+uint8 PacketBase::PacketCmd(Buffer_ptr buff)
 {
 	uint8 ret;
 	*buff >> Buffer::FromPosition(ret, 1);
 	return ret;
 }
+
+bool PacketBase::HasErrorParse() const
+{
+	return this->hasErrorParse;
+}
+
+#define BLOCK(b1, b2) b1; b2;
+#define INVOKE(f, ...) f(__VA_ARGS__);
+#define CORRECT_PACKET_LEN(c, b) (c::PktLen == 0 || c::PktLen == (b)->Length())
+#define PARSE_PACKET(_BUFFER_) switch (PacketBase::PacketCmd(_BUFFER_)) {
+#define PARSE_CASE(_BUFFER_, _PKT_, _VARIABLE_, _NAMECLIENT_, _CLIENT_, _FINALIZE_BLOCK_) \
+	case _PKT_::PktCmd: { \
+		if(!CORRECT_PACKET_LEN(_PKT_, packet)) \
+		{ \
+			LOG->ShowError("Desconnected "_NAMECLIENT_"(%s) error Protocol, incorrect "#_PKT_" size, expected %d bytes received %d bytes", \
+				(_CLIENT_)->GetRemoteAddress().c_str(), PacketBase::PacketCmd(packet), _PKT_::PktLen, (_BUFFER_)->Length()); \
+			_FINALIZE_BLOCK_ \
+		} \
+		else \
+		{ \
+			_PKT_ _VARIABLE_(_BUFFER_); \
+			if(_VARIABLE_.HasErrorParse()) \
+			{ \
+				LOG->ShowError("Desconnected "_NAMECLIENT_"(%s) error Protocol, "#_PKT_" has parse error", \
+				(_CLIENT_)->GetRemoteAddress().c_str(), PacketBase::PacketCmd(packet)); \
+				_FINALIZE_BLOCK_ \
+				break; \
+			} \
+			else \
+			{ 
+#define END_PARSE_CASE() }}}break;
+#define END_PARSE_PACKET(_PKT_, _NAMECLIENT_, _CLIENT_, _FINALIZE_BLOCK_) \
+	default: \
+		LOG->ShowError("Desconnected "_NAMECLIENT_"(%s) error Protocol(Packet %#.2X not expected)", \
+			(_CLIENT_)->GetRemoteAddress().c_str(), PacketBase::PacketCmd(_PKT_)); \
+		_FINALIZE_BLOCK_ \
+	} \
 
 #endif //_RISKEMULIBRARY_PACKET_PACKETBASE_H_

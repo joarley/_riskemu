@@ -1,8 +1,12 @@
 #ifndef _RISKEMUGATEWAY_GATEWAY_H_
 #define _RISKEMUGATEWAY_GATEWAY_H_
 
+#include <script/ScriptContext.h>
+
 #include <string>
 #include <vector>
+
+#include "AuthServer.h"
 
 class Gateway
 {
@@ -11,8 +15,18 @@ public:
 	bool LoadConfig();
 	int Start();
 
-	bool ValidateUserPass(std::string &user, std::string &pass);
+	inline ScriptContext& GetConfiguration();
 private:
+	ScriptContext configuration;
+	AuthServer authServer;
 };
+
+ScriptContext& Gateway::GetConfiguration() 
+{
+	return this->configuration;
+}
+
+
+
 
 #endif //_RISKEMUGATEWAY_GATEWAY_H_

@@ -10,17 +10,16 @@ using namespace boost::system;
 using namespace boost::asio::ip;
 
 Client::Client():
-	socket(NULL), runing(false), service(new ServiceContainer()),
+	runing(false), service(new ServiceContainer()),
 	receivePackeHeaderBuffer(new Buffer(PacketBase::PACKET_HEADER_SIZE))
 {
-	
+	this->socket = new tcp::socket(this->service->ioservice);	
 }
 
 Client::Client(tcp::socket *socket, ServiceContainer_Ptr service):
 	socket(socket), service(service), 
 	runing(true), receivePackeHeaderBuffer(new Buffer(PacketBase::PACKET_HEADER_SIZE))
-{
-	this->socket = new tcp::socket(this->service->ioservice);
+{	
 }
 
 Client::~Client()
@@ -86,6 +85,14 @@ void Client::InitReceiveBody()
 void Client::HandlerReceiveHeader(std::size_t bytes_transferred, const boost::system::error_code& error)
 {
 	if(!this->runing) return;
+
+	if(error == boost::asio::error::eof)
+	{
+		Stop();
+		if(this->desconectedCallback != NULL)
+			this->desconectedCallback(this, false, "");
+		return;
+	}
 
 	if(error)
 	{
