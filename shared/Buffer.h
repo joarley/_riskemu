@@ -18,6 +18,7 @@
 
 using namespace std;
 
+class Buffer;
 typedef boost::shared_ptr<Buffer> Buffer_ptr;
 
 class Buffer : public boost::enable_shared_from_this<Buffer> {
@@ -359,7 +360,7 @@ public:
 		return *this;
 	}
 
-	inline Buffer& operator>>(const SizedValue<void*&>& value)
+	inline Buffer& operator>>(const SizedValue<void*>& value)
 	{
 		if(GetBytes(value.value, value.size, this->readerOffset))
 			this->readerOffset += value.size;
@@ -533,7 +534,7 @@ private:
         return true;
 	}
 
-	inline bool GetBytes(void *&value, size_t size, size_t offset) {
+	inline bool GetBytes(void *value, size_t size, size_t offset) {
         if (offset + size > this->length) {
             return false;
         }

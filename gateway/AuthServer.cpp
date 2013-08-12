@@ -4,7 +4,7 @@
 
 #include "Gateway.h"
 
-AuthServer::AuthServer(ScriptContext *configuration):
+AuthServer::AuthServer(ScriptContext &configuration):
 	configuration(configuration)
 {
 	this->authListen.SetAcceptCallback(boost::bind(&AuthServer::UnauthorizedAuthAccept, this, _1, _2));
@@ -15,8 +15,8 @@ bool AuthServer::Start()
 	uint16 port;
 	std::string address;
 
-	this->configuration->GetVariableValue("string Gateway::AuthServerListen::Address", address);
-	this->configuration->GetVariableValue("uint16 Gateway::AuthServerListen::Port", port);
+	this->configuration.GetVariableValue("string Gateway::AuthServerListen::Address", address);
+	this->configuration.GetVariableValue("uint16 Gateway::AuthServerListen::Port", port);
 
 	return this->authListen.BindAndListen(address, port);
 }
@@ -31,7 +31,9 @@ void AuthServer::UnauthorizedAuthAccept(Server *server, Client *client)
 
 void AuthServer::UnauthorizedAuthPacketReceive(Client* client, Buffer_ptr packet)
 {
-#define FINALIZE BLOCK(INVOKE(this->unauthorizedAuths.erase, client), delete client)
+#define FINALIZE \
+	BLOCK(INVOKE(this->unauthorizedAuths.erase, client), delete client)
+	
 	PARSE_PACKET(packet)
 		PARSE_CASE(packet, PktPing, ping, "Auth", client, FINALIZE)
 			UnauthorizedAuthPacketParse_PktPing(client, ping);
@@ -40,6 +42,7 @@ void AuthServer::UnauthorizedAuthPacketReceive(Client* client, Buffer_ptr packet
 			UnauthorizedAuthPacketParse_PktAuthServer(client, authServer);
 		END_PARSE_CASE()
 	END_PARSE_PACKET(packet, "Auth", client, FINALIZE)
+
 #undef FINALIZE
 }
 
@@ -99,7 +102,7 @@ uint8 AuthServer::GetFreeSlot(uint8 slot)
 {
 #define FIND_SLOT() \
 	it = this->onlineAuths.begin(); \
-	bool found = false; \
+	found = false; \
 	while(it != this->onlineAuths.end()) \
 	{ \
 		if((*it)->GetSlot() == slot) \
@@ -110,7 +113,9 @@ uint8 AuthServer::GetFreeSlot(uint8 slot)
 		it++; \
 	}
 
-	std::list<OnlineAuth*>::iterator it;		
+	bool found;
+	std::list<OnlineAuth*>::iterator it;
+
 	FIND_SLOT()
 	if(found)
 	{
@@ -123,21 +128,22 @@ uint8 AuthServer::GetFreeSlot(uint8 slot)
 		}
 	}
 	return slot;
+
 #undef FIND_SLOT
 }
 
 bool AuthServer::ValidateUserPass(std::string &user, std::string &pass)  const
 {
 	std::string u, p;
-	this->configuration->GetVariableValue("string Global::User", u);
-	this->configuration->GetVariableValue("string Global::Pass", p);	
+	this->configuration.GetVariableValue("string Global::User", u);
+	this->configuration.GetVariableValue("string Global::Pass", p);	
 	return user == u && pass == p;
 }
 
 uint32 AuthServer::GetMaxAuthConnections() const
 {
 	uint32 max;
-	this->configuration->GetVariableValue("uint32 Gateway::AuthServerListen::MaxAuthConnections", max);
+	this->configuration.GetVariableValue("uint32 Gateway::AuthServerListen::MaxAuthConnections", max);
 	return max;
 }
 

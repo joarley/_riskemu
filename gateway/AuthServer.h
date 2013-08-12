@@ -66,7 +66,7 @@ public:
 		boost::posix_time::ptime ConnectionTime;
 	};
 
-	AuthServer(ScriptContext *configuration);
+	AuthServer(ScriptContext &configuration);
 	bool Start();
 	void ReleaseAuth(OnlineAuth *auth);
 private:
@@ -83,7 +83,7 @@ private:
 	Server authListen;
 	std::list<OnlineAuth*> onlineAuths;
 	std::map<Client*, UnauthorizedAuthDetails> unauthorizedAuths;	
-	ScriptContext *configuration;
+	ScriptContext &configuration;
 };
 
 uint8 OnlineAuth::GetSlot() const

@@ -172,6 +172,7 @@ bool PacketBase::HasErrorParse() const
 #define INVOKE(f, ...) f(__VA_ARGS__);
 #define CORRECT_PACKET_LEN(c, b) (c::PktLen == 0 || c::PktLen == (b)->Length())
 #define PARSE_PACKET(_BUFFER_) switch (PacketBase::PacketCmd(_BUFFER_)) {
+#define PARSE_IGNORE(_PKT_) case _PKT_::PktCmd: break;
 #define PARSE_CASE(_BUFFER_, _PKT_, _VARIABLE_, _NAMECLIENT_, _CLIENT_, _FINALIZE_BLOCK_) \
 	case _PKT_::PktCmd: { \
 		if(!CORRECT_PACKET_LEN(_PKT_, packet)) \
