@@ -2,18 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Media.Imaging;
 
 namespace RylPacketAnalyzer
 {
-    class Destination
+    public class Destination
     {
-        public string Name;
-        public int Port;
-        public DestinationType Type;        
-    }
-
-    enum DestinationType
-    {
-        Server, Client
+        public Guid Id { get; set; }
+        public int Port { get; set; }
+        public string Name { get; set; }
+        public DstType Type { get; set; }        
     }
 }
