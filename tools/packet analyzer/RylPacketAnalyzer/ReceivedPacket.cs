@@ -18,7 +18,7 @@ namespace RylPacketAnalyzer
             }
         }
 
-        public Destination Destination
+        public PacketSource Source
         {
             get
             {

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RylPacketAnalyzer
 {
-    public enum DstType
+    public enum PacketSourceType
     {
         Server,
         Client,

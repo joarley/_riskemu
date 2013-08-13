@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RylPacketAnalyzer
 {
-    public interface PktPart
+    public abstract class PktPart
     {
         string Name { get; set; }
     }

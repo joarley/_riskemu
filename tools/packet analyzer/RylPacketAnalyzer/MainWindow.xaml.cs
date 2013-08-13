@@ -22,35 +22,51 @@ namespace RylPacketAnalyzer
     public partial class MainWindow : Window
     {
         public List<Packet> Packets { get; set; }
+        public List<PacketSource> Sources { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
 
-            Destination d1 = new Destination() { Id = Guid.NewGuid(), Name = "D1"};
-            Destination d2 = new Destination() { Id = Guid.NewGuid(), Name = "D2" };            
+            PacketSource d1 = new PacketSource() { Id = Guid.NewGuid(), Name = "D1"};
+            PacketSource d2 = new PacketSource() { Id = Guid.NewGuid(), Name = "D2", Type=PacketSourceType.Client};                        
 
             List<PktPart> c1 = new List<PktPart>();
 
             StructPart s1 = new StructPart() { Name = "Struct 1", Content = new List<PktPart>() };
+            ForPart f1 = new ForPart { Name = "For 1", Content = new List<PktPart>() };
             IntergerPart i1 = new IntergerPart() { };
             StringPart str1 = new StringPart();
 
             s1.Content.Add(i1);
             s1.Content.Add(i1);
             s1.Content.Add(str1);
+            s1.Content.Add(f1);
+
+            f1.Content.Add(i1);
+            f1.Content.Add(i1);
+            f1.Content.Add(str1);
 
             c1.Add(s1);
             c1.Add(i1);
             c1.Add(i1);
 
-            Packet p1 = new Packet() { Destination = d1, Content = c1 };
-            Packet p2 = new Packet() { Destination = d2, Content = c1 };
+            Packet p1 = new Packet() { Source = d1, Content = c1, Name = "p1" };
+            Packet p2 = new Packet() { Source = d2, Content = c1, Name = "p2" };
+            Packet p3 = new Packet() { Source = d1, Content = c1, Name = "p3" };
+            Packet p4 = new Packet() { Source = d2, Content = c1, Name = "p4" };
+            Packet p5 = new Packet() { Source = d1, Content = c1, Name = "p5" };
+            Packet p6 = new Packet() { Source = d2, Content = c1, Name = "p6" };
+            Packet p7 = new Packet() { Source = d1, Content = c1, Name = "p7" };
+            Packet p8 = new Packet() { Source = d2, Content = c1, Name = "p8" };
 
             Packets = new List<Packet>();
-            Packets.Add(p1); Packets.Add(p2);
+            Sources = new List<PacketSource>();
 
-            tabPacket.Content = new CtrlPacketEdit(Packets);
+            Packets.Add(p1); Packets.Add(p2); Packets.Add(p3); Packets.Add(p4); Packets.Add(p5); Packets.Add(p6); Packets.Add(p7); Packets.Add(p8);
+            Sources.Add(d1); Sources.Add(d2); Sources.Add(new PacketSource() { Id = Guid.NewGuid(), Name = "D3", Type = PacketSourceType.Client });
+
+            tabPacket.Content = new CtrlPacketEdit(Packets, Sources);
         }
     }
 }

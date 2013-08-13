@@ -9,29 +9,113 @@
         <ResourceDictionary>
             <BitmapImage x:Key="client" UriSource="pack://siteoforigin:,,,/img/client.png" />
             <BitmapImage x:Key="server" UriSource="pack://siteoforigin:,,,/img/server.png" />
+            <BitmapImage x:Key="packet" UriSource="pack://siteoforigin:,,,/img/packet.png" />
+            <BitmapImage x:Key="pktpart" UriSource="pack://siteoforigin:,,,/img/pktpart.png" />
+            <Style x:Key="imageCS">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=Type}" Value="{x:Static self:PacketSourceType.Server}">
+                        <Setter Property="Image.Source" Value="{StaticResource server}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Path=Type}" Value="{x:Static self:PacketSourceType.Client}">
+                        <Setter Property="Image.Source" Value="{StaticResource client}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    
+    <Grid>
+        <TreeView Name="pktTree">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type self:PacketSource}">
+                    <WrapPanel MouseDown="SourcePacket_MouseDown">
+                        <WrapPanel.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="New Source" Click="addSource_Click"/>
+                                <MenuItem Header="New Packet" Click="addPacket_Click"/>                            
+                                <MenuItem Header="Delete Source" Click="deleteSource_Click"/>
+                            </ContextMenu>
+                        </WrapPanel.ContextMenu>
+                        <Image Style="{StaticResource imageCS}" />
+                        <TextBlock Text="{Binding Path=Port}" Margin="5 0 0 0" />
+                        <TextBlock Text=" - " />
+                        <TextBlock Text="{Binding Path=Name}" />
+                    </WrapPanel>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type self:Packet}">
+                    <WrapPanel>
+                        <Image Source="{StaticResource packet}" />
+                        <TextBlock Text="{Binding Path=Name}" Margin="5 0 0 0" />
+                    </WrapPanel>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type self:PktPart}">
+                    <WrapPanel>
+                        <Image Source="{StaticResource pktpart}" />
+                        <TextBlock Text="{Binding Path=Name}" Margin="5 0 0 0" />
+                    </WrapPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+            <TreeView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="New Source" Click="addSource_Click"/>                    
+                </ContextMenu>
+            </TreeView.ContextMenu>            
+        </TreeView>
 
-    <TreeView Name="pktTree">
-        <TreeView.Resources>            
-            <HierarchicalDataTemplate DataType="{x:Type self:Destination}">
-                <WrapPanel>
-                    <Image>                        
-                        <Image.Triggers>
-                            <DataTrigger Binding="{Binding Type}" Value="0">
-                                <Setter Property="Image.Source" Value="{StaticResource server}" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Type}" Value="1">
-                                <Setter Property="Image.Source" Value="{StaticResource client}" />
-                            </DataTrigger>
-                        </Image.Triggers>
-                    </Image>
-                    <TextBlock Text="{Binding Path=Port}" />
-                    <TextBlock Text=" - " />
-                    <TextBlock Text="{Binding Path=Name}" />
-                </WrapPanel>
-            </HierarchicalDataTemplate>
-        </TreeView.Resources>
-    </TreeView>
+        <self:ModalContentPresenter x:Name="pktEdit">
+            <self:ModalContentPresenter.ModalContent>
+                <TextBlock></TextBlock>
+            </self:ModalContentPresenter.ModalContent>
+        </self:ModalContentPresenter>
+
+        <self:ModalContentPresenter x:Name="sourceEdit">
+            <self:ModalContentPresenter.ModalContent>
+                <Border  Width="400" Height="250" Background="#aaa" BorderBrush="Black" BorderThickness="2" Padding="25">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="45" />
+                            <RowDefinition Height="35" />
+                            <RowDefinition Height="35" />
+                            <RowDefinition Height="35" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <WrapPanel HorizontalAlignment="Center" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0">
+                            <TextBlock FontWeight="Bold" FontSize="16">Source</TextBlock>
+                        </WrapPanel>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold">Origin</TextBlock>
+                        <ComboBox SelectedValue="{Binding Path=Type}" SelectedValuePath="Tag" Grid.Row="1" Grid.Column="1"  Margin="5 0 0 10">
+                            <ComboBoxItem Tag="{x:Static self:PacketSourceType.Server}">
+                                <WrapPanel>
+                                    <Image Source="{StaticResource server}" />
+                                    <TextBlock Margin="10 0 0 0">Server</TextBlock>
+                                </WrapPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem Tag="{x:Static self:PacketSourceType.Client}">
+                                <WrapPanel>
+                                    <Image Source="{StaticResource client}" />
+                                    <TextBlock Margin="10 0 0 0">Client</TextBlock>
+                                </WrapPanel>
+                            </ComboBoxItem>
+                        </ComboBox>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold">Port</TextBlock>
+                        <TextBox  Grid.Row="2" Grid.Column="1" Text="{Binding Path=Port}"  Margin="5 0 0 10" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" FontWeight="Bold">Name</TextBlock>
+                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=Name}" Margin="5 0 0 10" />
+                        
+                        <WrapPanel Grid.Column="1" Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                            <Button Click="SaveSource_Click" Width="100">Save</Button>
+                            <Button Click="CancelEditSource" Width="100">Cancel</Button>
+                        </WrapPanel>
+                    </Grid>
+                </Border>
+            </self:ModalContentPresenter.ModalContent>
+        </self:ModalContentPresenter>
+    </Grid>
 </UserControl>

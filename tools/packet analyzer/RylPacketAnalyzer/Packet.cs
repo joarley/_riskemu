@@ -7,7 +7,8 @@ namespace RylPacketAnalyzer
 {
     public class Packet
     {
-        public Destination Destination { get; set; }
+        public PacketSource Source { get; set; }
         public List<PktPart> Content { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -3,29 +3,29 @@
   <Class Name="RylPacketAnalyzer.Packet">
     <Position X="4.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Packet.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="Destination" />
+      <Property Name="Source" />
     </ShowAsAssociation>
   </Class>
   <Class Name="RylPacketAnalyzer.ReceivedPacket">
     <Position X="7.5" Y="2.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAIAAAAACA=</HashCode>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAACA=</HashCode>
       <FileName>ReceivedPacket.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Packet" />
-      <Property Name="Destination" />
+      <Property Name="Source" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="RylPacketAnalyzer.Destination">
+  <Class Name="RylPacketAnalyzer.PacketSource">
     <Position X="4.5" Y="2.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQACAAAAAAAAQAAAAAAAAA=</HashCode>
-      <FileName>Destination.cs</FileName>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQACAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>PacketSource.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Type" />
@@ -37,7 +37,6 @@
       <HashCode>AAAAAAAAAAAAgAAAAAAAAAQAAAAAAQAAAAAAAAAAAAA=</HashCode>
       <FileName>IntergerPart.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="RylPacketAnalyzer.StringPart">
     <Position X="7.5" Y="0.5" Width="1.5" />
@@ -45,12 +44,11 @@
       <HashCode>AACAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAABAAAA=</HashCode>
       <FileName>StringPart.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="RylPacketAnalyzer.ForPart">
     <Position X="5.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAEAAAAAAAQAAAAAAQAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAEAgAAAAAAAAAAAAQAAAEAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ForPart.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -61,23 +59,16 @@
   <Class Name="RylPacketAnalyzer.StructPart">
     <Position X="9.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>StructPart.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Interface Name="RylPacketAnalyzer.PktPart">
-    <Position X="0.5" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>PktPart.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Enum Name="RylPacketAnalyzer.DstType">
+  <Enum Name="RylPacketAnalyzer.SourceType">
     <Position X="0.5" Y="2.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAQ=</HashCode>
-      <FileName>DstType.cs</FileName>
+      <FileName>SourceType.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />
