@@ -12,6 +12,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "db", "db", "{02A459A2-53F5-
 		db\packets.sdf = db\packets.sdf
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RylPacketAnalyzerV2", "RylPacketAnalyzerV2\RylPacketAnalyzerV2.csproj", "{A7124BE5-DC6C-4470-84F6-CED77C0519DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RylPacketAnalyzerV2.Test", "RylPacketAnalyzerV2.Test\RylPacketAnalyzerV2.Test.csproj", "{EEED1A1B-AFEF-4B98-8489-AD8EBAF1A833}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +56,26 @@ Global
 		{AAFBFEFA-CCA9-40F4-9FAD-77C73E20A3B4}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{AAFBFEFA-CCA9-40F4-9FAD-77C73E20A3B4}.Release|Win32.ActiveCfg = Release|Win32
 		{AAFBFEFA-CCA9-40F4-9FAD-77C73E20A3B4}.Release|Win32.Build.0 = Release|Win32
+		{A7124BE5-DC6C-4470-84F6-CED77C0519DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7124BE5-DC6C-4470-84F6-CED77C0519DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7124BE5-DC6C-4470-84F6-CED77C0519DE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A7124BE5-DC6C-4470-84F6-CED77C0519DE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A7124BE5-DC6C-4470-84F6-CED77C0519DE}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{A7124BE5-DC6C-4470-84F6-CED77C0519DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7124BE5-DC6C-4470-84F6-CED77C0519DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7124BE5-DC6C-4470-84F6-CED77C0519DE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A7124BE5-DC6C-4470-84F6-CED77C0519DE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A7124BE5-DC6C-4470-84F6-CED77C0519DE}.Release|Win32.ActiveCfg = Release|Any CPU
+		{EEED1A1B-AFEF-4B98-8489-AD8EBAF1A833}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEED1A1B-AFEF-4B98-8489-AD8EBAF1A833}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEED1A1B-AFEF-4B98-8489-AD8EBAF1A833}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EEED1A1B-AFEF-4B98-8489-AD8EBAF1A833}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EEED1A1B-AFEF-4B98-8489-AD8EBAF1A833}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{EEED1A1B-AFEF-4B98-8489-AD8EBAF1A833}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEED1A1B-AFEF-4B98-8489-AD8EBAF1A833}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEED1A1B-AFEF-4B98-8489-AD8EBAF1A833}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EEED1A1B-AFEF-4B98-8489-AD8EBAF1A833}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EEED1A1B-AFEF-4B98-8489-AD8EBAF1A833}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

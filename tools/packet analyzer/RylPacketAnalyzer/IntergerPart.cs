@@ -9,6 +9,5 @@ namespace RylPacketAnalyzer
     {
         public bool IsUnsigned { get; set; }
         public int Size { get; set; }
-        public string Name { get; set; }
     }
 }

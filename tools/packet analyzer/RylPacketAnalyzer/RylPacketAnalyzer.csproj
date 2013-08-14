@@ -83,6 +83,7 @@
     <Compile Include="CtrlReceivePacket.xaml.cs">
       <DependentUpon>CtrlReceivePacket.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FloatPart.cs" />
     <Compile Include="ModalContentPresenter.cs" />
     <Compile Include="StructPart.cs" />
     <Page Include="CtrlPacketEdit.xaml">
@@ -223,6 +224,17 @@
     <None Include="img\pktpart.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\forpart.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="img\structpart.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="PacketView\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

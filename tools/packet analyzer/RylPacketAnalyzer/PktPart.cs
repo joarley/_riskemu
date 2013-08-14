@@ -7,6 +7,6 @@ namespace RylPacketAnalyzer
 {
     public abstract class PktPart
     {
-        string Name { get; set; }
+        public string Name { get; set; }
     }
 }

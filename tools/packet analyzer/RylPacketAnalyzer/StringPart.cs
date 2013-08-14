@@ -9,6 +9,6 @@ namespace RylPacketAnalyzer
     {
         public bool Fixed { get; set; }
         public int FixedSize { get; set; }
-        public string Name { get; set; }
+        public IntergerPart SizeInt  { get; set; }
     }
 }

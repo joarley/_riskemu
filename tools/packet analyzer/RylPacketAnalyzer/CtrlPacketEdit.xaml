@@ -11,6 +11,8 @@
             <BitmapImage x:Key="server" UriSource="pack://siteoforigin:,,,/img/server.png" />
             <BitmapImage x:Key="packet" UriSource="pack://siteoforigin:,,,/img/packet.png" />
             <BitmapImage x:Key="pktpart" UriSource="pack://siteoforigin:,,,/img/pktpart.png" />
+            <BitmapImage x:Key="forpart" UriSource="pack://siteoforigin:,,,/img/forpart.png" />
+            <BitmapImage x:Key="structpart" UriSource="pack://siteoforigin:,,,/img/structpart.png" />
             <Style x:Key="imageCS">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Path=Type}" Value="{x:Static self:PacketSourceType.Server}">
@@ -25,14 +27,19 @@
     </UserControl.Resources>
     <Grid>
         <TreeView Name="pktTree">
-            <TreeView.Resources>
+            <TreeView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="New Source" Click="AddSource_Click"/>
+                </ContextMenu>
+            </TreeView.ContextMenu>
+            <TreeView.Resources>                
                 <HierarchicalDataTemplate DataType="{x:Type self:PacketSource}">
                     <WrapPanel MouseDown="SourcePacket_MouseDown">
                         <WrapPanel.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="New Source" Click="addSource_Click"/>
-                                <MenuItem Header="New Packet" Click="addPacket_Click"/>                            
-                                <MenuItem Header="Delete Source" Click="deleteSource_Click"/>
+                                <MenuItem Header="New Source" Click="AddSource_Click"/>
+                                <MenuItem Header="New Packet" Click="AddPacket_Click"/>                            
+                                <MenuItem Header="Delete Source" Click="DeleteSource_Click"/>
                             </ContextMenu>
                         </WrapPanel.ContextMenu>
                         <Image Style="{StaticResource imageCS}" />
@@ -42,7 +49,20 @@
                     </WrapPanel>
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type self:Packet}">
-                    <WrapPanel>
+                    <WrapPanel MouseDown="Packet_MouseDown">
+                        <WrapPanel.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="New Packet" Click="AddPacket_Click"/>
+                                <MenuItem Header="Packet Part" Click="AddPacketPart_Click">
+                                    <MenuItem Header="New Interger" />
+                                    <MenuItem Header="New Floating Point" />
+                                    <MenuItem Header="New String" />
+                                    <MenuItem Header="New Struct" />
+                                    <MenuItem Header="New For" />
+                                </MenuItem>
+                                <MenuItem Header="Delete Packet" Click="DeletePacket_Click"/>
+                            </ContextMenu>
+                        </WrapPanel.ContextMenu>
                         <Image Source="{StaticResource packet}" />
                         <TextBlock Text="{Binding Path=Name}" Margin="5 0 0 0" />
                     </WrapPanel>
@@ -53,17 +73,52 @@
                         <TextBlock Text="{Binding Path=Name}" Margin="5 0 0 0" />
                     </WrapPanel>
                 </HierarchicalDataTemplate>
-            </TreeView.Resources>
-            <TreeView.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="New Source" Click="addSource_Click"/>                    
-                </ContextMenu>
-            </TreeView.ContextMenu>            
+                <HierarchicalDataTemplate DataType="{x:Type self:StructPart}">
+                    <WrapPanel>
+                        <Image Source="{StaticResource structpart}" />
+                        <TextBlock Text="{Binding Path=Name}" Margin="5 0 0 0" />
+                    </WrapPanel>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type self:ForPart}">
+                    <WrapPanel>
+                        <Image Source="{StaticResource forpart}" />
+                        <TextBlock Text="{Binding Path=Name}" Margin="5 0 0 0" />
+                    </WrapPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>            
         </TreeView>
 
-        <self:ModalContentPresenter x:Name="pktEdit">
+        <self:ModalContentPresenter x:Name="packetEdit">
             <self:ModalContentPresenter.ModalContent>
-                <TextBlock></TextBlock>
+                <Border  Width="400" Height="250" Background="#aaa" BorderBrush="Black" BorderThickness="2" Padding="25">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="65" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="45" />
+                            <RowDefinition Height="35" />
+                            <RowDefinition Height="35" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <WrapPanel HorizontalAlignment="Center" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0">
+                            <TextBlock FontWeight="Bold" FontSize="16">Packet</TextBlock>
+                        </WrapPanel>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold">Name</TextBlock>
+                        <TextBox  Grid.Row="1" Grid.Column="1" Text="{Binding Path=Name}"  Margin="5 0 0 10" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold">Command</TextBlock>
+                        <TextBox  Grid.Row="2" Grid.Column="1" Text="{Binding Path=Command}"  Margin="5 0 0 10" />
+
+                        <WrapPanel Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                            <Button Click="SavePacket_Click" Width="100">Save</Button>
+                            <Button Click="CancelEditPacket_Click" Width="100">Cancel</Button>
+                        </WrapPanel>
+                    </Grid>
+                </Border>
             </self:ModalContentPresenter.ModalContent>
         </self:ModalContentPresenter>
 
@@ -92,7 +147,7 @@
                             <ComboBoxItem Tag="{x:Static self:PacketSourceType.Server}">
                                 <WrapPanel>
                                     <Image Source="{StaticResource server}" />
-                                    <TextBlock Margin="10 0 0 0">Server</TextBlock>
+                                    <TextBlock Margin="10 0 0 0">Server</TextBlock>                                    
                                 </WrapPanel>
                             </ComboBoxItem>
                             <ComboBoxItem Tag="{x:Static self:PacketSourceType.Client}">
@@ -112,6 +167,40 @@
                         <WrapPanel Grid.Column="1" Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Bottom">
                             <Button Click="SaveSource_Click" Width="100">Save</Button>
                             <Button Click="CancelEditSource" Width="100">Cancel</Button>
+                        </WrapPanel>
+                    </Grid>
+                </Border>
+            </self:ModalContentPresenter.ModalContent>
+        </self:ModalContentPresenter>
+
+        <self:ModalContentPresenter x:Name="stringEdit">
+            <self:ModalContentPresenter.ModalContent>
+                <Border  Width="400" Height="250" Background="#aaa" BorderBrush="Black" BorderThickness="2" Padding="25">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="65" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="45" />
+                            <RowDefinition Height="35" />
+                            <RowDefinition Height="35" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <WrapPanel HorizontalAlignment="Center" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0">
+                            <TextBlock FontWeight="Bold" FontSize="16">Packet</TextBlock>
+                        </WrapPanel>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold">Name</TextBlock>
+                        <TextBox  Grid.Row="1" Grid.Column="1" Text="{Binding Path=Name}"  Margin="5 0 0 10" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold">Command</TextBlock>
+                        <TextBox  Grid.Row="2" Grid.Column="1" Text="{Binding Path=Command}"  Margin="5 0 0 10" />
+
+                        <WrapPanel Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                            <Button Click="SavePacket_Click" Width="100">Save</Button>
+                            <Button Click="CancelEditPacket_Click" Width="100">Cancel</Button>
                         </WrapPanel>
                     </Grid>
                 </Border>

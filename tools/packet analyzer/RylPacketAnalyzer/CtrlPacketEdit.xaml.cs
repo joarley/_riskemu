@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -31,9 +32,10 @@ namespace RylPacketAnalyzer
             InitializeComponent();
 
             if (packets != null)
-                AssembleTree();            
+                AssembleTree();
         }
 
+        #region AssembleTree
         private void AssembleTree()
         {
             pktTree.Items.Clear();
@@ -49,7 +51,7 @@ namespace RylPacketAnalyzer
                     TreeViewItem p = new TreeViewItem() { Header = i };
                     AssembleNode(p, i.Content);
                     root.Items.Add(p);
-                }                
+                }
                 sources.Add(root);
             }
 
@@ -76,6 +78,9 @@ namespace RylPacketAnalyzer
             }
         }
 
+        #endregion
+
+        #region SourcePacket
         private void SourcePacket_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount >= 2)
@@ -96,9 +101,9 @@ namespace RylPacketAnalyzer
         private void SaveSource_Click(object sender, RoutedEventArgs e)
         {
             sourceEdit.HideModalContent();
-            PacketSource src = (PacketSource)(sender as FrameworkElement).DataContext;           
+            PacketSource src = (PacketSource)(sender as FrameworkElement).DataContext;
 
-            var ori = Sources.FirstOrDefault(x=>x.Id == src.Id);
+            var ori = Sources.FirstOrDefault(x => x.Id == src.Id);
             if (ori == null)
             {
                 Sources.Add(src);
@@ -114,15 +119,10 @@ namespace RylPacketAnalyzer
 
         private void CancelEditSource(object sender, RoutedEventArgs e)
         {
-            sourceEdit.HideModalContent();            
+            sourceEdit.HideModalContent();
         }
 
-        private void addPacket_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void deleteSource_Click(object sender, RoutedEventArgs e)
+        private void DeleteSource_Click(object sender, RoutedEventArgs e)
         {
             PacketSource src = (PacketSource)(sender as FrameworkElement).DataContext;
 
@@ -136,11 +136,84 @@ namespace RylPacketAnalyzer
             Packets.RemoveAll(x => x.Source.Id == src.Id);
         }
 
-        private void addSource_Click(object sender, RoutedEventArgs e)
+        private void AddSource_Click(object sender, RoutedEventArgs e)
         {
             PacketSource src = new PacketSource();
             sourceEdit.DataContext = src;
-            sourceEdit.ShowModalContent();            
+            sourceEdit.ShowModalContent();
         }
+
+        #endregion
+
+        #region Packet
+        private void AddPacket_Click(object sender, RoutedEventArgs e)
+        {
+            Packet pkt = new Packet();
+            object dc = (sender as FrameworkElement).DataContext;
+            if (dc is PacketSource) pkt.Source = dc as PacketSource;
+            if (dc is Packet) pkt.Source = (dc as Packet).Source;
+
+            packetEdit.DataContext = pkt;
+            packetEdit.ShowModalContent();
+        }
+
+        private void DeletePacket_Click(object sender, RoutedEventArgs e)
+        {
+            Packet src = (Packet)(sender as FrameworkElement).DataContext;
+            var items = pktTree.Items.Cast<TreeViewItem>().First(x => x.Header == src.Source);
+            var item = items.Items.Cast<TreeViewItem>().First(x => x.Header == src);
+            items.Items.Remove(item);
+            Packets.Remove(src);
+        }
+
+        private void SavePacket_Click(object sender, RoutedEventArgs e)
+        {
+            packetEdit.HideModalContent();
+            Packet src = (Packet)(sender as FrameworkElement).DataContext;
+
+            var ori = Packets.FirstOrDefault(x => x.Id == src.Id);
+            if (ori == null)
+            {
+                Packets.Add(src);
+                pktTree.Items.Cast<TreeViewItem>().
+                    First(x => (x.Header as PacketSource).Id == src.Source.Id).
+                    Items.Add(new TreeViewItem() { Header = src });
+            }
+            else
+            {
+                ori.Name = src.Name;
+                ori.Command = src.Command;
+            }
+        }
+
+        private void CancelEditPacket_Click(object sender, RoutedEventArgs e)
+        {
+            packetEdit.HideModalContent();
+        }
+
+        private void Packet_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+            if (e.ClickCount >= 2)
+            {
+                Packet src = (Packet)(sender as FrameworkElement).DataContext;
+                Packet edit = new Packet();
+                edit.Id = src.Id;
+                edit.Name = src.Name;
+                edit.Command = src.Command;
+
+                packetEdit.DataContext = edit;
+                packetEdit.ShowModalContent();
+            }
+        }
+
+        #endregion
+
+        #region PacketPart
+        private void AddPacketPart_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        #endregion
     }
 }

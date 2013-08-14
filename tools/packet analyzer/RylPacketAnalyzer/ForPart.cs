@@ -5,11 +5,9 @@ using System.Text;
 
 namespace RylPacketAnalyzer
 {
-    public class ForPart : PktPart, ContainerPart
+    public class ForPart : ContainerPart
     {
         public int SizeFixed { get; set; }
         public IntergerPart SizeIntergerPart { get; set; }
-        public List<PktPart> Content { get; set; }
-        public string Name { get; set; }
     }
 }

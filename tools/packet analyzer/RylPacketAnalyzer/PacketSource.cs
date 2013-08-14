@@ -16,54 +16,10 @@ namespace RylPacketAnalyzer
         string name;
         PacketSourceType type;
 
-        public Guid Id
-        {
-            get
-            {
-                return id;
-            }
-            set
-            {
-                id = value;
-                OnPropertyChanged("Id");
-            }
-        }
-        public int Port
-        {
-            get
-            {
-                return port;
-            }
-            set
-            {
-                port = value;
-                OnPropertyChanged("Port");
-            }
-        }
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                name = value;
-                OnPropertyChanged("Name");
-            }
-        }
-        public PacketSourceType Type
-        {
-            get
-            {
-                return type;
-            }
-            set
-            {
-                type = value;
-                OnPropertyChanged("Type");
-            }
-        }
+        public Guid Id { get { return id; } set { SetField(ref id, value, "Id"); } }
+        public int Port { get { return port; } set { SetField(ref port, value, "Port"); } }
+        public string Name { get { return name; } set { SetField(ref name, value, "Name"); } }
+        public PacketSourceType Type { get { return type; } set { SetField(ref type, value, "Type"); } }
 
         public PacketSource()
         {
@@ -76,6 +32,13 @@ namespace RylPacketAnalyzer
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(pn));
             }
+        }
+
+        void SetField<T>(ref T field, T value, string propertyName)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return;
+            field = value;
+            OnPropertyChanged(propertyName);
         }
     }
 }

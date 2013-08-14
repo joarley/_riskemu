@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace RylPacketAnalyzer
 {
-    public interface ContainerPart
+    public class ContainerPart : PktPart
     {
-        List<PktPart> Content { get; set; }
+        public List<PktPart> Content { get; set; }
     }
 }
