@@ -8,9 +8,9 @@
 #include <main.h>
 
 Gateway::Gateway(std::vector<std::string> params):
-	authServer(&configuration)
+	authServer(configuration)
 {
-	
+
 }
 
 bool Gateway::LoadConfig()

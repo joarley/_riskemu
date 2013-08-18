@@ -1,8 +1,8 @@
 ﻿namespace RylPacketAnalyzerV2.Model.Packet.Parts
 {
-    public class ForPart : ContainerPart
+    public class StringPart : PacketPart
     {
         public IntergerPart IntergerPartSize;
-        public int Size;
+        public int Size;        
     }
 }

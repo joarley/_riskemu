@@ -2,5 +2,7 @@
 {
     public class IntergerPart : PacketPart
     {
+        public bool IsUnsigned {get;set;}
+        public IntergerPartPrecision Precision { get; set; }
     }
 }

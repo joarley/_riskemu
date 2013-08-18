@@ -63,19 +63,28 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\NetworkComunication\EmittedPacket.cs" />
+    <Compile Include="Infrastructure\CloseTabItem.cs" />
+    <Compile Include="Model\NetworkComunication\AnalizerSession.cs" />
+    <Compile Include="Model\NetworkComunication\PacketEmitted.cs" />
     <Compile Include="Model\NetworkComunication\PacketEmitter.cs" />
     <Compile Include="Model\NetworkComunication\SourceAddress.cs" />
     <Compile Include="Model\NetworkComunication\SourceAddressType.cs" />
     <Compile Include="Model\Packet\Packet.cs" />
     <Compile Include="Model\Packet\PacketPart.cs" />
+    <Compile Include="Model\Packet\Parts\StrinPart.cs" />
     <Compile Include="Model\Packet\Parts\FloatPart.cs" />
+    <Compile Include="Model\Packet\Parts\FloatPartPrecision.cs" />
     <Compile Include="Model\Packet\Parts\IntergerPart.cs" />
     <Compile Include="Model\Packet\Parts\ContainerPart.cs" />
     <Compile Include="Model\Packet\Parts\ForPart.cs" />
+    <Compile Include="Model\Packet\Parts\IntergerPartPrecision.cs" />
     <Compile Include="Model\Packet\Parts\StructPart.cs" />
     <Compile Include="RylPacketAnalyzerBootstrapper .cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\NetworkAnalyzeViewModel.cs" />
+    <Compile Include="Views\NetworkAnalyzeView.xaml.cs">
+      <DependentUpon>NetworkAnalyzeView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -95,7 +104,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Model\Domain.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -108,6 +116,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NetworkAnalyzeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

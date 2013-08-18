@@ -2,5 +2,6 @@
 {
     public class FloatPart : PacketPart
     {
+        public FloatPartPrecision Precision { get; set; }
     }
 }

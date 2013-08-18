@@ -1,13 +1,18 @@
 ﻿namespace RylPacketAnalyzerV2.ViewModels
 {
-    using System.Windows;
     using Caliburn.Micro;
+    using System;
+    using System.Collections.Generic;
+    using System.Windows;
+    using System.Windows.Controls;
 
-    class MainViewModel : PropertyChangedBase
+    class MainViewModel : Conductor<IScreen>.Collection.OneActive
     {
-        public void Teste()
+        public MainViewModel()
         {
-            MessageBox.Show("teste");
+            ActivateItem(new NetworkAnalyzeViewModel() { CloseButtonVisibility = Visibility.Collapsed, DisplayName="Network Analyze"});
+            ActivateItem(new NetworkAnalyzeViewModel() { CloseButtonVisibility = Visibility.Hidden, DisplayName = "Network Analyze" });
+            ActivateItem(new NetworkAnalyzeViewModel() { CloseButtonVisibility = Visibility.Visible, DisplayName = "Network Analyze" });
         }
     }
 }
