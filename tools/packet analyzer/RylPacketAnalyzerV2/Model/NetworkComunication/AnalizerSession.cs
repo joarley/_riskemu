@@ -8,6 +8,6 @@ namespace RylPacketAnalyzerV2.Model.NetworkComunication
 {
     public class AnalizerSession
     {
-        public List<PacketEmitted> PacketEmitteds;
+        public List<PacketEmitted> PacketEmitted;
     }
 }

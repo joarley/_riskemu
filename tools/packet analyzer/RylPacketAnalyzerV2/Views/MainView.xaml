@@ -67,7 +67,8 @@
                         <TextBlock Text="{Binding DisplayName}" Margin="0 0 5 0" />
                         <Button Content="X" Width="15" Height="15" FontWeight="UltraBold"
                                 Background="#9f00 " FontSize="10" Foreground="White"
-                                Visibility="{Binding CloseButtonVisibility}" Style="{StaticResource CircleButton}"/>
+                                Visibility="{Binding CloseVisibility}" Style="{StaticResource CircleButton}"
+                                cal:Message.Attach="CloseTab($dataContext)"/>
                     </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>

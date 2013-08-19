@@ -3,7 +3,7 @@ namespace RylPacketAnalyzerV2.Model.NetworkComunication
 {
     public class SourceAddress
     {
-        public Guid Id { get; private set; }
+        public Guid Id { get; set; }
         public int Port { get; set; }
         public SourceAddressType Type { get; set; }
 

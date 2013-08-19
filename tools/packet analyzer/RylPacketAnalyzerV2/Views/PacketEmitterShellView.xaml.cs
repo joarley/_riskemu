@@ -2,9 +2,9 @@
 {
     using System.Windows.Controls;
 
-    public partial class NetworkAnalyzeView : UserControl
+    public partial class PacketEmitterShellView : UserControl
     {
-        public NetworkAnalyzeView()
+        public PacketEmitterShellView()
         {
             InitializeComponent();
         }

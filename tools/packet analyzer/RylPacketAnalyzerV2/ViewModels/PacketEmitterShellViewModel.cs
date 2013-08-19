@@ -2,13 +2,13 @@
 {
     using System.Collections.ObjectModel;
 
-    class NetworkAnalyzeViewModel: Infrastructure.ScreenWithCloseVisibility
+    class PacketEmitterShellViewModel: Infrastructure.ScreenWithCloseVisibility
     {
         public ObservableCollection<Model.NetworkComunication.PacketEmitter> PacketEmitters { get; set; }
 
-        public NetworkAnalyzeViewModel(ObservableCollection<Model.NetworkComunication.PacketEmitter> packetEmitters)
+        public PacketEmitterShellViewModel(ObservableCollection<Model.NetworkComunication.PacketEmitter> packetEmitters)
         {
             PacketEmitters = packetEmitters;
-        }        
+        }
     }
 }

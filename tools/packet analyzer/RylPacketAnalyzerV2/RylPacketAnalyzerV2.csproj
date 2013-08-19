@@ -63,7 +63,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Infrastructure\CloseTabItem.cs" />
+    <Compile Include="Infrastructure\ScreenWithCloseVisibility.cs" />
     <Compile Include="Model\NetworkComunication\AnalizerSession.cs" />
     <Compile Include="Model\NetworkComunication\PacketEmitted.cs" />
     <Compile Include="Model\NetworkComunication\PacketEmitter.cs" />
@@ -82,8 +82,15 @@
     <Compile Include="RylPacketAnalyzerBootstrapper .cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\NetworkAnalyzeViewModel.cs" />
+    <Compile Include="ViewModels\PacketEmitterShellViewModel.cs" />
+    <Compile Include="Views\MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\NetworkAnalyzeView.xaml.cs">
       <DependentUpon>NetworkAnalyzeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PacketEmitterShellView.xaml.cs">
+      <DependentUpon>PacketEmitterShellView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +127,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NetworkAnalyzeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PacketEmitterShellView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
