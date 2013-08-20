@@ -6,36 +6,59 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              xmlns:RylPacketAnalyzerV2.Model.NetworkComunication="clr-namespace:RylPacketAnalyzerV2.Model.NetworkComunication"
-             xmlns:RylPacketAnalyzerV2.Model.Packet="clr-namespace:RylPacketAnalyzerV2.Model.Packet">
+             xmlns:RylPacketAnalyzerV2.Model.Packet="clr-namespace:RylPacketAnalyzerV2.Model.Packet"
+             xmlns:cal="http://www.caliburnproject.org">
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Menu>
+            <Menu.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </Menu.ItemsPanel>
 
-        <TreeView x:Name="PacketEmitters">
-            <TreeView.ItemContainerStyle>
-                <Style TargetType="{x:Type TreeViewItem}">
-                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
-                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-                    <Setter Property="FontWeight" Value="Normal" />
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="FontWeight" Value="Bold" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </TreeView.ItemContainerStyle>
+            <MenuItem x:Name="AddPacketEmmiter" Header="Add Packet Emmiter" />
+            <MenuItem x:Name="EditPacketEmmiter" Header="Edit Packet Emmiter" />
+            <MenuItem x:Name="DeletePacketEmmiter" Header="Delete Packet Emmiter" />
+            <Separator />
+            <MenuItem x:Name="AddPacket" Header="Add Packet" />
+            <MenuItem x:Name="EditPacket"  Header="Edit Packet" />
+            <MenuItem x:Name="DeletePacket" Header="Delete Packet" />
+        </Menu>
 
+        <TreeView x:Name="PacketEmitters" Grid.Column="1" cal:Message.Attach="[Event SelectedItemChanged] = [Action SetSelectedItem($this.SelectedItem)]">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.NetworkComunication:PacketEmitter}" ItemsSource="{Binding EmitPackets}">
-                    <WrapPanel>
-                        <TextBlock>Teste 1</TextBlock>
+                    <WrapPanel Margin="2">
+                        <Image Margin="0 0 5 0">
+                            <Image.Style>
+                                <Style>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=Source.Type}" Value="{x:Static RylPacketAnalyzerV2.Model.NetworkComunication:SourceAddressType.Server}">
+                                            <Setter Property="Image.Source" Value="pack://application:,,,/img/server.png" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Source.Type}" Value="{x:Static RylPacketAnalyzerV2.Model.NetworkComunication:SourceAddressType.Client}">
+                                            <Setter Property="Image.Source" Value="pack://application:,,,/img/client.png" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <TextBlock Text="{Binding Path=Source.Port}" />
+                        <TextBlock Text=" - " />
+                        <TextBlock Text="{Binding Path=Name}" />
                     </WrapPanel>
                 </HierarchicalDataTemplate>
 
-                <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.Packet:PacketPart}"  ItemsSource="{Binding Parts}">
-                    <WrapPanel>
-                        <TextBlock>Teste 2</TextBlock>
+                <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.Packet:Packet}">
+                    <WrapPanel Margin="2">
+                        <Image Margin="0 0 5 0" Source="pack://application:,,,/img/packet.png" />
+                        <TextBlock Text="{Binding Path=Command, StringFormat=0x{0:X2}}" />
+                        <TextBlock Text=" - " />
+                        <TextBlock Text="{Binding Path=Name}" />
                     </WrapPanel>
                 </HierarchicalDataTemplate>
             </TreeView.Resources>

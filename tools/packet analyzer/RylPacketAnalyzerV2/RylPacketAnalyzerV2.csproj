@@ -80,6 +80,7 @@
     <Compile Include="Model\Packet\Parts\IntergerPartPrecision.cs" />
     <Compile Include="Model\Packet\Parts\StructPart.cs" />
     <Compile Include="RylPacketAnalyzerBootstrapper .cs" />
+    <Compile Include="ViewModels\PacketEditViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\NetworkAnalyzeViewModel.cs" />
     <Compile Include="ViewModels\PacketEmitterShellViewModel.cs" />
@@ -88,6 +89,9 @@
     </Compile>
     <Compile Include="Views\NetworkAnalyzeView.xaml.cs">
       <DependentUpon>NetworkAnalyzeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PacketEditView.xaml.cs">
+      <DependentUpon>PacketEditView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PacketEmitterShellView.xaml.cs">
       <DependentUpon>PacketEmitterShellView.xaml</DependentUpon>
@@ -130,12 +134,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\PacketEditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\PacketEmitterShellView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="img\client.png" />
+    <Resource Include="img\forpart.png" />
+    <Resource Include="img\packet.png" />
+    <Resource Include="img\pktpart.png" />
+    <Resource Include="img\server.png" />
+    <Resource Include="img\structpart.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

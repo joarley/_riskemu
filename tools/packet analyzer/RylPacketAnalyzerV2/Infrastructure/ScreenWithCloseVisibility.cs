@@ -16,5 +16,10 @@
                 NotifyOfPropertyChange(() => CloseVisibility);
             }
         }
+
+        public virtual bool CanClose()
+        {
+            return true;
+        }
     }
 }
