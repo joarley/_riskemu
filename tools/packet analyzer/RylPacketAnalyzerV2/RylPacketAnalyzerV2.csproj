@@ -74,7 +74,7 @@
     <Compile Include="Model\NetworkComunication\SourceAddressType.cs" />
     <Compile Include="Model\Packet\Packet.cs" />
     <Compile Include="Model\Packet\PacketPart.cs" />
-    <Compile Include="Model\Packet\Parts\StrinPart.cs" />
+    <Compile Include="Model\Packet\Parts\StringPart.cs" />
     <Compile Include="Model\Packet\Parts\FloatPart.cs" />
     <Compile Include="Model\Packet\Parts\FloatPartPrecision.cs" />
     <Compile Include="Model\Packet\Parts\IntergerPart.cs" />
