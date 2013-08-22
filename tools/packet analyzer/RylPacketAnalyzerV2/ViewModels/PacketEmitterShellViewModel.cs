@@ -6,7 +6,7 @@
     using System.Linq;
     using Caliburn.Micro;
 
-    class PacketEmitterShellViewModel: Infrastructure.ScreenWithCloseVisibility
+    class PacketEmitterShellViewModel : Screen
     {
         object selectedItem;
 
@@ -57,27 +57,7 @@
             throw new Exception();
         }
 
-        public class ProcessEdit: IResult
-        {
-
-            public event EventHandler<ResultCompletionEventArgs> Completed;
-
-            public void Execute(ActionExecutionContext context)
-            {
-                try
-                {
-                    
-                }
-                catch (Exception e)
-                {
-                    Completed(this, new ResultCompletionEventArgs { Error = e });
-                }
-
-                Completed(this, new ResultCompletionEventArgs());
-            }
-        }
-
-        public IEnumerable<IResult> AddPacket()
+        public void AddPacket()
         {
             var currrentEmitter = SelectedItem is Model.NetworkComunication.PacketEmitter ?
                 SelectedItem as Model.NetworkComunication.PacketEmitter :
@@ -85,13 +65,13 @@
 
             Model.Packet.Packet newPacket = new Model.Packet.Packet();
 
-            PacketEditViewModel edit = new PacketEditViewModel(newPacket);
-
-            yield return new ProcessEdit();
+            var edit = new PacketEditViewModel(newPacket);
         }
 
         public void EditPacket()
         {
+            var edit = new PacketEditViewModel(selectedItem as Model.Packet.Packet);
+            ConductorParent.ActivateItem(new Infrastructure.ScreenWithCloseVisibilityViewModel(edit));
         }
 
         public void DeletePacket()

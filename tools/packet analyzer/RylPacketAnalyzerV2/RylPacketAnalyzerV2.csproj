@@ -63,7 +63,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Infrastructure\ScreenWithCloseVisibility.cs" />
+    <Compile Include="Infrastructure\ScreenWithCloseVisibilityView.xaml.cs">
+      <DependentUpon>ScreenWithCloseVisibilityView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\ScreenWithCloseVisibilityViewModel.cs" />
     <Compile Include="Model\NetworkComunication\AnalizerSession.cs" />
     <Compile Include="Model\NetworkComunication\PacketEmitted.cs" />
     <Compile Include="Model\NetworkComunication\PacketEmitter.cs" />
@@ -126,6 +129,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Infrastructure\ScreenWithCloseVisibilityView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

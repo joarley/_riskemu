@@ -4,7 +4,7 @@
     using System.Windows;
     using Caliburn.Micro;
 
-    class MainViewModel : Conductor<Infrastructure.ScreenWithCloseVisibility>.Collection.OneActive
+    class MainViewModel : Conductor<IScreen>.Collection.OneActive
     {
         public ObservableCollection<Model.NetworkComunication.PacketEmitter> PacketEmitters { get; set; }
 
@@ -12,6 +12,7 @@
         {
             PacketEmitters = new ObservableCollection<Model.NetworkComunication.PacketEmitter>();
 
+            #region Initialize Test
             PacketEmitters.Add(new Model.NetworkComunication.PacketEmitter()
                 {
                     EmitPackets = new ObservableCollection<Model.Packet.Packet>
@@ -31,21 +32,11 @@
                 {
                     Source = new Model.NetworkComunication.SourceAddress() { Type = Model.NetworkComunication.SourceAddressType.Server }
                 });
+            #endregion
 
-            Items.AddRange(
-                new Infrastructure.ScreenWithCloseVisibility[] 
-                {
-                    new NetworkAnalyzeViewModel(PacketEmitters) { CloseVisibility = Visibility.Collapsed, DisplayName = "Network Analyze" },
-                    new PacketEmitterShellViewModel(PacketEmitters, this) { CloseVisibility = Visibility.Collapsed, DisplayName = "Packets" }
-                });
-
+            Items.Add(new NetworkAnalyzeViewModel(PacketEmitters) { DisplayName = "Network Analyze" });
+            Items.Add(new PacketEmitterShellViewModel(PacketEmitters, this) { DisplayName = "Packets" });
             ActivateItem(Items[0]);
-        }
-
-        public void CloseTab(Infrastructure.ScreenWithCloseVisibility item)
-        {
-            if (item.CanClose())
-                Items.Remove(item);
         }
     }
 }
