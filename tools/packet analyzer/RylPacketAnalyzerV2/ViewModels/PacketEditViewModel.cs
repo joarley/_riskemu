@@ -9,35 +9,27 @@
 
     class PacketEditViewModel : Screen
     {
-        public Packet Packet;
+        public Packet Packet { get; set; }
+        public Packet BindedPacket { get; set; }
 
         public bool Saved { get; private set; }
-
-        public byte Command { get; set; }
-        public string Name { get; set; }
-        public ObservableCollection<PacketPart> Content { get; set; }
 
         public PacketEditViewModel(Packet packet)
         {
             Packet = packet;
-            Command = packet.Command;
-            Name = packet.Name;
-            Content = new ObservableCollection<PacketPart>();
-            foreach (var psrc in packet.Content)
-            {
-                PacketPart pdest = (PacketPart)Activator.CreateInstance(psrc.GetType());
-                psrc.CopyTo(ref pdest);
-                Content.Add(psrc);
-            }
         }
 
         public void Save()
         {
-            Packet.Command = Command;
-            Packet.Name = Name;
-            Packet.Content = Content;
+            CopyFromTo(Packet, BindedPacket);
             Saved = true;
             TryClose();
+        }
+
+        private void CopyFromTo(Packet from, Packet to)
+        {
+            BindedPacket.Id = Packet.Id;
+            BindedPacket.Name = Packet.Name;
         }
 
         public void Cancel()

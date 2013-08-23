@@ -18,8 +18,8 @@
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
 
-            <MenuItem Header="Save" />
-            <MenuItem Header="Cancel" />
+            <MenuItem x:Name="Save" Header="Save" />
+            <MenuItem x:Name="Cancel" Header="Cancel" />
             <Separator />
             <MenuItem Header="Add Packet Part" />
             <MenuItem Header="Edit Packet Part" />
@@ -37,12 +37,19 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
+            <Grid.BindingGroup>
+                <BindingGroup NotifyOnValidationError="True">
+                    
+                </BindingGroup>
+            </Grid.BindingGroup>
+            
             <Label Grid.Column="0" Grid.Row="0" Margin="6">Command</Label>
             <Label Grid.Column="0" Grid.Row="1" Margin="6">Name</Label>
 
-            <TextBox x:Name="Command" Grid.Column="1" Grid.Row="0" Margin="6" />
-            <TextBox x:Name="Name" Grid.Column="1" Grid.Row="1" Margin="6" />
 
+            <TextBox Grid.Column="1" Grid.Row="0" Margin="6" Text="{Binding Path=Packet.Command}"/>
+            <TextBox Grid.Column="1" Grid.Row="1" Margin="6" Text="{Binding Path=Packet.Name}" />
+            
             <TreeView x:Name="Content" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Margin="6">
                 
             </TreeView>

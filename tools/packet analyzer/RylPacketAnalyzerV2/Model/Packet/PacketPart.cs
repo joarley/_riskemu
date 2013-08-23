@@ -8,7 +8,5 @@
         public int Order { get; set; }
         public string Name { get; set; }
         public string Notes { get; set; }
-
-        public virtual void CopyTo(ref PacketPart part);
     }
 }
