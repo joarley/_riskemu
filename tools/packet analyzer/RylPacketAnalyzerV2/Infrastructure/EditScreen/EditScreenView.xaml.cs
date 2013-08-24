@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RylPacketAnalyzerV2.Infrastructure
+namespace RylPacketAnalyzerV2.Infrastructure.EditScreen
 {
     /// <summary>
-    /// Interaction logic for ScreenWithCloseVisibilityView.xaml
+    /// Interaction logic for EditScreenView.xaml
     /// </summary>
-    public partial class ScreenWithCloseVisibilityView : UserControl
+    public partial class EditScreenView : UserControl
     {
-        public ScreenWithCloseVisibilityView()
+        public EditScreenView()
         {
             InitializeComponent();
         }

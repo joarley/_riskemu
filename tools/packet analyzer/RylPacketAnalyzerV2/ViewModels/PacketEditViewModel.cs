@@ -1,42 +1,60 @@
 ﻿namespace RylPacketAnalyzerV2.ViewModels
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using Caliburn.Micro;
     using RylPacketAnalyzerV2.Model.Packet;
-    using RylPacketAnalyzerV2.Model.Packet.Parts;
 
     class PacketEditViewModel : Screen
     {
-        public Packet Packet { get; set; }
-        public Packet BindedPacket { get; set; }
+        Packet Packet { get; set; }
+
+        public Guid PacketId { get; set; }
+        public byte PacketCommand { get; set; }
+        public string PacketName { get; set; }
+        public ObservableCollection<IPacketPart> PacketContent { get; set; }
 
         public bool Saved { get; private set; }
 
+        public PacketEditViewModel()
+        {
+            Create();
+        }
+
         public PacketEditViewModel(Packet packet)
         {
+            Load(packet);
+        }
+
+        public void Create()
+        {
+            Load(new Packet());
+        }
+
+        private void Load(Packet packet)
+        {
             Packet = packet;
+            PacketId = Packet.Id;
+            PacketCommand = Packet.Command;
+            PacketName = Packet.Name;
+            PacketContent = Packet.Content;            
         }
 
         public void Save()
         {
-            CopyFromTo(Packet, BindedPacket);
-            Saved = true;
-            TryClose();
-        }
+            Packet.Id = PacketId;
+            Packet.Command = PacketCommand;
+            Packet.Name = PacketName;
+            Packet.Content = PacketContent;
 
-        private void CopyFromTo(Packet from, Packet to)
-        {
-            BindedPacket.Id = Packet.Id;
-            BindedPacket.Name = Packet.Name;
+            Saved = true;
+            TryClose();            
         }
 
         public void Cancel()
         {
-
             Saved = false;
-            TryClose();
+            TryClose(true);
         }
 
         public override void CanClose(System.Action<bool> callback)

@@ -68,7 +68,7 @@
                             <Style x:Key="ButtonCloseVisibility" BasedOn="{StaticResource CircleButton}" TargetType="Button">
                                 <Setter Property="Visibility" Value="Collapsed" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Type}" Value="{x:Type RylPacketAnalyzerV2.Infrastructure:ScreenWithCloseVisibilityViewModel}">
+                                    <DataTrigger Binding="{Binding Type}" Value="{x:Type RylPacketAnalyzerV2.Infrastructure:ScreenWithCloseVisibility}">
                                         <Setter Property="Visibility" Value="{Binding CloseVisibility}" />
                                     </DataTrigger>                                    
                                 </Style.Triggers>

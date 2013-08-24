@@ -38,6 +38,7 @@
       <HintPath>..\packages\Caliburn.Micro.1.5.2\lib\net45\Caliburn.Micro.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.1.5.2\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -53,6 +54,24 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.AvalonDock">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.0.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.0.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.0.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.0.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.0.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.0.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -63,26 +82,37 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Infrastructure\ScreenWithCloseVisibilityView.xaml.cs">
-      <DependentUpon>ScreenWithCloseVisibilityView.xaml</DependentUpon>
+    <Compile Include="Infrastructure\Behaviour\TextBoxBehaviour.cs" />
+    <Compile Include="Infrastructure\Converter\HexStringConverter.cs" />
+    <Compile Include="Infrastructure\EditScreen\EditScreenView.xaml.cs">
+      <DependentUpon>EditScreenView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\ScreenWithCloseVisibilityViewModel.cs" />
+    <Compile Include="Infrastructure\EditScreen\EditScreenViewModel.cs" />
+    <Compile Include="Infrastructure\IMessageBox.cs" />
+    <Compile Include="Infrastructure\IRootWindow.cs" />
+    <Compile Include="Infrastructure\MessageBoxOption.cs" />
+    <Compile Include="Infrastructure\MessageBox\MessageBoxView.xaml.cs">
+      <DependentUpon>MessageBoxView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\MessageBox\MessageBoxViewModel.cs" />
+    <Compile Include="Infrastructure\ScreenWithCloseVisibility.cs" />
     <Compile Include="Model\NetworkComunication\AnalizerSession.cs" />
     <Compile Include="Model\NetworkComunication\PacketEmitted.cs" />
     <Compile Include="Model\NetworkComunication\PacketEmitter.cs" />
     <Compile Include="Model\NetworkComunication\SourceAddress.cs" />
     <Compile Include="Model\NetworkComunication\SourceAddressType.cs" />
     <Compile Include="Model\Packet\Packet.cs" />
-    <Compile Include="Model\Packet\PacketPart.cs" />
+    <Compile Include="Model\Packet\IPacketPart.cs" />
     <Compile Include="Model\Packet\Parts\StringPart.cs" />
     <Compile Include="Model\Packet\Parts\FloatPart.cs" />
     <Compile Include="Model\Packet\Parts\FloatPartPrecision.cs" />
     <Compile Include="Model\Packet\Parts\IntergerPart.cs" />
-    <Compile Include="Model\Packet\Parts\ContainerPart.cs" />
+    <Compile Include="Model\Packet\Parts\IContainerPart.cs" />
     <Compile Include="Model\Packet\Parts\ForPart.cs" />
     <Compile Include="Model\Packet\Parts\IntergerPartPrecision.cs" />
     <Compile Include="Model\Packet\Parts\StructPart.cs" />
     <Compile Include="RylPacketAnalyzerBootstrapper .cs" />
+    <Compile Include="Infrastructure\IShell.cs" />
     <Compile Include="ViewModels\PacketEditViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\NetworkAnalyzeViewModel.cs" />
@@ -129,7 +159,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Infrastructure\ScreenWithCloseVisibilityView.xaml">
+    <Page Include="Infrastructure\EditScreen\EditScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Infrastructure\MessageBox\MessageBoxView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -158,6 +192,7 @@
     <Resource Include="img\server.png" />
     <Resource Include="img\structpart.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

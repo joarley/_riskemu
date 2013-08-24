@@ -4,7 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="450">
+             d:DesignHeight="300" d:DesignWidth="450"
+             xmlns:RylPacketAnalyzerV2.Model.Packet="clr-namespace:RylPacketAnalyzerV2.Model.Packet"
+             xmlns:RylPacketAnalyzerV2.Infrastructure.Behaviour="clr-namespace:RylPacketAnalyzerV2.Infrastructure.Behaviour"
+             xmlns:RylPacketAnalyzerV2.Infrastructure.Converter="clr-namespace:RylPacketAnalyzerV2.Infrastructure.Converter"
+             xmlns:RylPacketAnalyzerV2.Model.Packet.Parts="clr-namespace:RylPacketAnalyzerV2.Model.Packet.Parts">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
@@ -20,6 +24,7 @@
 
             <MenuItem x:Name="Save" Header="Save" />
             <MenuItem x:Name="Cancel" Header="Cancel" />
+            <MenuItem x:Name="Delete" Header="Delete" />
             <Separator />
             <MenuItem Header="Add Packet Part" />
             <MenuItem Header="Edit Packet Part" />
@@ -47,11 +52,31 @@
             <Label Grid.Column="0" Grid.Row="1" Margin="6">Name</Label>
 
 
-            <TextBox Grid.Column="1" Grid.Row="0" Margin="6" Text="{Binding Path=Packet.Command}"/>
-            <TextBox Grid.Column="1" Grid.Row="1" Margin="6" Text="{Binding Path=Packet.Name}" />
-            
-            <TreeView x:Name="Content" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Margin="6">
-                
+            <TextBox x:Name="PacketCommand" Grid.Column="1" Grid.Row="0" Margin="6" MaxLength="3" 
+                     RylPacketAnalyzerV2.Infrastructure.Behaviour:TextBoxBehaviour.KeepCursorPosition="true"
+                     
+                     />
+            <TextBox x:Name="PacketName" Grid.Column="1" Grid.Row="1" Margin="6" />
+
+            <TreeView x:Name="PacketContent" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Margin="6">
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.Packet.Parts:StructPart}" ItemsSource="{Binding Content}">
+                        <TextBlock>Struct</TextBlock>
+                    </HierarchicalDataTemplate>
+                    <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.Packet.Parts:ForPart}" ItemsSource="{Binding Content}">
+                        <TextBlock>For</TextBlock>
+                    </HierarchicalDataTemplate>
+
+                    <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.Packet.Parts:FloatPart}">
+                        <TextBlock>Float</TextBlock>
+                    </HierarchicalDataTemplate>
+                    <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.Packet.Parts:IntergerPart}">
+                        <TextBlock>Interger</TextBlock>
+                    </HierarchicalDataTemplate>
+                    <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.Packet.Parts:StringPart}">
+                        <TextBlock>String</TextBlock>
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
             </TreeView>
         </Grid>
     </Grid>

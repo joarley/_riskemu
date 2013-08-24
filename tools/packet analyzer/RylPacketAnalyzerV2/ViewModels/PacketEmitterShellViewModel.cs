@@ -17,7 +17,7 @@
         public bool CanAddPacketEmmiter { get { return true; } }
         public bool CanEditPacketEmmiter { get { return SelectedItem is Model.NetworkComunication.PacketEmitter; } }
         public bool CanDeletePacketEmmiter { get { return SelectedItem is Model.NetworkComunication.PacketEmitter; } }
-        public IConductor ConductorParent;
+        public Infrastructure.IRootWindow rootWindow;
 
         public object SelectedItem
         {
@@ -36,10 +36,10 @@
         }
         
 
-        public PacketEmitterShellViewModel(ObservableCollection<Model.NetworkComunication.PacketEmitter> packetEmitters, IConductor parent)
+        public PacketEmitterShellViewModel(ObservableCollection<Model.NetworkComunication.PacketEmitter> packetEmitters, Infrastructure.IRootWindow rootWindow)
         {
             PacketEmitters = packetEmitters;
-            ConductorParent = parent;
+            this.rootWindow = rootWindow;
         }
 
         public void SetSelectedItem(object item)
@@ -57,21 +57,31 @@
             throw new Exception();
         }
 
-        public void AddPacket()
+        public IEnumerable<IResult> AddPacket()
         {
             var currrentEmitter = SelectedItem is Model.NetworkComunication.PacketEmitter ?
                 SelectedItem as Model.NetworkComunication.PacketEmitter :
                 PacketEmitters.First(x => x.EmitPackets.Contains(SelectedItem as Model.Packet.Packet));
-
             Model.Packet.Packet newPacket = new Model.Packet.Packet();
 
             var edit = new PacketEditViewModel(newPacket);
+
+            var res = rootWindow.ShowEditScreen(edit);
+            res.Completed += new EventHandler<ResultCompletionEventArgs>(new Action<object, ResultCompletionEventArgs>(
+                (sender, e) => {
+                    if (!e.WasCancelled && e.Error == null)
+                    {
+                        if (edit.Saved) currrentEmitter.EmitPackets.Add(newPacket);
+                    }
+                }));
+
+            yield return res;            
         }
 
-        public void EditPacket()
+        public IEnumerable<IResult> EditPacket()
         {
-            var edit = new PacketEditViewModel(selectedItem as Model.Packet.Packet);
-            ConductorParent.ActivateItem(new Infrastructure.ScreenWithCloseVisibilityViewModel(edit));
+            yield return rootWindow.
+                ShowEditScreen(new PacketEditViewModel(selectedItem as Model.Packet.Packet));
         }
 
         public void DeletePacket()
