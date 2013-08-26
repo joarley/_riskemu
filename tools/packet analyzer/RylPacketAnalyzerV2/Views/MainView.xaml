@@ -5,58 +5,7 @@
              Title="Ryl Packet Analyzer"
              xmlns:RylPacketAnalyzerV2.Infrastructure="clr-namespace:RylPacketAnalyzerV2.Infrastructure">
     <Window.Resources>
-        <Style x:Key="CircleButtonFocusVisual">
-            <Setter Property="Control.Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Control}">
-                        <Grid Margin="8">
-                            <Ellipse
-                    Name="r1"
-                    Stroke="Black"
-                    StrokeDashArray="2 2"
-                    StrokeThickness="1"/>
-                            <Border
-                    Name="border"
-                    Width="{TemplateBinding ActualWidth}"
-                    Height="{TemplateBinding ActualHeight}"
-                    BorderThickness="1"
-                    CornerRadius="2"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style x:Key="CircleButton" TargetType="Button">
-            <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="Margin" Value="0"/>
-            <Setter Property="FocusVisualStyle" Value="{StaticResource CircleButtonFocusVisual}"/>
-            <Setter Property="Background" Value="#FF6DB4EF"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Grid>
-                            <Ellipse Fill="{TemplateBinding Background}"/>
-                            <Ellipse x:Name="back" Fill="#0000"/>
-                            <ContentPresenter x:Name="content" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Grid>
-
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="back" Property="Fill">
-                                    <Setter.Value>
-                                        <LinearGradientBrush StartPoint="0.3,0" EndPoint="0.7,1">
-                                            <GradientStop Offset="0" Color="#50FFFFFF"/>
-                                            <GradientStop Offset="0.5" Color="#00FFFFFF"/>
-                                            <GradientStop Offset="1" Color="#50FFFFFF"/>
-                                        </LinearGradientBrush>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <ResourceDictionary Source="pack://application:,,,/Style/Style.xaml" />
     </Window.Resources>
     
     <Grid>

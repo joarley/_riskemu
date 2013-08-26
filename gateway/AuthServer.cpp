@@ -5,10 +5,7 @@
 #include "Gateway.h"
 
 AuthServer::AuthServer(ScriptContext &configuration):
-	configuration(configuration)
-{
-	this->authListen.SetAcceptCallback(boost::bind(&AuthServer::UnauthorizedAuthAccept, this, _1, _2));
-}
+	configuration(configuration) { }
 
 bool AuthServer::Start()
 {
@@ -18,6 +15,7 @@ bool AuthServer::Start()
 	this->configuration.GetVariableValue("string Gateway::AuthServerListen::Address", address);
 	this->configuration.GetVariableValue("uint16 Gateway::AuthServerListen::Port", port);
 
+	this->authListen.SetAcceptCallback(boost::bind(&AuthServer::UnauthorizedAuthAccept, this, _1, _2));
 	return this->authListen.BindAndListen(address, port);
 }
 
@@ -31,8 +29,7 @@ void AuthServer::UnauthorizedAuthAccept(Server *server, Client *client)
 
 void AuthServer::UnauthorizedAuthPacketReceive(Client* client, Buffer_ptr packet)
 {
-#define FINALIZE \
-	BLOCK(INVOKE(this->unauthorizedAuths.erase, client), delete client)
+#define FINALIZE BLOCK(INVOKE(this->unauthorizedAuths.erase, client), delete client)
 	
 	PARSE_PACKET(packet)
 		PARSE_CASE(packet, PktPing, ping, "Auth", client, FINALIZE)
@@ -147,6 +144,12 @@ uint32 AuthServer::GetMaxAuthConnections() const
 	return max;
 }
 
+void AuthServer::ReleaseAuth(OnlineAuth *auth)
+{
+	this->onlineAuths.remove(auth);
+	delete auth;
+}
+
 OnlineAuth::OnlineAuth(Client* client, AuthServer *authServer):
 	client(client), authServer(authServer)
 {
@@ -186,10 +189,4 @@ void OnlineAuth::Close()
 {
 	this->client->Stop();
 	this->authServer->ReleaseAuth(this);
-}
-
-void AuthServer::ReleaseAuth(OnlineAuth *auth)
-{
-	this->onlineAuths.remove(auth);
-	delete auth;
 }

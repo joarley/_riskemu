@@ -54,12 +54,12 @@
 
             Items.Add(new NetworkAnalyzeViewModel(PacketEmitters));
             Items.Add(new PacketEmitterShellViewModel(PacketEmitters, this));
-            ActivateItem(Items[0]);
+            ActivateItem(Items[0]);            
         }
 
-        public Infrastructure.IMessageBox ShowMessageBox(string message, string title = null, Infrastructure.MessageBoxOption options = MessageBoxOption.Ok)
+        public Infrastructure.IMessageBox ShowMessageBox(string message, string title = null, MessageBoxButton options = MessageBoxButton.OK)
         {
-            return new Infrastructure.MessageBox.MessageBoxViewModel(WindowManager);
+            return new Infrastructure.MessageBox.MessageBox(this, message, title, options);
         }
 
         public IResult ShowEditScreen(IScreen dialogModel)

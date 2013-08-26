@@ -87,11 +87,7 @@
     </Compile>
     <Compile Include="Infrastructure\EditScreen\EditScreenViewModel.cs" />
     <Compile Include="Infrastructure\IMessageBox.cs" />
-    <Compile Include="Infrastructure\MessageBoxOption.cs" />
-    <Compile Include="Infrastructure\MessageBox\MessageBoxView.xaml.cs">
-      <DependentUpon>MessageBoxView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Infrastructure\MessageBox\MessageBoxViewModel.cs" />
+    <Compile Include="Infrastructure\MessageBox\MessageBox.cs" />
     <Compile Include="Infrastructure\ScreenWithCloseVisibility.cs" />
     <Compile Include="Model\NetworkComunication\AnalizerSession.cs" />
     <Compile Include="Model\NetworkComunication\PacketEmitted.cs" />
@@ -114,7 +110,7 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\NetworkAnalyzeViewModel.cs" />
     <Compile Include="ViewModels\PacketEmitterShellViewModel.cs" />
-    <Compile Include="ViewModels\PacketEmmitterEditViewModel.cs" />
+    <Compile Include="ViewModels\PacketEmitterEditViewModel.cs" />
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -123,6 +119,9 @@
     </Compile>
     <Compile Include="Views\PacketEditView.xaml.cs">
       <DependentUpon>PacketEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PacketEmitterEditView.xaml.cs">
+      <DependentUpon>PacketEmitterEditView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PacketEmitterShellView.xaml.cs">
       <DependentUpon>PacketEmitterShellView.xaml</DependentUpon>
@@ -161,7 +160,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Infrastructure\MessageBox\MessageBoxView.xaml">
+    <Page Include="Style\Style.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -174,6 +173,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PacketEditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PacketEmitterEditView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

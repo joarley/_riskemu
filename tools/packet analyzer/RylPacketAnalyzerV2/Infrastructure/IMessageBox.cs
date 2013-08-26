@@ -1,16 +1,14 @@
 ﻿namespace RylPacketAnalyzerV2.Infrastructure
 {
+    using System.Windows;
     using Caliburn.Micro;
 
-    public interface IMessageBox : IScreen, IResult
+    public interface IMessageBox : IResult
     {
-        string Message { get; set; }
-        MessageBoxOption Options { get; set; }
-        MessageBoxOption SelectedOptions { get; set; }
-
-        void Ok();
-        void Cancel();
-        void Yes();
-        void No();
+        MessageBoxButton Options { get; set; }
+        MessageBoxResult SelectedOption { get; set; }
+        IViewAware Owner { get; set; }
+        string MessageBoxText { get; set; }
+        string Caption { get; set; }
     }
 }

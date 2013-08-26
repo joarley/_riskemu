@@ -38,13 +38,7 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <Grid.BindingGroup>
-                <BindingGroup NotifyOnValidationError="True">
-
-                </BindingGroup>
-            </Grid.BindingGroup>
+            </Grid.RowDefinitions>            
 
             <Label Grid.Column="0" Grid.Row="0" Margin="6">Command</Label>
             <Label Grid.Column="0" Grid.Row="1" Margin="6">Name</Label>

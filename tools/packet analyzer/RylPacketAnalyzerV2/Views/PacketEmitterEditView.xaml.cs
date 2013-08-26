@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RylPacketAnalyzerV2.Infrastructure.MessageBox
+namespace RylPacketAnalyzerV2.Views
 {
     /// <summary>
-    /// Interaction logic for MessageBoxView.xaml
+    /// Interaction logic for PacketEmitterEditView.xaml
     /// </summary>
-    public partial class MessageBoxView : UserControl
+    public partial class PacketEmitterEditView : UserControl
     {
-        public MessageBoxView()
+        public PacketEmitterEditView()
         {
             InitializeComponent();
         }

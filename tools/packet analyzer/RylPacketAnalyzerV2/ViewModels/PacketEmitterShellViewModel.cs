@@ -49,10 +49,10 @@
             if (item == null ||
                 (item is Model.NetworkComunication.PacketEmitter &&
                 PacketEmitters.Contains(item as Model.NetworkComunication.PacketEmitter)) ||
-                (item is Model.Packet.Packet && 
+                (item is Model.Packet.Packet &&
                     PacketEmitters.Count(x => x.EmitPackets.Contains(item as Model.Packet.Packet)) > 0))
             {
-                SelectedItem = item;                
+                SelectedItem = item;
                 return;
             }
 
@@ -69,15 +69,15 @@
             var edit = new PacketEditViewModel(newPacket);
 
             var res = rootWindow.ShowEditScreen(edit);
-            res.Completed += new EventHandler<ResultCompletionEventArgs>(new Action<object, ResultCompletionEventArgs>(
-                (sender, e) => {
-                    if (!e.WasCancelled && e.Error == null)
-                    {
-                        if (edit.Saved) currrentEmitter.EmitPackets.Add(newPacket);
-                    }
-                }));
+            res.Completed += (sender, e) =>
+            {
+                if (!e.WasCancelled && e.Error == null)
+                {
+                    if (edit.Saved) currrentEmitter.EmitPackets.Add(newPacket);
+                }
+            };
 
-            yield return res;            
+            yield return res;
         }
 
         public IEnumerable<IResult> EditPacket()
@@ -92,19 +92,32 @@
                 EmitPackets.Remove(SelectedItem as Model.Packet.Packet);
         }
 
-        public void AddPacketEmmiter()
+        public IEnumerable<IResult> AddPacketEmmiter()
         {
+            var newPacketEmitter = new Model.NetworkComunication.PacketEmitter();
+            var edit = new PacketEmitterEditViewModel(newPacketEmitter);
 
+            var res = rootWindow.ShowEditScreen(edit);
+            res.Completed += (sender, e) =>
+            {
+                if (!e.WasCancelled && e.Error == null)
+                {
+                    if (edit.Saved) PacketEmitters.Add(newPacketEmitter);
+                }
+            };
+
+            yield return res;
         }
 
-        public void EditPacketEmmiter()
+        public IEnumerable<IResult> EditPacketEmmiter()
         {
-
+            yield return rootWindow.ShowEditScreen(
+                new PacketEmitterEditViewModel(selectedItem as Model.NetworkComunication.PacketEmitter));
         }
 
         public void DeletePacketEmmiter()
         {
-            
+            PacketEmitters.Remove(selectedItem as Model.NetworkComunication.PacketEmitter);
         }
     }
 }
