@@ -9,6 +9,7 @@
 
         public NetworkAnalyzeViewModel(ObservableCollection<Model.NetworkComunication.PacketEmitter> packetEmitters)
         {
+            DisplayName = "Network Analyze";
             PacketEmitters = packetEmitters;
         }        
     }

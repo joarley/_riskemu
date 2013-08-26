@@ -7,7 +7,7 @@
     public class ScreenWithCloseVisibility : Conductor<IScreen>
     {
         protected Visibility closeVisibility;
-        public Type Type { get { return GetType(); } }
+        public Type Type { get { return typeof(ScreenWithCloseVisibility); } }
         public Visibility CloseVisibility
         {
             get { return closeVisibility; }

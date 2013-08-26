@@ -35,6 +35,8 @@
         public Packet()
         {
             id = Guid.NewGuid();
+            name = "New Packet";
+            command = 1;
             content = new ObservableCollection<IPacketPart>();
         }
 

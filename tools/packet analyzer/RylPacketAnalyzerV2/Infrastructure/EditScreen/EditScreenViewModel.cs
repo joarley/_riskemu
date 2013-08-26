@@ -10,6 +10,14 @@
         public EditScreenViewModel(IScreen screen)
         {
             ActivateItem(screen);
+            DisplayName = ActiveItem.DisplayName;
+            screen.PropertyChanged += screen_PropertyChanged;
+        }
+
+        void screen_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "DisplayName")
+                DisplayName = ActiveItem.DisplayName;
         }
 
         public void Execute(ActionExecutionContext context)

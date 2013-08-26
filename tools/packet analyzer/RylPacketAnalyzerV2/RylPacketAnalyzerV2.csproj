@@ -82,14 +82,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Infrastructure\Behaviour\TextBoxBehaviour.cs" />
-    <Compile Include="Infrastructure\Converter\HexStringConverter.cs" />
     <Compile Include="Infrastructure\EditScreen\EditScreenView.xaml.cs">
       <DependentUpon>EditScreenView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\EditScreen\EditScreenViewModel.cs" />
     <Compile Include="Infrastructure\IMessageBox.cs" />
-    <Compile Include="Infrastructure\IRootWindow.cs" />
     <Compile Include="Infrastructure\MessageBoxOption.cs" />
     <Compile Include="Infrastructure\MessageBox\MessageBoxView.xaml.cs">
       <DependentUpon>MessageBoxView.xaml</DependentUpon>
@@ -117,6 +114,7 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\NetworkAnalyzeViewModel.cs" />
     <Compile Include="ViewModels\PacketEmitterShellViewModel.cs" />
+    <Compile Include="ViewModels\PacketEmmitterEditViewModel.cs" />
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>

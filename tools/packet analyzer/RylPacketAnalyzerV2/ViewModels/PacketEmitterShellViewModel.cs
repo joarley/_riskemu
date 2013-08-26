@@ -5,6 +5,7 @@
     using System.Collections.ObjectModel;
     using System.Linq;
     using Caliburn.Micro;
+    using RylPacketAnalyzerV2.Infrastructure;
 
     class PacketEmitterShellViewModel : Screen
     {
@@ -17,7 +18,7 @@
         public bool CanAddPacketEmmiter { get { return true; } }
         public bool CanEditPacketEmmiter { get { return SelectedItem is Model.NetworkComunication.PacketEmitter; } }
         public bool CanDeletePacketEmmiter { get { return SelectedItem is Model.NetworkComunication.PacketEmitter; } }
-        public Infrastructure.IRootWindow rootWindow;
+        public IShell rootWindow;
 
         public object SelectedItem
         {
@@ -34,10 +35,11 @@
                 NotifyOfPropertyChange(() => CanDeletePacketEmmiter);
             }
         }
-        
 
-        public PacketEmitterShellViewModel(ObservableCollection<Model.NetworkComunication.PacketEmitter> packetEmitters, Infrastructure.IRootWindow rootWindow)
+
+        public PacketEmitterShellViewModel(ObservableCollection<Model.NetworkComunication.PacketEmitter> packetEmitters, IShell rootWindow)
         {
+            DisplayName = "Packets";
             PacketEmitters = packetEmitters;
             this.rootWindow = rootWindow;
         }

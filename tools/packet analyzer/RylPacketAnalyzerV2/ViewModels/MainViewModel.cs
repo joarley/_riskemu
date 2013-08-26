@@ -7,7 +7,7 @@
     using RylPacketAnalyzerV2.Infrastructure;
 
     [Export(typeof(IShell))]
-    public class MainViewModel : Conductor<IScreen>.Collection.OneActive, Infrastructure.IRootWindow
+    public class MainViewModel : Conductor<IScreen>.Collection.OneActive, IShell
     {
         public ObservableCollection<Model.NetworkComunication.PacketEmitter> PacketEmitters { get; set; }
         public IWindowManager WindowManager { get; set; }
@@ -15,6 +15,7 @@
         [ImportingConstructor]
         public MainViewModel(IWindowManager windowManager)
         {
+            DisplayName = "Packet Analyzer";
             WindowManager = windowManager;
 
             PacketEmitters = new ObservableCollection<Model.NetworkComunication.PacketEmitter>();            
@@ -51,8 +52,8 @@
                 });
             #endregion
 
-            Items.Add(new NetworkAnalyzeViewModel(PacketEmitters) { DisplayName = "Network Analyze" });
-            Items.Add(new PacketEmitterShellViewModel(PacketEmitters, this) { DisplayName = "Packets" });
+            Items.Add(new NetworkAnalyzeViewModel(PacketEmitters));
+            Items.Add(new PacketEmitterShellViewModel(PacketEmitters, this));
             ActivateItem(Items[0]);
         }
 
@@ -64,8 +65,7 @@
         public IResult ShowEditScreen(IScreen dialogModel)
         {
             var edit = new Infrastructure.EditScreen.EditScreenViewModel(dialogModel) { 
-                CloseVisibility =Visibility.Visible,
-                DisplayName = dialogModel.DisplayName
+                CloseVisibility =Visibility.Visible
             };
             Items.Add(edit);
             return edit;

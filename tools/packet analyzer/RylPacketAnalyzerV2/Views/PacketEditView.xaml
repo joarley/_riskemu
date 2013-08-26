@@ -6,9 +6,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="450"
              xmlns:RylPacketAnalyzerV2.Model.Packet="clr-namespace:RylPacketAnalyzerV2.Model.Packet"
-             xmlns:RylPacketAnalyzerV2.Infrastructure.Behaviour="clr-namespace:RylPacketAnalyzerV2.Infrastructure.Behaviour"
-             xmlns:RylPacketAnalyzerV2.Infrastructure.Converter="clr-namespace:RylPacketAnalyzerV2.Infrastructure.Converter"
-             xmlns:RylPacketAnalyzerV2.Model.Packet.Parts="clr-namespace:RylPacketAnalyzerV2.Model.Packet.Parts">
+             xmlns:RylPacketAnalyzerV2.Model.Packet.Parts="clr-namespace:RylPacketAnalyzerV2.Model.Packet.Parts"
+             xmlns:cal="http://www.caliburnproject.org">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
@@ -24,13 +23,12 @@
 
             <MenuItem x:Name="Save" Header="Save" />
             <MenuItem x:Name="Cancel" Header="Cancel" />
-            <MenuItem x:Name="Delete" Header="Delete" />
             <Separator />
             <MenuItem Header="Add Packet Part" />
             <MenuItem Header="Edit Packet Part" />
             <MenuItem Header="Delete Packet Part" />
         </Menu>
-        
+
         <Grid Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
@@ -44,21 +42,18 @@
 
             <Grid.BindingGroup>
                 <BindingGroup NotifyOnValidationError="True">
-                    
+
                 </BindingGroup>
             </Grid.BindingGroup>
-            
+
             <Label Grid.Column="0" Grid.Row="0" Margin="6">Command</Label>
             <Label Grid.Column="0" Grid.Row="1" Margin="6">Name</Label>
 
 
-            <TextBox x:Name="PacketCommand" Grid.Column="1" Grid.Row="0" Margin="6" MaxLength="3" 
-                     RylPacketAnalyzerV2.Infrastructure.Behaviour:TextBoxBehaviour.KeepCursorPosition="true"
-                     
-                     />
+            <TextBox x:Name="PacketCommand" Grid.Column="1" Grid.Row="0" Margin="6" />
             <TextBox x:Name="PacketName" Grid.Column="1" Grid.Row="1" Margin="6" />
 
-            <TreeView x:Name="PacketContent" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Margin="6">
+            <TreeView x:Name="PacketContent" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Margin="6" cal:Message.Attach="[Event SelectedItemChanged] = [Action SetSelectedPacketContent($this.SelectedItem)]">
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.Packet.Parts:StructPart}" ItemsSource="{Binding Content}">
                         <TextBlock>Struct</TextBlock>
