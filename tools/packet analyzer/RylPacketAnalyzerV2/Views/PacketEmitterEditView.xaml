@@ -4,10 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <UserControl.Resources>
-        <ResourceDictionary Source="pack://application:,,,/Style/Style.xaml" />
-    </UserControl.Resources>
+             d:DesignHeight="300" d:DesignWidth="300"
+             xmlns:RylPacketAnalyzerV2.Model.NetworkComunication="clr-namespace:RylPacketAnalyzerV2.Model.NetworkComunication">
     
     <Grid>
         <Grid.ColumnDefinitions>
@@ -30,9 +28,9 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="30" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
@@ -41,12 +39,24 @@
             <Label Grid.Column="0" Grid.Row="0" Margin="6">Name</Label>
             <TextBox x:Name="PacketEmitterName" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Margin="6" />
 
-            <Label Grid.Column="0" Grid.Row="1" Margin="6">Source</Label>
-            <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" DataContext="{Binding PacketEmitterSource}" Grid.Column="1" Grid.Row="1"  Margin="6">
-                <Image Width="16" Height="16" Style="{StaticResource ClientServerTriggers}" Margin="0 0 6 0" />
-                <TextBlock Text="{Binding Path=Port,StringFormat='Port: {0}'}" />
-            </WrapPanel>
-            <Button Grid.Column="2" Grid.Row="1"  Margin="6">...</Button>
+            <Label Grid.Column="0" Grid.Row="1" Margin="6">Type</Label>
+            <ComboBox SelectedValue="{Binding Path=PacketEmitterSource.Type}" SelectedValuePath="DataContext" Grid.Column="1" Grid.Row="1" Margin="6">
+                <ComboBoxItem DataContext="{x:Static RylPacketAnalyzerV2.Model.NetworkComunication:SourceAddressType.Server}">
+                    <WrapPanel Orientation="Horizontal">
+                        <Image Source="pack://application:,,,/img/server.png" />
+                        <TextBlock>Server</TextBlock>
+                    </WrapPanel>
+                </ComboBoxItem>
+                <ComboBoxItem  DataContext="{x:Static RylPacketAnalyzerV2.Model.NetworkComunication:SourceAddressType.Client}">
+                    <WrapPanel Orientation="Horizontal">
+                        <Image Source="pack://application:,,,/img/Client.png" />
+                        <TextBlock>Client</TextBlock>
+                    </WrapPanel>
+                </ComboBoxItem>
+            </ComboBox>
+
+            <Label Grid.Column="0" Grid.Row="2" Margin="6">Port</Label>
+            <TextBox Text="{Binding Path=PacketEmitterSource.Port}"  Grid.Column="1" Grid.Row="2" Margin="6" />
         </Grid>
     </Grid>
 </UserControl>
