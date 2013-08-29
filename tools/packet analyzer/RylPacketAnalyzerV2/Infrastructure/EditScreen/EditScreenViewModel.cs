@@ -26,9 +26,13 @@
             Action<object, DeactivationEventArgs> ev = null;
             ev = (sender, e) =>
                 {
-                    ActiveItem.Deactivated -= new EventHandler<DeactivationEventArgs>(ev);
-                    if (this.IsActive) this.TryClose();
-                    Completed(this, new ResultCompletionEventArgs());
+                    if (e.WasClosed)
+                    {
+
+                        ActiveItem.Deactivated -= new EventHandler<DeactivationEventArgs>(ev);
+                        if (this.IsActive) this.TryClose();
+                        Completed(this, new ResultCompletionEventArgs());
+                    }
                 };
 
             ActiveItem.Deactivated += new EventHandler<DeactivationEventArgs>(ev);

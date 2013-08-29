@@ -5,14 +5,36 @@
     using System;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Collections.Generic;
+    using RylPacketAnalyzerV2.Model.Packet.Parts;
+    using System.Linq;
 
     class PacketEditViewModel : Screen
     {
         Guid packetId;
         byte packetCommand;
         string packetName;
-        ObservableCollection<IPacketPart> packetContent;        
+        IPacketPart packetContent;
+        Infrastructure.IShell shell;
+        IPacketPart selectedPacketPart;
 
+        public Packet Packet { get; set; }
+        public bool Saved { get; private set; }
+        public IPacketPart SelectedPacketPart
+        {
+            get
+            {
+                return selectedPacketPart;
+            }
+            private set
+            {
+                selectedPacketPart = value;
+                NotifyOfPropertyChange(() => SelectedPacketPart);
+                NotifyOfPropertyChange(() => CanAddPacketPart);
+                NotifyOfPropertyChange(() => CanEditPacketPart);
+                NotifyOfPropertyChange(() => CanDeletePacketPart);
+            }
+        }
         public Guid PacketId
         {
             get { return packetId; }
@@ -28,24 +50,15 @@
             get { return packetName; }
             set { packetName = value; NotifyOfPropertyChange(() => PacketName); }
         }
-        public ObservableCollection<IPacketPart> PacketContent
+        public IPacketPart PacketContent
         {
             get { return packetContent; }
             set { packetContent = value; NotifyOfPropertyChange(() => PacketContent); }
         }
 
-        public Packet Packet { get; set; }
-        public bool Saved { get; private set; }
-        public bool Changed { get; private set; }
-        public IPacketPart SelectedPacketPart { get; private set; }
-
-        public PacketEditViewModel()
+        public PacketEditViewModel(Infrastructure.IShell shell, Packet packet)
         {
-            Create();
-        }
-
-        public PacketEditViewModel(Packet packet)
-        {
+            this.shell = shell;
             Load(packet);
         }
 
@@ -63,6 +76,7 @@
             PacketCommand = Packet.Command;
             PacketName = Packet.Name;
             PacketContent = Packet.Content;
+            SetSelectedPacketContent(packetContent);
         }
 
         void PacketEditViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -95,9 +109,65 @@
             TryClose();
         }
 
-        public override void CanClose(System.Action<bool> callback)
+
+        public bool CanEditPacketPart { get { return SelectedPacketPart != null; } }
+        public void EditPacketPart()
         {
-            callback(true);
+            shell.ShowEditScreen(new PacketPartEditViewModel(SelectedPacketPart));
+        }
+
+        public bool CanAddPacketPart { get { return packetContent == null || SelectedPacketPart is IContainerPart; } }
+        public IEnumerable<IResult> AddPacketPart()
+        {
+            var sp = new SelectPartTypeViewModel();
+            shell.ShowModalScreen(sp);
+            if (!sp.Selected)
+                yield break;
+            else
+            {
+                IPacketPart newPart;
+                newPart = (IPacketPart)Activator.CreateInstance(sp.SelectedType);
+
+                PacketPartEditViewModel edit = new PacketPartEditViewModel(newPart);
+                var res = shell.ShowEditScreen(edit);
+                res.Completed += (sender, e) =>
+                    {
+                        if (!e.WasCancelled && e.Error == null)
+                        {
+                            if (edit.Saved)
+                                if (PacketContent == null)
+                                    PacketContent = newPart;
+                                else
+                                    (SelectedPacketPart as IContainerPart).Content.Add(edit.Part);
+                        }
+                    };
+
+                yield return res;
+            }
+        }
+
+        public bool CanDeletePacketPart { get { return SelectedPacketPart != null; } }
+        public void DeletePacketPart()
+        {
+            if (SelectedPacketPart == PacketContent)
+                PacketContent = null;
+            else
+                FindParentPart((PacketContent as IContainerPart), SelectedPacketPart).
+                    Content.Remove(SelectedPacketPart);
+        }
+
+        private IContainerPart FindParentPart(IContainerPart source, IPacketPart finded)
+        {
+            if (source.Content.Contains(finded))
+                return source;
+
+            foreach (var ps in source.Content.Where(x => x is IContainerPart).Cast<IContainerPart>())
+            {
+                var ret = FindParentPart(ps, finded);
+                if (ret != null) return ret;
+            }
+
+            return null;
         }
     }
 }

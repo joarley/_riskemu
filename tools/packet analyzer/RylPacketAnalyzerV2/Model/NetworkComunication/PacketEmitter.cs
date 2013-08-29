@@ -38,6 +38,7 @@
         {
             Id = Guid.NewGuid();
             EmitPackets = new ObservableCollection<Packet.Packet>();
+            Name = "New Emitter";
         }
 
         private void OnPropertyChanged(string propertyName)

@@ -66,7 +66,7 @@
                 PacketEmitters.First(x => x.EmitPackets.Contains(SelectedItem as Model.Packet.Packet));
             Model.Packet.Packet newPacket = new Model.Packet.Packet();
 
-            var edit = new PacketEditViewModel(newPacket);
+            var edit = new PacketEditViewModel(rootWindow, newPacket);
 
             var res = rootWindow.ShowEditScreen(edit);
             res.Completed += (sender, e) =>
@@ -83,7 +83,7 @@
         public IEnumerable<IResult> EditPacket()
         {
             yield return rootWindow.
-                ShowEditScreen(new PacketEditViewModel(selectedItem as Model.Packet.Packet));
+                ShowEditScreen(new PacketEditViewModel(rootWindow, selectedItem as Model.Packet.Packet));
         }
 
         public void DeletePacket()

@@ -40,23 +40,23 @@
             <TextBox x:Name="PacketEmitterName" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Margin="6" />
 
             <Label Grid.Column="0" Grid.Row="1" Margin="6">Type</Label>
-            <ComboBox SelectedValue="{Binding Path=PacketEmitterSource.Type}" SelectedValuePath="DataContext" Grid.Column="1" Grid.Row="1" Margin="6">
+            <ComboBox SelectedValue="{Binding Path=PacketEmitterSourceType}" SelectedValuePath="DataContext" Grid.Column="1" Grid.Row="1" Margin="6">
                 <ComboBoxItem DataContext="{x:Static RylPacketAnalyzerV2.Model.NetworkComunication:SourceAddressType.Server}">
                     <WrapPanel Orientation="Horizontal">
-                        <Image Source="pack://application:,,,/img/server.png" />
+                        <Image Source="pack://application:,,,/img/server.png" Margin="0 0 6 0" />
                         <TextBlock>Server</TextBlock>
                     </WrapPanel>
                 </ComboBoxItem>
                 <ComboBoxItem  DataContext="{x:Static RylPacketAnalyzerV2.Model.NetworkComunication:SourceAddressType.Client}">
                     <WrapPanel Orientation="Horizontal">
-                        <Image Source="pack://application:,,,/img/Client.png" />
+                        <Image Source="pack://application:,,,/img/Client.png"  Margin="0 0 6 0" />
                         <TextBlock>Client</TextBlock>
                     </WrapPanel>
                 </ComboBoxItem>
             </ComboBox>
 
             <Label Grid.Column="0" Grid.Row="2" Margin="6">Port</Label>
-            <TextBox Text="{Binding Path=PacketEmitterSource.Port}"  Grid.Column="1" Grid.Row="2" Margin="6" />
+            <TextBox Text="{Binding Path=PacketEmitterSourcePort, UpdateSourceTrigger=PropertyChanged}"  Grid.Column="1" Grid.Row="2" Margin="6" />
         </Grid>
     </Grid>
 </UserControl>

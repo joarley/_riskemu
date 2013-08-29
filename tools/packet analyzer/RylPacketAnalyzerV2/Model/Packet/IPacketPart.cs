@@ -1,8 +1,9 @@
 ﻿namespace RylPacketAnalyzerV2.Model.Packet
 {
     using System;
+    using System.ComponentModel;
 
-    public interface IPacketPart
+    public interface IPacketPart : INotifyPropertyChanged
     {
         Guid Id { get; set; }
         int Order { get; set; }

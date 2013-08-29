@@ -111,6 +111,8 @@
     <Compile Include="ViewModels\NetworkAnalyzeViewModel.cs" />
     <Compile Include="ViewModels\PacketEmitterShellViewModel.cs" />
     <Compile Include="ViewModels\PacketEmitterEditViewModel.cs" />
+    <Compile Include="ViewModels\PacketPartEditViewModel.cs" />
+    <Compile Include="ViewModels\SelectPartTypeViewModel.cs" />
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -125,6 +127,12 @@
     </Compile>
     <Compile Include="Views\PacketEmitterShellView.xaml.cs">
       <DependentUpon>PacketEmitterShellView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PacketPartEditView.xaml.cs">
+      <DependentUpon>PacketPartEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SelectPartTypeView.xaml.cs">
+      <DependentUpon>SelectPartTypeView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +189,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PacketEmitterShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PacketPartEditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SelectPartTypeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

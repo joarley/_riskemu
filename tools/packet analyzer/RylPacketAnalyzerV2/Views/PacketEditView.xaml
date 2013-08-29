@@ -24,9 +24,9 @@
             <MenuItem x:Name="Save" Header="Save" />
             <MenuItem x:Name="Cancel" Header="Cancel" />
             <Separator />
-            <MenuItem Header="Add Packet Part" />
-            <MenuItem Header="Edit Packet Part" />
-            <MenuItem Header="Delete Packet Part" />
+            <MenuItem x:Name="AddPacketPart" Header="Add Packet Part" />
+            <MenuItem x:Name="EditPacketPart" Header="Edit Packet Part" />
+            <MenuItem x:Name="DeletePacketPart" Header="Delete Packet Part" />
         </Menu>
 
         <Grid Grid.Column="1">
@@ -47,25 +47,27 @@
             <TextBox x:Name="PacketCommand" Grid.Column="1" Grid.Row="0" Margin="6" />
             <TextBox x:Name="PacketName" Grid.Column="1" Grid.Row="1" Margin="6" />
 
-            <TreeView x:Name="PacketContent" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Margin="6" cal:Message.Attach="[Event SelectedItemChanged] = [Action SetSelectedPacketContent($this.SelectedItem)]">
+            <TreeView Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Margin="6" cal:Message.Attach="[Event SelectedItemChanged] = [Action SetSelectedPacketContent($DataContext)]">
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.Packet.Parts:StructPart}" ItemsSource="{Binding Content}">
-                        <TextBlock>Struct</TextBlock>
+                        <TextBlock Text="{Binding Path=Name, StringFormat='Struct - {0}'}" />
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.Packet.Parts:ForPart}" ItemsSource="{Binding Content}">
-                        <TextBlock>For</TextBlock>
+                        <TextBlock Text="{Binding Path=Name, StringFormat='For - {0}'}" />
                     </HierarchicalDataTemplate>
 
                     <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.Packet.Parts:FloatPart}">
-                        <TextBlock>Float</TextBlock>
+                        <TextBlock Text="{Binding Path=Name, StringFormat='Float - {0}'}" />
                     </HierarchicalDataTemplate>
-                    <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.Packet.Parts:IntergerPart}">
-                        <TextBlock>Interger</TextBlock>
+                    <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.Packet.Parts:IntegerPart}">
+                        <TextBlock Text="{Binding Path=Name, StringFormat='Interger - {0}'}" />
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.Packet.Parts:StringPart}">
-                        <TextBlock>String</TextBlock>
+                        <TextBlock Text="{Binding Path=Name, StringFormat='String - {0}'}" />
                     </HierarchicalDataTemplate>
                 </TreeView.Resources>
+
+                <ContentControl Content="{Binding Path=PacketContent}" />
             </TreeView>
         </Grid>
     </Grid>

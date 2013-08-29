@@ -11,7 +11,8 @@
 
         Guid packetEmitterId;
         string packetEmitterName;
-        SourceAddress packetEmitterSource;
+        int packetEmitterPort;
+        SourceAddressType packetEmitterType;
 
         public bool Saved { get; set; }
 
@@ -25,10 +26,17 @@
             get { return packetEmitterName; }
             set { packetEmitterName = value; NotifyOfPropertyChange(() => PacketEmitterName); }
         }
-        public SourceAddress PacketEmitterSource
+
+        public int PacketEmitterSourcePort
         {
-            get { return packetEmitterSource; }
-            set { packetEmitterSource = value; NotifyOfPropertyChange(() => PacketEmitterSource); }
+            get { return packetEmitterPort; }
+            set { packetEmitterPort = value; NotifyOfPropertyChange(() => PacketEmitterSourcePort); }
+        }
+
+        public SourceAddressType PacketEmitterSourceType
+        {
+            get { return packetEmitterType; }
+            set { packetEmitterType = value; NotifyOfPropertyChange(() => PacketEmitterSourceType); }
         }
 
         public PacketEmitter PacketEmitter
@@ -49,7 +57,8 @@
 
             PacketEmitterId = PacketEmitter.Id;
             PacketEmitterName = PacketEmitter.Name;
-            PacketEmitterSource = PacketEmitter.Source;
+            PacketEmitterSourcePort = PacketEmitter.Source.Port;
+            PacketEmitterSourceType = PacketEmitter.Source.Type;
         }
 
         void PacketEmitterEditViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -69,7 +78,11 @@
         {
             PacketEmitter.Id = PacketEmitterId;
             PacketEmitter.Name = PacketEmitterName;
-            PacketEmitter.Source = PacketEmitterSource;
+            PacketEmitter.Source = new SourceAddress()
+            {
+                Port = PacketEmitterSourcePort,
+                Type = PacketEmitterSourceType
+            };
 
             Saved = true;
             TryClose();
@@ -79,11 +92,6 @@
         {
             Saved = false;
             TryClose();
-        }
-
-        public override void CanClose(System.Action<bool> callback)
-        {
-            callback(true);
         }
     }
 }

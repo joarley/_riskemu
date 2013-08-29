@@ -9,7 +9,7 @@
         Guid id;
         byte command;
         string name;
-        ObservableCollection<IPacketPart> content;
+        IPacketPart content;
 
         public Guid Id
         {
@@ -26,7 +26,7 @@
             get { return name; }
             set { name = value; OnPropertyChanged("Name"); }
         }
-        public ObservableCollection<IPacketPart> Content
+        public IPacketPart Content
         {
             get { return content; }
             set { content = value; OnPropertyChanged("Content"); }
@@ -37,7 +37,6 @@
             id = Guid.NewGuid();
             name = "New Packet";
             command = 1;
-            content = new ObservableCollection<IPacketPart>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
