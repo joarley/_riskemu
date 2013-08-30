@@ -47,7 +47,7 @@
             <TextBox x:Name="PacketCommand" Grid.Column="1" Grid.Row="0" Margin="6" />
             <TextBox x:Name="PacketName" Grid.Column="1" Grid.Row="1" Margin="6" />
 
-            <TreeView Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Margin="6" cal:Message.Attach="[Event SelectedItemChanged] = [Action SetSelectedPacketContent($DataContext)]">
+            <TreeView Grid.Column="0" ItemsSource="{Binding Path=PacketContent}" Grid.Row="2" Grid.ColumnSpan="2" Margin="6" cal:Message.Attach="[Event SelectedItemChanged] = [Action SetSelectedPacketContent($this)]">
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.Packet.Parts:StructPart}" ItemsSource="{Binding Content}">
                         <TextBlock Text="{Binding Path=Name, StringFormat='Struct - {0}'}" />
@@ -65,9 +65,7 @@
                     <HierarchicalDataTemplate DataType="{x:Type RylPacketAnalyzerV2.Model.Packet.Parts:StringPart}">
                         <TextBlock Text="{Binding Path=Name, StringFormat='String - {0}'}" />
                     </HierarchicalDataTemplate>
-                </TreeView.Resources>
-
-                <ContentControl Content="{Binding Path=PacketContent}" />
+                </TreeView.Resources>                
             </TreeView>
         </Grid>
     </Grid>

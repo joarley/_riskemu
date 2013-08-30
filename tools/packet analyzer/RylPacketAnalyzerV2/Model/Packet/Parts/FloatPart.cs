@@ -33,6 +33,12 @@
 
         public FloatPartPrecision Precision { get; set; }
 
+        public FloatPart()
+        {
+            Name = "New Float Part";
+            Id = Guid.NewGuid();
+        }
+
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {

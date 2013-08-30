@@ -14,7 +14,7 @@
         Guid packetId;
         byte packetCommand;
         string packetName;
-        IPacketPart packetContent;
+        ObservableCollection<IPacketPart> packetContent;
         Infrastructure.IShell shell;
         IPacketPart selectedPacketPart;
 
@@ -50,7 +50,7 @@
             get { return packetName; }
             set { packetName = value; NotifyOfPropertyChange(() => PacketName); }
         }
-        public IPacketPart PacketContent
+        public ObservableCollection<IPacketPart> PacketContent
         {
             get { return packetContent; }
             set { packetContent = value; NotifyOfPropertyChange(() => PacketContent); }
@@ -75,8 +75,10 @@
             PacketId = Packet.Id;
             PacketCommand = Packet.Command;
             PacketName = Packet.Name;
-            PacketContent = Packet.Content;
-            SetSelectedPacketContent(packetContent);
+            PacketContent = new ObservableCollection<IPacketPart>();
+            if (Packet.Content != null)
+                packetContent.Add(Packet.Content);
+            SetSelectedPacketContent(PacketContent.FirstOrDefault());
         }
 
         void PacketEditViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -97,7 +99,7 @@
             Packet.Id = PacketId;
             Packet.Command = PacketCommand;
             Packet.Name = PacketName;
-            Packet.Content = PacketContent;
+            Packet.Content = PacketContent.FirstOrDefault();
 
             Saved = true;
             TryClose();
@@ -111,12 +113,12 @@
 
 
         public bool CanEditPacketPart { get { return SelectedPacketPart != null; } }
-        public void EditPacketPart()
+        public IEnumerable<IResult> EditPacketPart()
         {
-            shell.ShowEditScreen(new PacketPartEditViewModel(SelectedPacketPart));
+            yield return shell.ShowEditScreen(new PacketPartEditViewModel(SelectedPacketPart));
         }
 
-        public bool CanAddPacketPart { get { return packetContent == null || SelectedPacketPart is IContainerPart; } }
+        public bool CanAddPacketPart { get { return packetContent.Count == 0 || SelectedPacketPart is IContainerPart; } }
         public IEnumerable<IResult> AddPacketPart()
         {
             var sp = new SelectPartTypeViewModel();
@@ -135,8 +137,8 @@
                         if (!e.WasCancelled && e.Error == null)
                         {
                             if (edit.Saved)
-                                if (PacketContent == null)
-                                    PacketContent = newPart;
+                                if (PacketContent.Count == 0)
+                                    PacketContent.Add(newPart);
                                 else
                                     (SelectedPacketPart as IContainerPart).Content.Add(edit.Part);
                         }
@@ -149,10 +151,10 @@
         public bool CanDeletePacketPart { get { return SelectedPacketPart != null; } }
         public void DeletePacketPart()
         {
-            if (SelectedPacketPart == PacketContent)
-                PacketContent = null;
+            if (SelectedPacketPart == PacketContent.FirstOrDefault())
+                PacketContent.Clear();
             else
-                FindParentPart((PacketContent as IContainerPart), SelectedPacketPart).
+                FindParentPart((PacketContent.First() as IContainerPart), SelectedPacketPart).
                     Content.Remove(SelectedPacketPart);
         }
 

@@ -99,7 +99,7 @@
     <Compile Include="Model\Packet\Parts\StringPart.cs" />
     <Compile Include="Model\Packet\Parts\FloatPart.cs" />
     <Compile Include="Model\Packet\Parts\FloatPartPrecision.cs" />
-    <Compile Include="Model\Packet\Parts\IntergerPart.cs" />
+    <Compile Include="Model\Packet\Parts\IntegerPart.cs" />
     <Compile Include="Model\Packet\Parts\IContainerPart.cs" />
     <Compile Include="Model\Packet\Parts\ForPart.cs" />
     <Compile Include="Model\Packet\Parts\IntergerPartPrecision.cs" />
