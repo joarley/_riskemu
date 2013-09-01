@@ -10,6 +10,7 @@ using System.ComponentModel;
         int order;
         string name;
         string notes;
+        ObservableCollection<IPacketPart> content;
 
         public Guid Id
         {
@@ -31,8 +32,13 @@ using System.ComponentModel;
             get { return notes; }
             set { notes = value; OnPropertyChanged("Notes"); }
         }
-       
-        public ObservableCollection<IPacketPart> Content { get; set; }
+
+        public ObservableCollection<IPacketPart> Content
+        {
+            get { return content; }
+            set { content = value; OnPropertyChanged("Content"); }
+        }
+
         public Guid IntergerPartSizeId { get; set; }
         public int Size { get; set; }
 

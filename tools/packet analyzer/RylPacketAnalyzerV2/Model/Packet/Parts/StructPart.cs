@@ -10,6 +10,7 @@
         int order;
         string name;
         string notes;
+        ObservableCollection<IPacketPart> content;
 
         public Guid Id
         {
@@ -32,7 +33,11 @@
             set { notes = value; OnPropertyChanged("Notes"); }
         }
 
-        public ObservableCollection<IPacketPart> Content{ get; set; }
+        public ObservableCollection<IPacketPart> Content
+        {
+            get { return content; }
+            set { content = value; OnPropertyChanged("Content"); }
+        }
 
         public StructPart()
         {

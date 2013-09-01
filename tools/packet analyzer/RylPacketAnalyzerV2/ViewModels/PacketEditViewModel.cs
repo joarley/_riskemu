@@ -33,6 +33,8 @@
                 NotifyOfPropertyChange(() => CanAddPacketPart);
                 NotifyOfPropertyChange(() => CanEditPacketPart);
                 NotifyOfPropertyChange(() => CanDeletePacketPart);
+                NotifyOfPropertyChange(() => CanOrderUpSelectedPacketPart);
+                NotifyOfPropertyChange(() => CanOrderDownSelectedPacketPart);
             }
         }
         public Guid PacketId
@@ -77,8 +79,54 @@
             PacketName = Packet.Name;
             PacketContent = new ObservableCollection<IPacketPart>();
             if (Packet.Content != null)
-                packetContent.Add(Packet.Content);
+            {
+                var n = (IPacketPart)Activator.CreateInstance(Packet.Content.GetType());
+                packetContent.Add(n);
+                CopyPart(Packet.Content, n);
+            }
             SetSelectedPacketContent(PacketContent.FirstOrDefault());
+        }
+
+        private void CopyPart(IPacketPart from, IPacketPart to)
+        {
+            to.Id = from.Id;
+            to.Name = from.Name;
+            to.Notes = from.Notes;
+            to.Order = from.Order;
+
+            dynamic dto = to;
+            dynamic dfrom = from;
+
+            if (from is IContainerPart)
+            {
+                foreach (var f in dfrom.Content)
+                {
+                    var t = Activator.CreateInstance(f.GetType());
+                    dto.Content.Add(t);
+                    CopyPart(f, t);
+                }
+
+                FixOrder(dto.Content);
+            }
+
+            if (from is FloatPart)
+                dto.Precision = dfrom.Precision;
+            else if (from is ForPart)
+            {
+                dto.IntergerPartSizeId = dfrom.IntergerPartSizeId;
+                dto.Size = dfrom.Size;
+            }
+            else if (from is IntegerPart)
+            {
+                dto.IsUnsigned = dfrom.IsUnsigned;
+                dto.Precision = dfrom.Precision;
+            }
+            else if (from is StringPart)
+            {
+                dto.IntergerPartSizeId = dfrom.IntergerPartSizeId;
+                dto.Size = dfrom.Size;
+            }
+            else if (from is StructPart) { }
         }
 
         void PacketEditViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -140,7 +188,11 @@
                                 if (PacketContent.Count == 0)
                                     PacketContent.Add(newPart);
                                 else
-                                    (SelectedPacketPart as IContainerPart).Content.Add(edit.Part);
+                                {
+                                    IContainerPart parent = (SelectedPacketPart as IContainerPart);
+                                    edit.Part.Order = parent.Content.Count == 0 ? 0 : parent.Content.Max(x => x.Order) + 1;
+                                    parent.Content.Add(edit.Part);
+                                }
                         }
                     };
 
@@ -154,8 +206,22 @@
             if (SelectedPacketPart == PacketContent.FirstOrDefault())
                 PacketContent.Clear();
             else
-                FindParentPart((PacketContent.First() as IContainerPart), SelectedPacketPart).
-                    Content.Remove(SelectedPacketPart);
+            {
+                var parent = FindParentPart((PacketContent.First() as IContainerPart), SelectedPacketPart);
+                parent.Content.Remove(SelectedPacketPart);
+                parent.Content = new ObservableCollection<IPacketPart>(FixOrder(parent.Content));
+            }
+        }
+
+        private IEnumerable<IPacketPart> FixOrder(IEnumerable<IPacketPart> parts)
+        {
+            int order = 0;
+            var p = parts.OrderBy(x => x.Order);
+            foreach (var part in p)
+            {
+                part.Order = order++;
+            }
+            return p;
         }
 
         private IContainerPart FindParentPart(IContainerPart source, IPacketPart finded)
@@ -170,6 +236,41 @@
             }
 
             return null;
+        }
+
+        public bool CanOrderUpSelectedPacketPart { get { return SelectedPacketPart != null && SelectedPacketPart.Order > 0; } }
+        public void OrderUpSelectedPacketPart()
+        {
+            var parent = FindParentPart(PacketContent.First() as IContainerPart, SelectedPacketPart);
+            var up = parent.Content.First(x => x.Order == SelectedPacketPart.Order - 1);
+
+            up.Order++;
+            SelectedPacketPart.Order--;
+
+            parent.Content = new ObservableCollection<IPacketPart>(parent.Content.OrderBy(x => x.Order));
+        }
+
+        public bool CanOrderDownSelectedPacketPart
+        {
+            get
+            {
+                return SelectedPacketPart != null &&
+                    SelectedPacketPart != PacketContent.First() &&
+                    selectedPacketPart.Order <
+                        FindParentPart(PacketContent.First() as IContainerPart, SelectedPacketPart).
+                        Content.Max(x => x.Order);
+            }
+        }
+
+        public void OrderDownSelectedPacketPart()
+        {
+            var parent = FindParentPart(PacketContent.First() as IContainerPart, SelectedPacketPart);
+            var down = parent.Content.First(x => x.Order == SelectedPacketPart.Order + 1);
+
+            down.Order--;
+            SelectedPacketPart.Order++;
+
+            parent.Content = new ObservableCollection<IPacketPart>(parent.Content.OrderBy(x => x.Order));
         }
     }
 }
