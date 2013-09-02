@@ -9,6 +9,7 @@
         int order;
         string name;
         string notes;
+        FloatPartPrecision precision;
 
         public Guid Id
         {
@@ -31,7 +32,11 @@
             set { notes = value; OnPropertyChanged("Notes"); }
         }
 
-        public FloatPartPrecision Precision { get; set; }
+        public FloatPartPrecision Precision
+        {
+            get { return precision; }
+            set { precision = value; OnPropertyChanged("Precision"); }
+        }
 
         public FloatPart()
         {

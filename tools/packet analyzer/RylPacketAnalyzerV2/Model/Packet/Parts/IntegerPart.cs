@@ -32,7 +32,7 @@
         }
 
         public bool IsUnsigned {get;set;}
-        public IntergerPartPrecision Precision { get; set; }
+        public IntegerPartPrecision Precision { get; set; }
 
         public IntegerPart()
         {

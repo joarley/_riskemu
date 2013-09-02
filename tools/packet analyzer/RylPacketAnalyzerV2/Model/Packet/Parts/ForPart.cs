@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.ObjectModel;
-using System.ComponentModel;
+    using System.ComponentModel;
 
     public class ForPart : IContainerPart
     {
@@ -11,6 +11,8 @@ using System.ComponentModel;
         string name;
         string notes;
         ObservableCollection<IPacketPart> content;
+        Guid? intergerPartSizeId;
+        int? size;
 
         public Guid Id
         {
@@ -39,8 +41,17 @@ using System.ComponentModel;
             set { content = value; OnPropertyChanged("Content"); }
         }
 
-        public Guid IntergerPartSizeId { get; set; }
-        public int Size { get; set; }
+        public Guid? IntergerPartSizeId
+        {
+            get { return intergerPartSizeId; }
+            set { intergerPartSizeId = value; OnPropertyChanged("IntergerPartSizeId"); }
+        }
+
+        public int? Size
+        {
+            get { return size; }
+            set { size = value; OnPropertyChanged("Size"); }
+        }
 
         public ForPart()
         {

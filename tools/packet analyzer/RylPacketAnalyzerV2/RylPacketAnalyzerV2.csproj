@@ -102,7 +102,7 @@
     <Compile Include="Model\Packet\Parts\IntegerPart.cs" />
     <Compile Include="Model\Packet\Parts\IContainerPart.cs" />
     <Compile Include="Model\Packet\Parts\ForPart.cs" />
-    <Compile Include="Model\Packet\Parts\IntergerPartPrecision.cs" />
+    <Compile Include="Model\Packet\Parts\IntegerPartPrecision.cs" />
     <Compile Include="Model\Packet\Parts\StructPart.cs" />
     <Compile Include="RylPacketAnalyzerBootstrapper .cs" />
     <Compile Include="Infrastructure\IShell.cs" />

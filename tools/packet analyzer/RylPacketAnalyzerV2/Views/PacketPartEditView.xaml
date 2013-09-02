@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
+             d:DesignHeight="300" d:DesignWidth="450"
              xmlns:RylPacketAnalyzerV2.Model.Packet.Parts="clr-namespace:RylPacketAnalyzerV2.Model.Packet.Parts">
     <UserControl.Resources>
         <ResourceDictionary Source="pack://application:,,,/Style/Style.xaml" />
@@ -35,6 +35,9 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -42,6 +45,27 @@
             <TextBox Text="{Binding Path=Part.Name, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="0" Margin="6" />
             <Label Grid.Column="0" Grid.Row="1" Margin="6">Notes</Label>
             <TextBox Text="{Binding Path=Part.Notes, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1" Margin="6" />
-        </Grid>        
+
+            <Label Grid.Column="0" Grid.Row="2" Margin="6">Precision</Label>
+            <ComboBox SelectedValue="{Binding Path=Precision}" SelectedValuePath="DataContext" Grid.Column="1" Grid.Row="2" Margin="6">
+                <ComboBoxItem DataContext="{x:Static RylPacketAnalyzerV2.Model.Packet.Parts:FloatPartPrecision.f16}" Content="16 bits" />
+                <ComboBoxItem DataContext="{x:Static RylPacketAnalyzerV2.Model.Packet.Parts:FloatPartPrecision.f32}" Content="32 bits" />
+                <ComboBoxItem DataContext="{x:Static RylPacketAnalyzerV2.Model.Packet.Parts:FloatPartPrecision.f64}" Content="64 bits" />
+                <ComboBoxItem DataContext="{x:Static RylPacketAnalyzerV2.Model.Packet.Parts:FloatPartPrecision.f128}" Content="128 bits" />
+            </ComboBox>
+
+            <Label Grid.Column="0" Grid.Row="3" Margin="6">Size Type</Label>
+            <ComboBox SelectedValuePath="DataContext" Grid.Column="1" Grid.Row="3" Margin="6">
+                <ComboBoxItem DataContext="" Content="Fixed" />
+                <ComboBoxItem DataContext="" Content="Integer Part" />
+            </ComboBox>
+
+            <Label Grid.Column="0" Grid.Row="4" Margin="6">Size</Label>
+            <TextBox Text="{Binding Path=Part.Size, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4" Margin="6" />
+            <DockPanel LastChildFill="True"  Grid.Column="1" Grid.Row="4" Margin="6">
+                <Button Content="..." Width="20" DockPanel.Dock="Right"/>
+                <TextBox Text="{Binding Path=SizeIntegerPart.Name}" DockPanel.Dock="Left" />
+            </DockPanel>
+        </Grid>
     </Grid>
 </UserControl>

@@ -1,9 +1,7 @@
 ﻿namespace RylPacketAnalyzerV2.ViewModels
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Windows.Controls;
     using Caliburn.Micro;
     using RylPacketAnalyzerV2.Model.Packet;
     using RylPacketAnalyzerV2.Model.Packet.Parts;
@@ -12,9 +10,38 @@
     {
         IPacketPart part;
         IPacketPart originalPart;
+        SizeType partSizeType;
+        int? sizeFixedValue;
+        IntegerPart sizeIntegerPart;
 
         public bool Saved { get; set; }
         public Type Type { get { return Part.GetType(); } }
+
+        public int? SizeFixedValue
+        {
+            get { return sizeFixedValue; }
+            set { sizeFixedValue = value; NotifyOfPropertyChange(() => SizeFixedValue); }
+        }
+
+        public IntegerPart SizeIntegerPart
+        {
+            get { return sizeIntegerPart; }
+            set { sizeIntegerPart = value; NotifyOfPropertyChange(() => SizeIntegerPart); }
+        }
+
+        SizeType PartSizeType
+        {
+            get { return partSizeType; }
+            set
+            {
+                partSizeType = value;
+                if (partSizeType == SizeType.Fixed) SizeFixedValue = null;
+                else if (partSizeType == SizeType.IntegerType) SizeIntegerPart = null;
+                else { SizeFixedValue = null; SizeIntegerPart = null; }
+                NotifyOfPropertyChange(() => PartSizeType);
+            }
+        }
+
         public IPacketPart Part
         {
             get { return part; }
@@ -39,6 +66,27 @@
             originalPart = part;
 
             CopyPart(part, Part);
+
+            if (Part is StringPart)
+            {
+                var strPart = Part as StringPart;
+                if (strPart.IntergerPartSizeId != null)
+                {
+                    PartSizeType = SizeType.Unknown;
+                }
+                else if (strPart.Size != null)
+                {
+                    PartSizeType = SizeType.Unknown;
+                }
+                else
+                {
+                    PartSizeType = SizeType.Unknown;
+                }
+            }
+            else if (Part is ForPart)
+            {
+
+            }
         }
 
         private void CopyPart(IPacketPart from, IPacketPart to)
@@ -59,7 +107,7 @@
             else if (from is ForPart)
             {
                 dto.IntergerPartSizeId = dfrom.IntergerPartSizeId;
-                dto.Size = dfrom.Size;                
+                dto.Size = dfrom.Size;
             }
             else if (from is IntegerPart)
             {
@@ -71,7 +119,7 @@
                 dto.IntergerPartSizeId = dfrom.IntergerPartSizeId;
                 dto.Size = dfrom.Size;
             }
-            else if (from is StructPart) { } 
+            else if (from is StructPart) { }
         }
 
         void PacketPartEditViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -93,6 +141,11 @@
         {
             Saved = false;
             TryClose();
+        }
+
+        public enum SizeType
+        {
+            Fixed, IntegerType, Unknown
         }
     }
 }

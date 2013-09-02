@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RylPacketAnalyzerV2.Model.Packet.Parts
 {
-    public enum IntergerPartPrecision
+    public enum IntegerPartPrecision
     {
         i8, i32, i64, i128
     }
