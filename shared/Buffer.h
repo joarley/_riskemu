@@ -25,53 +25,53 @@ class Buffer : public boost::enable_shared_from_this<Buffer> {
 public:
 	template<class T> struct SizedValue
 	{
-		SizedValue(T value, size_t size): value(value), size(size){}
+		SizedValue(size_t size, T value): value(value), size(size){}
 		T value;
 		size_t size;
 	};
 
 	template<class T> struct FromPositionedValue
 	{
-		FromPositionedValue(T value, size_t position): value(value), position(position){}
+		FromPositionedValue(size_t position, T value): value(value), position(position){}
 		T value;
 		size_t position;
 	};
 
 	template<class T> struct ToPositionedValue
 	{
-		ToPositionedValue(T value, size_t position): value(value), position(position){}
+		ToPositionedValue(size_t position, T value): value(value), position(position){}
 		T value;
 		size_t position;
 	};
 
-    template<class T> static const SizedValue<void*> Bytes(T *value, size_t size)
+    template<class T> static const SizedValue<void*> Bytes(size_t size, T *value)
 	{
-        return SizedValue<void*>(value, size);
+        return SizedValue<void*>(size, value);
 	}
 
-    static const SizedValue<string&> StringSizeFixed(string &value, size_t size)
+    static const SizedValue<string&> StringSizeFixed(size_t size, string &value)
 	{
-		return SizedValue<string&>(value, size);
+		return SizedValue<string&>(size, value);
 	}
 
-    static const SizedValue<char*&> StringSizeFixed(char *&value, size_t size)
+    static const SizedValue<char*&> StringSizeFixed(size_t size, char *&value)
 	{
-		return SizedValue<char*&>(value, size);
+		return SizedValue<char*&>(size, value);
 	}
 
-    static const SizedValue<const char*> StringSizeFixed(const char *value, size_t size)
+    static const SizedValue<const char*> StringSizeFixed(size_t size, const char *value)
 	{
-		return SizedValue<const char*>(value, size);
+		return SizedValue<const char*>(size, value);
 	}
 
-    template<class T> static const FromPositionedValue<T&> FromPosition(T &value, size_t position)
+    template<class T> static const FromPositionedValue<T&> FromPosition(size_t position, T &value)
 	{
-		return FromPositionedValue<T&>(value, position);
+		return FromPositionedValue<T&>(position, value);
 	}
 
-	template<class T> static const ToPositionedValue<T> ToPosition(T value, size_t position)
+	template<class T> static const ToPositionedValue<T> ToPosition(size_t position, T value)
 	{
-		return ToPositionedValue<T>(value, position);
+		return ToPositionedValue<T>(position, value);
 	}
 public:
     Buffer(size_t maxLength = 4096) : buffer(maxLength) {
@@ -231,7 +231,7 @@ public:
 
     inline Buffer& operator<<(const SizedValue<const string&> &value)
 	{
-        return *this << StringSizeFixed(value.value.c_str(), value.size);
+        return *this << StringSizeFixed(value.size, value.value.c_str());
 	}
 
     inline Buffer& operator<<(const SizedValue<void*> value)

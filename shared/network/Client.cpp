@@ -138,7 +138,8 @@ void Client::HandlerReceiveBody(std::size_t bytes_transferred, const boost::syst
 	}
 
 	*this->receivePackeBuffer << 
-		Buffer::ToPosition(Buffer::Bytes(this->receivePackeHeaderBuffer->Data(), PacketBase::PACKET_HEADER_SIZE), 0);
+		Buffer::ToPosition(0, 
+			Buffer::Bytes(PacketBase::PACKET_HEADER_SIZE, this->receivePackeHeaderBuffer->Data()));
 
 	PacketBase::DecriptBodyPacket(this->receivePackeBuffer);
 

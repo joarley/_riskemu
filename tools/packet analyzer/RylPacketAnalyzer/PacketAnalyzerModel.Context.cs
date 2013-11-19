@@ -15,8 +15,8 @@ namespace RylPacketAnalyzer
     
     public partial class Entities : DbContext
     {
-        public Entities()
-            : base("name=Entities")
+        public Entities(string path)
+            : base(path)
         {
         }
     
@@ -25,5 +25,7 @@ namespace RylPacketAnalyzer
             throw new UnintentionalCodeFirstException();
         }
     
+        public DbSet<Teste> Teste { get; set; }
+        public DbSet<TesteRel> TesteRel { get; set; }
     }
 }

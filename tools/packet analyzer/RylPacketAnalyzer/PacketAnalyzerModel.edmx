@@ -5,18 +5,109 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="RylPacketAnalyzer.Store" Alias="Self" Provider="System.Data.SqlServerCe.4.0" ProviderManifestToken="4.0" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityContainer Name="RylPacketAnalyzerStoreContainer" />
+        <EntityContainer Name="RylPacketAnalyzerStoreContainer">
+          <EntitySet Name="Teste" EntityType="RylPacketAnalyzer.Store.Teste" store:Type="Tables" />
+          <EntitySet Name="TesteRel" EntityType="RylPacketAnalyzer.Store.TesteRel" store:Type="Tables" />
+          <AssociationSet Name="teste1" Association="RylPacketAnalyzer.Store.teste1">
+            <End Role="Teste" EntitySet="Teste" />
+            <End Role="TesteRel" EntitySet="TesteRel" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Teste">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Nome" Type="nvarchar" MaxLength="100" />
+          <Property Name="Ativo" Type="bit" />
+        </EntityType>
+        <EntityType Name="TesteRel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Id_Teste" Type="uniqueidentifier" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <Association Name="teste1">
+          <End Role="Teste" Type="RylPacketAnalyzer.Store.Teste" Multiplicity="0..1" />
+          <End Role="TesteRel" Type="RylPacketAnalyzer.Store.TesteRel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teste">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TesteRel">
+              <PropertyRef Name="Id_Teste" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="RylPacketAnalyzer" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="Entities" p1:LazyLoadingEnabled="true" />
+        <EntityContainer Name="Entities" p1:LazyLoadingEnabled="true" >
+          <EntitySet Name="Teste" EntityType="RylPacketAnalyzer.Teste" />
+          <EntitySet Name="TesteRel" EntityType="RylPacketAnalyzer.TesteRel" />
+          <AssociationSet Name="teste1" Association="RylPacketAnalyzer.teste1">
+            <End Role="Teste" EntitySet="Teste" />
+            <End Role="TesteRel" EntitySet="TesteRel" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Teste">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Guid" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Nome" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="Ativo" />
+          <NavigationProperty Name="TesteRel" Relationship="RylPacketAnalyzer.teste1" FromRole="Teste" ToRole="TesteRel" />
+        </EntityType>
+        <EntityType Name="TesteRel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Guid" Name="Id" Nullable="false" />
+          <Property Type="Guid" Name="Id_Teste" />
+          <Property Type="String" Name="Name" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Teste" Relationship="RylPacketAnalyzer.teste1" FromRole="TesteRel" ToRole="Teste" />
+        </EntityType>
+        <Association Name="teste1">
+          <End Type="RylPacketAnalyzer.Teste" Role="Teste" Multiplicity="0..1" />
+          <End Type="RylPacketAnalyzer.TesteRel" Role="TesteRel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teste">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TesteRel">
+              <PropertyRef Name="Id_Teste" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="RylPacketAnalyzerStoreContainer" CdmEntityContainer="Entities" />
+        <EntityContainerMapping StorageEntityContainer="RylPacketAnalyzerStoreContainer" CdmEntityContainer="Entities" >
+          <EntitySetMapping Name="Teste">
+            <EntityTypeMapping TypeName="RylPacketAnalyzer.Teste">
+              <MappingFragment StoreEntitySet="Teste">
+                <ScalarProperty Name="Ativo" ColumnName="Ativo" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TesteRel">
+            <EntityTypeMapping TypeName="RylPacketAnalyzer.TesteRel">
+              <MappingFragment StoreEntitySet="TesteRel">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id_Teste" ColumnName="Id_Teste" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

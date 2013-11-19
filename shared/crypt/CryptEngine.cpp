@@ -54,7 +54,7 @@ void CryptEngine::XorDecrypt(Buffer_ptr buffer)
 {
     XorDecryptPacketHeader(buffer->Data());
     Cryptkey key;
-	*buffer >> Buffer::FromPosition(key, 4);
+	*buffer >> Buffer::FromPosition(4, key);
     XorDecryptPacketBody(buffer->Data(), buffer->Length(), key);
 }
 
@@ -141,10 +141,10 @@ CryptEngine::GGError CryptEngine::GGDecrypt(Buffer_ptr buffer)
 	uint32 GGDataCRC;
 	uint32 GGUseSeq;
 
-	*buffer >> Buffer::FromPosition(clientKey, buffer->Length() - 4)
-		>> Buffer::FromPosition(GGDataSize, buffer->Length() - 8)
-		>> Buffer::FromPosition(GGDataCRC, buffer->Length() - 12)
-		>> Buffer::FromPosition(GGUseSeq, buffer->Length() - 16);
+	*buffer >> Buffer::FromPosition(buffer->Length() - 4, clientKey)
+		>> Buffer::FromPosition(buffer->Length() - 8, GGDataSize)
+		>> Buffer::FromPosition(buffer->Length() - 12, GGDataCRC)
+		>> Buffer::FromPosition(buffer->Length() - 16, GGUseSeq);
 
 	clientKey = EndianChange(clientKey);
 	GGDataSize = EndianChange(GGDataSize);

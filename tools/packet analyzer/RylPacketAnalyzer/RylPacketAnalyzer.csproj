@@ -86,6 +86,12 @@
     <Compile Include="FloatPart.cs" />
     <Compile Include="ModalContentPresenter.cs" />
     <Compile Include="StructPart.cs" />
+    <Compile Include="Teste.cs">
+      <DependentUpon>PacketAnalyzerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TesteRel.cs">
+      <DependentUpon>PacketAnalyzerModel.tt</DependentUpon>
+    </Compile>
     <Page Include="CtrlPacketEdit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -174,7 +180,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RylPacketAnalyzer.Lib\RylPacketAnalyzer.Lib.vcxproj">

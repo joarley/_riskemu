@@ -31,15 +31,14 @@ void AuthServer::UnauthorizedAuthPacketReceive(Client* client, Buffer_ptr packet
 {
 #define FINALIZE BLOCK(INVOKE(this->unauthorizedAuths.erase, client), delete client)
 	
-	PARSE_PACKET(packet)
-		PARSE_CASE(packet, PktPing, ping, "Auth", client, FINALIZE)
+	PARSE_PACKET(packet, "Auth", client)
+		PARSE_CASE(PktPing, ping, FINALIZE)
 			UnauthorizedAuthPacketParse_PktPing(client, ping);
 		END_PARSE_CASE()
-		PARSE_CASE(packet, PktAuthServer, authServer, "Auth", client, FINALIZE)
+		PARSE_CASE(PktAuthServer, authServer, FINALIZE)
 			UnauthorizedAuthPacketParse_PktAuthServer(client, authServer);
 		END_PARSE_CASE()
-	END_PARSE_PACKET(packet, "Auth", client, FINALIZE)
-
+	END_PARSE_PACKET(FINALIZE)
 #undef FINALIZE
 }
 
@@ -134,7 +133,7 @@ bool AuthServer::ValidateUserPass(std::string &user, std::string &pass)  const
 	std::string u, p;
 	this->configuration.GetVariableValue("string Global::User", u);
 	this->configuration.GetVariableValue("string Global::Pass", p);	
-	return user == u && pass == p;
+	return user.compare(u) == 0 && pass.compare(p) == 0;
 }
 
 uint32 AuthServer::GetMaxAuthConnections() const
@@ -160,14 +159,14 @@ OnlineAuth::OnlineAuth(Client* client, AuthServer *authServer):
 
 void OnlineAuth::PacketReceive(Client* client, Buffer_ptr packet)
 {
-	PARSE_PACKET(packet)
-		PARSE_CASE(packet, PktServerDetail, detail, "Auth", client, INVOKE(Close))
+	PARSE_PACKET(packet, "Auth", client)
+		PARSE_CASE(PktServerDetail, detail, INVOKE(Close))
 			this->group = detail.Group;
 			this->name = detail.Name;
 			this->address = detail.Address;
 			this->status = OnlineAuthStatus::Connected;
 		END_PARSE_CASE()
-	END_PARSE_PACKET(packet, "Auth", client, INVOKE(Close))
+	END_PARSE_PACKET(INVOKE(Close))
 }
 
 void OnlineAuth::Desconnect(Client* client, bool error, const std::string& msg)

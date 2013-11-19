@@ -70,22 +70,28 @@
             if (Part is StringPart)
             {
                 var strPart = Part as StringPart;
-                if (strPart.IntergerPartSizeId != null)
+
+                SizeFixedValue = strPart.Size;
+
+                if (strPart.IntergerPartSizeId != null) PartSizeType = SizeType.IntegerType;
+                else if (strPart.Size != null) PartSizeType = SizeType.Fixed;
+                else PartSizeType = SizeType.Unknown;
+            }
+            else if (Part is ForPart)
+            {
+                var forPart = Part as ForPart;
+                if (forPart.IntergerPartSizeId != null)
                 {
-                    PartSizeType = SizeType.Unknown;
+                    PartSizeType = SizeType.IntegerType;
                 }
-                else if (strPart.Size != null)
+                else if (forPart.Size != null)
                 {
-                    PartSizeType = SizeType.Unknown;
+                    PartSizeType = SizeType.Fixed;
                 }
                 else
                 {
                     PartSizeType = SizeType.Unknown;
                 }
-            }
-            else if (Part is ForPart)
-            {
-
             }
         }
 

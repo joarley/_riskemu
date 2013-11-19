@@ -4,7 +4,11 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="c4afae8e800b42fe82343adfa4b2d226" Name="Diagram1" />
+      <Diagram DiagramId="c4afae8e800b42fe82343adfa4b2d226" Name="Diagram1" >
+        <EntityTypeShape EntityType="RylPacketAnalyzer.Teste" Width="1.5" PointX="2.2168366435062312" PointY="31.48599128401186" />
+        <EntityTypeShape EntityType="RylPacketAnalyzer.TesteRel" Width="1.5" PointX="6" PointY="1.5" />
+        <AssociationConnector Association="RylPacketAnalyzer.teste1" />
+      </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>
