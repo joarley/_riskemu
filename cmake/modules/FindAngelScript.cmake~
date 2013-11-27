@@ -2,6 +2,10 @@
 #  AngelScript_INCLUDE_DIRS - the AngelScript include directories
 #  AngelScript_LIBRARIES - link these to use AngelScript
 
+message("$ENV{ANGELSCRIPT_ROOT}/include")
+message("${ANGELSCRIPT_ROOT}/include")
+message(ANGELSCRIPT_ROOT)
+
 if(${ANGELSCRIPT_ROOT} STREQUAL "")
   if(NOT $ENV{ANGELSCRIPT_ROOT} STREQUAL "")
     set(ANGELSCRIPT_ROOT $ENV{BOOST_ROOT})

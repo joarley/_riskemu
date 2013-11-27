@@ -88,7 +88,7 @@ void Server::HandleAccept(const boost::system::error_code &ec)
 		{
 			Client *client = new Client(this->currentAcceptSocket, this->service);
 			this->acceptCallback(this, client);
-			client->InitReceiveHeader();	
+			client->InitReceiveHeader();
 		}
 	}
     InitAccept();

@@ -26,7 +26,11 @@ inline uint32 EndianChange(uint32 value) {
 #define sprintf_secure(dst, size, format, ...) sprintf_s(dst, size, format, __VA_ARGS__)
 #define fopen_secure(file, filename, mode) fopen_s(&file, filename, mode)
 #else
-
+#define strcpy_secure(dst,size,src) strcpy(dst, src)
+#define strlen_secure(str, max) strlen(str)
+#define vsprintf_secure(dst, size, format, ...) vsprintf(dst, format, __VA_ARGS__)
+#define sprintf_secure(dst, size, format, ...) sprintf(dst, format, __VA_ARGS__)
+#define fopen_secure(file, filename, mode) file = fopen(filename, mode)
 #endif
 
 #endif //_RISKEMULIBRARY_UTILS_H_

@@ -359,7 +359,7 @@ void CScriptArray::SetValue(asUINT index, void *value)
 	if( ptr == 0 ) return;
 
 	if( (subTypeId & ~asTYPEID_MASK_SEQNBR) && !(subTypeId & asTYPEID_OBJHANDLE) )
-		objType->GetEngine()->AssignScriptObject(ptr, value, subTypeId);
+		objType->GetEngine()->AssignScriptObject(ptr, value, (asIObjectType*)subTypeId);
 	else if( subTypeId & asTYPEID_OBJHANDLE )
 	{
 		void *tmp = *(void**)ptr;
@@ -692,7 +692,7 @@ void CScriptArray::Construct(SArrayBuffer *buf, asUINT start, asUINT end)
 		asIScriptEngine *engine = objType->GetEngine();
 
 		for( ; d < max; d++ )
-			*d = (void*)engine->CreateScriptObject(subTypeId);
+			*d = (void*)engine->CreateScriptObject((asIObjectType*)subTypeId);
 	}
 }
 
@@ -1199,7 +1199,7 @@ void CScriptArray::CopyBuffer(SArrayBuffer *dst, SArrayBuffer *src)
 				void **s   = (void**)src->data;
 
 				for( ; d < max; d++, s++ )
-					engine->AssignScriptObject(*d, *s, subTypeId);
+					engine->AssignScriptObject(*d, *s, (asIObjectType*)subTypeId);
 			}
 			else
 			{

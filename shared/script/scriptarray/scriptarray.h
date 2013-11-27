@@ -79,7 +79,7 @@ protected:
 	asIObjectType    *objType;
 	SArrayBuffer     *buffer;
 	int               elementSize;
-	int               subTypeId;
+	size_t               subTypeId;
 
 	bool  Less(const void *a, const void *b, bool asc, asIScriptContext *ctx);
 	void *GetArrayItemPointer(int index);

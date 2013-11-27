@@ -15,7 +15,7 @@ Gateway::Gateway(std::vector<std::string> params):
 
 bool Gateway::LoadConfig()
 {
-	if(!configuration.LoadScript("config/global.as")) 
+	if(!configuration.LoadScript("config/Global.as")) 
 	{
 		LOG->ShowError("Error Load \"config/Global.as\"\n");
 		LOG->ShowError(configuration.GetLastMessage().c_str());

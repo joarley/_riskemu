@@ -31,7 +31,7 @@ void CryptEngine::SetGGCryptParams(byte* ClientSeedKey, byte* ServerSeedKey, byt
 		delete[] GGKey;
 	}
 	size_t keylen = strlen_secure((char*)Key, 100) + 1;
-	GGKey = new byte[];
+	GGKey = new byte[keylen];
 	strcpy_secure((char*)GGKey, keylen, (char*)Key);
 
 	for (int i = 0; GGKey[i]; i++) 

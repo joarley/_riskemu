@@ -1,14 +1,6 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#if defined(_WIN32) || defined(_WIN64) 
-#ifdef _DEBUG
-//#include <vld.h>
-# endif
-#else
-# include <signal.h>
-#endif 
-
 #include "log/Logger.h"
 #include "Splash.h"
 

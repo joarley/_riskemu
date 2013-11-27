@@ -1,6 +1,6 @@
 #include "Logger.h"
 #include "Singleton.h"
-#include "utils.h"
+#include "Utils.h"
 
 #include <cstdarg>
 #include <cstdio>
@@ -259,7 +259,7 @@ int Logger::cprintf(LogFile_ptr logfile, const char* fmt, ...) {
 }
 
 int Logger::cprintf(LogFile_ptr logfile, const char *fmt, va_list argptr) {
-    DWORD written;
+    int written;
     char *p, *q;
     char tempbuf[4096]; // temporary buffer
     LOGFILEDESCRIPTOR file = logfile->GetFileDescriptor();
