@@ -259,7 +259,11 @@ int Logger::cprintf(LogFile_ptr logfile, const char* fmt, ...) {
 }
 
 int Logger::cprintf(LogFile_ptr logfile, const char *fmt, va_list argptr) {
-    int written;
+#if defined(_WIN32) || defined(_WIN64)
+	DWORD written;
+#else
+	int written;
+#endif
     char *p, *q;
     char tempbuf[4096]; // temporary buffer
     LOGFILEDESCRIPTOR file = logfile->GetFileDescriptor();

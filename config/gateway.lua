@@ -1,5 +1,5 @@
 gateway = {
-    logfile = "./log/LoginServer_" + os.date("%Y%m%d%H%M%S") + ".log",
+    logfile = "./log/LoginServer_" .. os.date("%Y%m%d%H%M%S") .. ".log",
     patch = {
 	    version = 1753,
 	    address = "localhost/patch"

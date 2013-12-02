@@ -35,26 +35,8 @@ bool Gateway::LoadConfig()
 		return false;
 	}
 
-	std::vector<const char*> vars;
-	vars.push_back("string Global::User");
-	vars.push_back("string Global::Pass");
-	vars.push_back("string Gateway::Logfile");
-	vars.push_back("string Gateway::LauncherListen::Address");
-	vars.push_back("uint16 Gateway::LauncherListen::Port");
-	vars.push_back("uint32 Gateway::LauncherListen::PatchVersion");
-	vars.push_back("string Gateway::LauncherListen::PatchAddress");
-	vars.push_back("string Gateway::AuthServerListen::Address");
-	vars.push_back("uint16 Gateway::AuthServerListen::Port");
-	vars.push_back("uint32 Gateway::AuthServerListen::MaxAuthConnections");
-	if(!configuration.CheckExistVariables(vars))
-	{
-		LOG->ShowError("Error in Script: %s\n",
-			configuration.GetLastMessage().c_str());
-		return false;
-	}
-	
 	std::string pathLogfile;
-	configuration.GetVariableValue("string Gateway::Logfile", pathLogfile);
+	configuration.GetVariableValue("gateway.logfile", pathLogfile);
 	LOG->AddObserver(LOG->CreateLogFile(pathLogfile.c_str(), false));	
 
 	return true;

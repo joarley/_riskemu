@@ -8,8 +8,11 @@ extern "C" {
 }
 #include "stdtypes.h"
 #include "Utils.h"
-#include <boost/date_time.hpp>
+#include <boost/algorithm/string.hpp>
 #include <string>
+#include <vector>
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits.hpp>
 
 class ScriptContext
 {
@@ -19,11 +22,13 @@ public:
 	inline bool LoadScript(std::string fileName);
 	inline bool Run();
 	template<class T> inline bool GetVariableValue(std::string name, T &value);
-	inline bool CheckExistVariables(std::vector<const char*> &vars);
     inline std::string GetLastMessage();
-private:
-	inline void LoadScriptFile(std::string fileName);
-	static inline std::string FormatCurrentDateTime(std::string format);
+private:	
+
+	template<class T> typename boost::enable_if<boost::is_float<T>, bool>::type  GetLuaStackValue(T &value);
+	template<class T> typename boost::enable_if<boost::is_same<T, std::string>, bool>::type  GetLuaStackValue(T &value);
+	template<class T> typename boost::enable_if<boost::is_signed<T>, bool>::type  GetLuaStackValue(T &value);
+	template<class T> typename boost::enable_if<boost::is_unsigned<T>, bool>::type  GetLuaStackValue(T &value);
 private:
 	lua_State *luaState;
     bool started;
@@ -33,7 +38,7 @@ private:
 ScriptContext::ScriptContext()
 {
     this->luaState = luaL_newstate();
-    luaL_openlibs(this->luaState);
+	luaL_requiref(this->luaState, "os", luaopen_os, 1);
     this->started = false;
 }
 
@@ -57,23 +62,64 @@ bool ScriptContext::Run()
 	return this->started;
 }
 
-template<class T> bool ScriptContext::GetVariableValue(std::string name, T &value)
+template<class T> typename boost::enable_if<boost::is_unsigned<T>, bool>::type  ScriptContext::GetLuaStackValue(T &value)
 {
-    //value =  *(T*)addr;
+	if(lua_isnumber(this->luaState, -1))
+		value = lua_tounsigned(this->luaState, -1);
+	else if(lua_isboolean(this->luaState, -1))
+		value = lua_toboolean(this->luaState, -1);
+	else
+		return false;
 	return true;
 }
 
-bool ScriptContext::CheckExistVariables(std::vector<const char*> &vars)
+template<class T> typename boost::enable_if<boost::is_signed<T>, bool>::type  ScriptContext::GetLuaStackValue(T &value)
 {
-	std::vector<const char*>::iterator it = vars.begin();
-	std::string msg;
+	if(lua_isnumber(this->luaState, -1) == 0) return false;
+	value = lua_tointeger(this->luaState, -1);
+	return true;
+}
 
-	while(it != vars.end())
+template<class T> typename boost::enable_if<boost::is_same<T, std::string>, bool>::type  ScriptContext::GetLuaStackValue(T &value)
+{
+	if(lua_isstring(this->luaState, -1) == 0) return false;
+	value = lua_tostring(this->luaState, -1);
+	return true;
+}
+
+template<class T> typename boost::enable_if<boost::is_float<T>, bool>::type  ScriptContext::GetLuaStackValue(T &value)
+{
+	if(lua_isnumber(this->luaState, -1) == 0) return false;
+	value = lua_tonumber(this->luaState, -1);
+	return true;
+}
+
+template<class T> bool ScriptContext::GetVariableValue(std::string name, T &value)
+{
+	std::vector<std::string> names;
+	boost::split(names, name, boost::is_any_of("."));
+	std::vector<std::string>::iterator it = names.begin();
+
+	lua_getglobal(this->luaState, (*it).c_str());
+	if(lua_isnil(this->luaState, -1)) return false;
+
+	it++;
+
+	if(it != names.end() && !lua_istable(this->luaState, -1))
+		return false;
+
+	while(it != names.end())
 	{
-		
+		lua_getfield(this->luaState, -1, (*it).c_str());
+		it++;
+
+		if(it != names.end() && !lua_istable(this->luaState, -1))
+			return false;
 	}
-	this->lastMessage = msg;
-	return this->lastMessage.empty();
+
+	if(lua_isnil(this->luaState, -1)) return false;
+
+	return GetLuaStackValue(value);	
 }
 
 std::string ScriptContext::GetLastMessage()
