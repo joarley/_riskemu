@@ -12,9 +12,7 @@ set(RISKEMULIBRARY_SRC
 	"./Utils.h"
 	"./packet/PktPing.h" "./packet/PktAuthServer.h" "./packet/PktAuthServerAck.h"
 	"./packet/PktServerDetail.h"
-	"./script/ScriptContext.h" "./script/scriptstdstring/scriptstdstring.cpp" 
-	"./script/scriptstdstring/scriptstdstring.h" "./script/scriptstdstring/scriptstdstring_utils.cpp"
-	"./script/scriptarray/scriptarray.cpp" "./script/scriptarray/scriptarray.h"
+	"./script/ScriptContext.h"
 	"./log/Logger.h" "./log/Logger.cpp")
 
 if(MINILZO_USE_ORIGINAL_C_LIBRARY)
@@ -24,6 +22,5 @@ if(MINILZO_USE_ORIGINAL_C_LIBRARY)
 		"./minilzo/oberhumer/minilzo.c" "./minilzo/oberhumer/minilzo.h")
 endif()
 
-
 add_library(RiskEmuLibrary ${RISKEMULIBRARY_SRC})
-target_link_libraries(RiskEmuLibrary ${Boost_LIBRARIES} ${AngelScript_LIBRARIES})
+target_link_libraries(RiskEmuLibrary ${Boost_LIBRARIES} ${LUA_LIBRARIES})

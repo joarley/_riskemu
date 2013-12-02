@@ -15,22 +15,22 @@ Gateway::Gateway(std::vector<std::string> params):
 
 bool Gateway::LoadConfig()
 {
-	if(!configuration.LoadScript("config/Global.as")) 
+	if(!configuration.LoadScript("config/global.lua")) 
 	{
-		LOG->ShowError("Error Load \"config/Global.as\"\n");
+		LOG->ShowError("Error Load \"config/global.lua\"\n");
 		LOG->ShowError(configuration.GetLastMessage().c_str());
 		return false;
 	}
-	if(!configuration.LoadScript("config/Gateway.as"))
+	if(!configuration.LoadScript("config/gateway.lua"))
 	{
-		LOG->ShowError("Error Load \"config/Gateway.as\"\n");
+		LOG->ShowError("Error Load \"config/gateway.lua\"\n");
 		LOG->ShowError(configuration.GetLastMessage().c_str());
 		return false;
 	}
 
-	if(!configuration.Bind())
+	if(!configuration.Run())
 	{
-		LOG->ShowError("Error Bind Script\n");
+		LOG->ShowError("Error Run Script\n");
 		LOG->ShowError(configuration.GetLastMessage().c_str());
 		return false;
 	}

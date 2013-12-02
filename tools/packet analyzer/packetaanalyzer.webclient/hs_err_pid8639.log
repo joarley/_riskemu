@@ -1,0 +1,649 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00007ff943c0822d, pid=8639, tid=140708578748160
+#
+# JRE version: Java(TM) SE Runtime Environment (7.0_45-b18) (build 1.7.0_45-b18)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (24.45-b08 mixed mode linux-amd64 compressed oops)
+# Problematic frame:
+# V  [libjvm.so+0x8c422d]  SignatureIterator::expect(char)+0x1d
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.sun.com/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007ff93c00a000):  JavaThread "main" [_thread_in_vm, id=8644, stack(0x00007ff944ca6000,0x00007ff944da7000)]
+
+siginfo:si_signo=SIGSEGV: si_errno=0, si_code=1 (SEGV_MAPERR), si_addr=0x000000000000000a
+
+Registers:
+RAX=0x0000000000000000, RBX=0x00007ff944da1980, RCX=0x0000000000000000, RDX=0x0000000000000000
+RSP=0x00007ff944da1830, RBP=0x00007ff944da1950, RSI=0x0000000000000028, RDI=0x00007ff944da1980
+R8 =0x0000000000000006, R9 =0x0000000000005300, R10=0x00007ff944185ce0, R11=0x00007ff939063dd0
+R12=0x00007ff944da1980, R13=0x00007ff93c00a000, R14=0x00007ff93c007690, R15=0x00000000d87456b0
+RIP=0x00007ff943c0822d, EFLAGS=0x0000000000010206, CSGSFS=0x0000000000000033, ERR=0x0000000000000004
+  TRAPNO=0x000000000000000e
+
+Top of Stack: (sp=0x00007ff944da1830)
+0x00007ff944da1830:   00007ff944da1870 00007ff944da1870
+0x00007ff944da1840:   00007ff944da1860 00007ff9439375a5
+0x00007ff944da1850:   0000000000000001 0000000000000002
+0x00007ff944da1860:   00007ff944da1880 00007ff943c080d9
+0x00007ff944da1870:   00007ff944da1c00 00007ff944da18b0
+0x00007ff944da1880:   00007ff944da18a0 00007ff943c08961
+0x00007ff944da1890:   00007ff944da18b0 0000000000000000
+0x00007ff944da18a0:   00007ff944da18f0 00007ff943b0a37e
+0x00007ff944da18b0:   00007ff9440fe6d0 00007ff9405e2ed0
+0x00007ff944da18c0:   0000000000000003 000000000000000e
+0x00007ff944da18d0:   00007ff900000000 00007ff9405e2ed1
+0x00007ff944da18e0:   00007ff939005310 00000000d877e2a0
+0x00007ff944da18f0:   00007ff944da1950 00007ff9437d5d16
+0x00007ff944da1900:   00007ff944da1c00 00007ff93901d643
+0x00007ff944da1910:   00007ff939005310 00017ff900000000
+0x00007ff944da1920:   00007ff944da1c48 00000000fffffffe
+0x00007ff944da1930:   00007ff918039b68 00007ff93c00a000
+0x00007ff944da1940:   00000000fffffffe 00007ff944da1980
+0x00007ff944da1950:   00007ff944da1970 00007ff943c082a2
+0x00007ff944da1960:   00007ff944da1980 00007ff944da1bb0
+0x00007ff944da1970:   00007ff944da19c0 00007ff94385d553
+0x00007ff944da1980:   00007ff944125370 0000000000000000
+0x00007ff944da1990:   0000000000000000 0000000000000063
+0x00007ff944da19a0:   00007ff900000000 00007ff943b20489
+0x00007ff944da19b0:   00007ff944da1bb0 0000000000000000
+0x00007ff944da19c0:   00007ff944da1c50 00007ff943937082
+0x00007ff944da19d0:   00007ff9fffffffe 0000000000000000
+0x00007ff944da19e0:   0000000000000000 00007ff944da1ab0
+0x00007ff944da19f0:   01007ff9000000b9 00007ff93c00a8c0
+0x00007ff944da1a00:   00007ff93c00a8d0 00007ff93c00aca8
+0x00007ff944da1a10:   00000000000003d8 0000000000000000
+0x00007ff944da1a20:   00007ff918039b38 00007ff918039b38 
+
+Instructions: (pc=0x00007ff943c0822d)
+0x00007ff943c0820d:   00 00 00 55 40 0f be f6 48 89 e5 53 48 89 fb 48
+0x00007ff943c0821d:   81 ec 18 01 00 00 8b 4f 10 48 8b 57 08 48 63 c1
+0x00007ff943c0822d:   0f be 44 02 0a 39 c6 74 37 89 f2 48 8d bd e0 fe
+0x00007ff943c0823d:   ff ff 48 8d 35 1e 41 14 00 31 c0 e8 83 d1 9e ff 
+
+Register to memory mapping:
+
+RAX=0x0000000000000000 is an unknown value
+RBX=0x00007ff944da1980 is pointing into the stack for thread: 0x00007ff93c00a000
+RCX=0x0000000000000000 is an unknown value
+RDX=0x0000000000000000 is an unknown value
+RSP=0x00007ff944da1830 is pointing into the stack for thread: 0x00007ff93c00a000
+RBP=0x00007ff944da1950 is pointing into the stack for thread: 0x00007ff93c00a000
+RSI=0x0000000000000028 is an unknown value
+RDI=0x00007ff944da1980 is pointing into the stack for thread: 0x00007ff93c00a000
+R8 =0x0000000000000006 is an unknown value
+R9 =0x0000000000005300 is an unknown value
+R10=0x00007ff944185ce0: <offset 0xe41ce0> in /usr/lib/jvm/java-7-oracle/jre/lib/amd64/server/libjvm.so at 0x00007ff943344000
+R11=0x00007ff939063dd0 is at entry_point+16 in (nmethod*)0x00007ff939063c90
+R12=0x00007ff944da1980 is pointing into the stack for thread: 0x00007ff93c00a000
+R13=0x00007ff93c00a000 is a thread
+R14=0x00007ff93c007690 is an unknown value
+R15=0x00000000d87456b0 is an oop
+{method} 
+ - klass: {other class}
+
+
+Stack: [0x00007ff944ca6000,0x00007ff944da7000],  sp=0x00007ff944da1830,  free space=1006k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [libjvm.so+0x8c422d]  SignatureIterator::expect(char)+0x1d
+V  [libjvm.so+0x8c42a2]  SignatureIterator::iterate_parameters()+0x22
+V  [libjvm.so+0x519553]  frame::interpreter_callee_receiver_addr(Symbol*)+0x43
+V  [libjvm.so+0x5f3082]  InterpreterRuntime::resolve_invoke(JavaThread*, Bytecodes::Code)+0x3d2
+j  scala.collection.SetLike$class.$plus$plus(Lscala/collection/SetLike;Lscala/collection/GenTraversableOnce;)Lscala/collection/Set;+25
+j  scala.collection.AbstractSet.$plus$plus(Lscala/collection/GenTraversableOnce;)Lscala/collection/Set;+2
+j  scala.collection.immutable.HashSet.$plus(Ljava/lang/Object;Ljava/lang/Object;Lscala/collection/Seq;)Lscala/collection/immutable/HashSet;+10
+j  scala.collection.immutable.Set$Set4.$plus(Ljava/lang/Object;)Lscala/collection/immutable/Set;+55
+j  scala.collection.immutable.Set$Set4.$plus(Ljava/lang/Object;)Lscala/collection/Set;+2
+j  scala.collection.mutable.SetBuilder.$plus$eq(Ljava/lang/Object;)Lscala/collection/mutable/SetBuilder;+6
+j  scala.collection.mutable.SetBuilder.$plus$eq(Ljava/lang/Object;)Lscala/collection/generic/Growable;+2
+j  scala.collection.generic.Growable$$anonfun$$plus$plus$eq$1.apply(Ljava/lang/Object;)Lscala/collection/generic/Growable;+5
+j  scala.collection.generic.Growable$$anonfun$$plus$plus$eq$1.apply(Ljava/lang/Object;)Ljava/lang/Object;+2
+j  scala.collection.immutable.List.foreach(Lscala/Function1;)V+15
+j  scala.collection.generic.Growable$class.$plus$plus$eq(Lscala/collection/generic/Growable;Lscala/collection/TraversableOnce;)Lscala/collection/generic/Growable;+14
+j  scala.collection.mutable.SetBuilder.$plus$plus$eq(Lscala/collection/TraversableOnce;)Lscala/collection/generic/Growable;+2
+j  scala.collection.TraversableLike$class.to(Lscala/collection/TraversableLike;Lscala/collection/generic/CanBuildFrom;)Ljava/lang/Object;+21
+j  scala.collection.AbstractTraversable.to(Lscala/collection/generic/CanBuildFrom;)Ljava/lang/Object;+2
+j  scala.collection.TraversableOnce$class.toSet(Lscala/collection/TraversableOnce;)Lscala/collection/immutable/Set;+7
+j  scala.collection.AbstractTraversable.toSet()Lscala/collection/immutable/Set;+1
+j  scala.runtime.ScalaRunTime$.<init>()V+57
+j  scala.runtime.ScalaRunTime$.<clinit>()V+3
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x5f8485]  JavaCalls::call_helper(JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x365
+V  [libjvm.so+0x5f6ee8]  JavaCalls::call(JavaValue*, methodHandle, JavaCallArguments*, Thread*)+0x28
+V  [libjvm.so+0x5b8eca]  instanceKlass::call_class_initializer(Thread*)+0xca
+V  [libjvm.so+0x5b9124]  instanceKlass::initialize_impl(instanceKlassHandle, Thread*)+0x234
+V  [libjvm.so+0x5b957a]  instanceKlass::initialize(Thread*)+0x6a
+V  [libjvm.so+0x73dd63]  LinkResolver::resolve_field(FieldAccessInfo&, constantPoolHandle, int, Bytecodes::Code, bool, bool, Thread*)+0x6e3
+V  [libjvm.so+0x73debb]  LinkResolver::resolve_field(FieldAccessInfo&, constantPoolHandle, int, Bytecodes::Code, bool, Thread*)+0x1b
+V  [libjvm.so+0x5f2695]  InterpreterRuntime::resolve_get_put(JavaThread*, Bytecodes::Code)+0x105
+j  scala.collection.mutable.HashTable$HashUtils$class.elemHashCode(Lscala/collection/mutable/HashTable$HashUtils;Ljava/lang/Object;)I+0
+j  scala.collection.mutable.HashMap.elemHashCode(Ljava/lang/Object;)I+2
+j  scala.collection.mutable.HashTable$class.findOrAddEntry(Lscala/collection/mutable/HashTable;Ljava/lang/Object;Ljava/lang/Object;)Lscala/collection/mutable/HashEntry;+3
+j  scala.collection.mutable.HashMap.findOrAddEntry(Ljava/lang/Object;Ljava/lang/Object;)Lscala/collection/mutable/HashEntry;+3
+j  scala.collection.mutable.HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Lscala/Option;+3
+j  scala.collection.mutable.HashMap.update(Ljava/lang/Object;Ljava/lang/Object;)V+3
+j  scala.sys.SystemProperties$.addHelp(Lscala/sys/Prop;Ljava/lang/String;)Lscala/sys/Prop;+11
+j  scala.sys.SystemProperties$.bool(Ljava/lang/String;Ljava/lang/String;)Lscala/sys/BooleanProp;+28
+j  scala.sys.SystemProperties$.noTraceSupression$lzycompute()Lscala/sys/BooleanProp;+22
+j  scala.sys.SystemProperties$.noTraceSupression()Lscala/sys/BooleanProp;+13
+j  scala.util.control.NoStackTrace$.<init>()V+17
+j  scala.util.control.NoStackTrace$.<clinit>()V+3
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x5f8485]  JavaCalls::call_helper(JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x365
+V  [libjvm.so+0x5f6ee8]  JavaCalls::call(JavaValue*, methodHandle, JavaCallArguments*, Thread*)+0x28
+V  [libjvm.so+0x5b8eca]  instanceKlass::call_class_initializer(Thread*)+0xca
+V  [libjvm.so+0x5b9124]  instanceKlass::initialize_impl(instanceKlassHandle, Thread*)+0x234
+V  [libjvm.so+0x5b957a]  instanceKlass::initialize(Thread*)+0x6a
+V  [libjvm.so+0x73dd63]  LinkResolver::resolve_field(FieldAccessInfo&, constantPoolHandle, int, Bytecodes::Code, bool, bool, Thread*)+0x6e3
+V  [libjvm.so+0x73debb]  LinkResolver::resolve_field(FieldAccessInfo&, constantPoolHandle, int, Bytecodes::Code, bool, Thread*)+0x1b
+V  [libjvm.so+0x5f2695]  InterpreterRuntime::resolve_get_put(JavaThread*, Bytecodes::Code)+0x105
+j  scala.util.control.NoStackTrace$class.fillInStackTrace(Lscala/util/control/NoStackTrace;)Ljava/lang/Throwable;+0
+j  scala.util.control.BreakControl.fillInStackTrace()Ljava/lang/Throwable;+1
+j  java.lang.Throwable.<init>()V+24
+j  scala.util.control.BreakControl.<init>()V+1
+j  scala.util.control.Breaks.<init>()V+9
+j  scala.collection.Traversable$.<init>()V+13
+j  scala.collection.Traversable$.<clinit>()V+3
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x5f8485]  JavaCalls::call_helper(JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x365
+V  [libjvm.so+0x5f6ee8]  JavaCalls::call(JavaValue*, methodHandle, JavaCallArguments*, Thread*)+0x28
+V  [libjvm.so+0x5b8eca]  instanceKlass::call_class_initializer(Thread*)+0xca
+V  [libjvm.so+0x5b9124]  instanceKlass::initialize_impl(instanceKlassHandle, Thread*)+0x234
+V  [libjvm.so+0x5b957a]  instanceKlass::initialize(Thread*)+0x6a
+V  [libjvm.so+0x73dd63]  LinkResolver::resolve_field(FieldAccessInfo&, constantPoolHandle, int, Bytecodes::Code, bool, bool, Thread*)+0x6e3
+V  [libjvm.so+0x73debb]  LinkResolver::resolve_field(FieldAccessInfo&, constantPoolHandle, int, Bytecodes::Code, bool, Thread*)+0x1b
+V  [libjvm.so+0x5f2695]  InterpreterRuntime::resolve_get_put(JavaThread*, Bytecodes::Code)+0x105
+j  scala.package$.<init>()V+20
+j  scala.package$.<clinit>()V+3
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x5f8485]  JavaCalls::call_helper(JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x365
+V  [libjvm.so+0x5f6ee8]  JavaCalls::call(JavaValue*, methodHandle, JavaCallArguments*, Thread*)+0x28
+V  [libjvm.so+0x5b8eca]  instanceKlass::call_class_initializer(Thread*)+0xca
+V  [libjvm.so+0x5b9124]  instanceKlass::initialize_impl(instanceKlassHandle, Thread*)+0x234
+V  [libjvm.so+0x5b957a]  instanceKlass::initialize(Thread*)+0x6a
+V  [libjvm.so+0x73dd63]  LinkResolver::resolve_field(FieldAccessInfo&, constantPoolHandle, int, Bytecodes::Code, bool, bool, Thread*)+0x6e3
+V  [libjvm.so+0x73debb]  LinkResolver::resolve_field(FieldAccessInfo&, constantPoolHandle, int, Bytecodes::Code, bool, Thread*)+0x1b
+V  [libjvm.so+0x5f2695]  InterpreterRuntime::resolve_get_put(JavaThread*, Bytecodes::Code)+0x105
+j  scala.Predef$.<init>()V+8
+j  scala.Predef$.<clinit>()V+3
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x5f8485]  JavaCalls::call_helper(JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x365
+V  [libjvm.so+0x5f6ee8]  JavaCalls::call(JavaValue*, methodHandle, JavaCallArguments*, Thread*)+0x28
+V  [libjvm.so+0x5b8eca]  instanceKlass::call_class_initializer(Thread*)+0xca
+V  [libjvm.so+0x5b9124]  instanceKlass::initialize_impl(instanceKlassHandle, Thread*)+0x234
+V  [libjvm.so+0x5b957a]  instanceKlass::initialize(Thread*)+0x6a
+V  [libjvm.so+0x73dd63]  LinkResolver::resolve_field(FieldAccessInfo&, constantPoolHandle, int, Bytecodes::Code, bool, bool, Thread*)+0x6e3
+V  [libjvm.so+0x73debb]  LinkResolver::resolve_field(FieldAccessInfo&, constantPoolHandle, int, Bytecodes::Code, bool, Thread*)+0x1b
+V  [libjvm.so+0x5f2695]  InterpreterRuntime::resolve_get_put(JavaThread*, Bytecodes::Code)+0x105
+j  sbt.xMain.run(Lxsbti/AppConfiguration;)Lxsbti/MainResult;+10
+j  xsbt.boot.Launch$$anonfun$run$1.apply()Ljava/lang/Object;+10
+j  xsbt.boot.Launch$.withContextLoader(Ljava/lang/ClassLoader;Lscala/Function0;)Ljava/lang/Object;+15
+j  xsbt.boot.Launch$.run(Lxsbti/Launcher;Lxsbt/boot/RunConfiguration;)Lxsbti/MainResult;+97
+j  xsbt.boot.Launch$$anonfun$explicit$1.apply(Ljava/lang/Object;)Ljava/lang/Object;+16
+j  xsbt.boot.Launch$.launch(Lscala/Function1;Lxsbt/boot/RunConfiguration;)Lscala/Option;+2
+j  xsbt.boot.Launch$.apply(Lscala/collection/immutable/List;)Lscala/Option;+323
+j  xsbt.boot.Boot$.runImpl([Ljava/lang/String;)Lscala/Option;+19
+j  xsbt.boot.Boot$.main([Ljava/lang/String;)V+145
+j  xsbt.boot.Boot.main([Ljava/lang/String;)V+4
+...<more frames>...
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+j  scala.collection.SetLike$class.$plus$plus(Lscala/collection/SetLike;Lscala/collection/GenTraversableOnce;)Lscala/collection/Set;+25
+j  scala.collection.AbstractSet.$plus$plus(Lscala/collection/GenTraversableOnce;)Lscala/collection/Set;+2
+j  scala.collection.immutable.HashSet.$plus(Ljava/lang/Object;Ljava/lang/Object;Lscala/collection/Seq;)Lscala/collection/immutable/HashSet;+10
+j  scala.collection.immutable.Set$Set4.$plus(Ljava/lang/Object;)Lscala/collection/immutable/Set;+55
+j  scala.collection.immutable.Set$Set4.$plus(Ljava/lang/Object;)Lscala/collection/Set;+2
+j  scala.collection.mutable.SetBuilder.$plus$eq(Ljava/lang/Object;)Lscala/collection/mutable/SetBuilder;+6
+j  scala.collection.mutable.SetBuilder.$plus$eq(Ljava/lang/Object;)Lscala/collection/generic/Growable;+2
+j  scala.collection.generic.Growable$$anonfun$$plus$plus$eq$1.apply(Ljava/lang/Object;)Lscala/collection/generic/Growable;+5
+j  scala.collection.generic.Growable$$anonfun$$plus$plus$eq$1.apply(Ljava/lang/Object;)Ljava/lang/Object;+2
+j  scala.collection.immutable.List.foreach(Lscala/Function1;)V+15
+j  scala.collection.generic.Growable$class.$plus$plus$eq(Lscala/collection/generic/Growable;Lscala/collection/TraversableOnce;)Lscala/collection/generic/Growable;+14
+j  scala.collection.mutable.SetBuilder.$plus$plus$eq(Lscala/collection/TraversableOnce;)Lscala/collection/generic/Growable;+2
+j  scala.collection.TraversableLike$class.to(Lscala/collection/TraversableLike;Lscala/collection/generic/CanBuildFrom;)Ljava/lang/Object;+21
+j  scala.collection.AbstractTraversable.to(Lscala/collection/generic/CanBuildFrom;)Ljava/lang/Object;+2
+j  scala.collection.TraversableOnce$class.toSet(Lscala/collection/TraversableOnce;)Lscala/collection/immutable/Set;+7
+j  scala.collection.AbstractTraversable.toSet()Lscala/collection/immutable/Set;+1
+j  scala.runtime.ScalaRunTime$.<init>()V+57
+j  scala.runtime.ScalaRunTime$.<clinit>()V+3
+v  ~StubRoutines::call_stub
+j  scala.collection.mutable.HashTable$HashUtils$class.elemHashCode(Lscala/collection/mutable/HashTable$HashUtils;Ljava/lang/Object;)I+0
+j  scala.collection.mutable.HashMap.elemHashCode(Ljava/lang/Object;)I+2
+j  scala.collection.mutable.HashTable$class.findOrAddEntry(Lscala/collection/mutable/HashTable;Ljava/lang/Object;Ljava/lang/Object;)Lscala/collection/mutable/HashEntry;+3
+j  scala.collection.mutable.HashMap.findOrAddEntry(Ljava/lang/Object;Ljava/lang/Object;)Lscala/collection/mutable/HashEntry;+3
+j  scala.collection.mutable.HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Lscala/Option;+3
+j  scala.collection.mutable.HashMap.update(Ljava/lang/Object;Ljava/lang/Object;)V+3
+j  scala.sys.SystemProperties$.addHelp(Lscala/sys/Prop;Ljava/lang/String;)Lscala/sys/Prop;+11
+j  scala.sys.SystemProperties$.bool(Ljava/lang/String;Ljava/lang/String;)Lscala/sys/BooleanProp;+28
+j  scala.sys.SystemProperties$.noTraceSupression$lzycompute()Lscala/sys/BooleanProp;+22
+j  scala.sys.SystemProperties$.noTraceSupression()Lscala/sys/BooleanProp;+13
+j  scala.util.control.NoStackTrace$.<init>()V+17
+j  scala.util.control.NoStackTrace$.<clinit>()V+3
+v  ~StubRoutines::call_stub
+j  scala.util.control.NoStackTrace$class.fillInStackTrace(Lscala/util/control/NoStackTrace;)Ljava/lang/Throwable;+0
+j  scala.util.control.BreakControl.fillInStackTrace()Ljava/lang/Throwable;+1
+j  java.lang.Throwable.<init>()V+24
+j  scala.util.control.BreakControl.<init>()V+1
+j  scala.util.control.Breaks.<init>()V+9
+j  scala.collection.Traversable$.<init>()V+13
+j  scala.collection.Traversable$.<clinit>()V+3
+v  ~StubRoutines::call_stub
+j  scala.package$.<init>()V+20
+j  scala.package$.<clinit>()V+3
+v  ~StubRoutines::call_stub
+j  scala.Predef$.<init>()V+8
+j  scala.Predef$.<clinit>()V+3
+v  ~StubRoutines::call_stub
+j  sbt.xMain.run(Lxsbti/AppConfiguration;)Lxsbti/MainResult;+10
+j  xsbt.boot.Launch$$anonfun$run$1.apply()Ljava/lang/Object;+10
+j  xsbt.boot.Launch$.withContextLoader(Ljava/lang/ClassLoader;Lscala/Function0;)Ljava/lang/Object;+15
+j  xsbt.boot.Launch$.run(Lxsbti/Launcher;Lxsbt/boot/RunConfiguration;)Lxsbti/MainResult;+97
+j  xsbt.boot.Launch$$anonfun$explicit$1.apply(Ljava/lang/Object;)Ljava/lang/Object;+16
+j  xsbt.boot.Launch$.launch(Lscala/Function1;Lxsbt/boot/RunConfiguration;)Lscala/Option;+2
+j  xsbt.boot.Launch$.apply(Lscala/collection/immutable/List;)Lscala/Option;+323
+j  xsbt.boot.Boot$.runImpl([Ljava/lang/String;)Lscala/Option;+19
+j  xsbt.boot.Boot$.main([Ljava/lang/String;)V+145
+j  xsbt.boot.Boot.main([Ljava/lang/String;)V+4
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x00007ff93c119000 JavaThread "Service Thread" daemon [_thread_blocked, id=8653, stack(0x00007ff933bfc000,0x00007ff933cfd000)]
+  0x00007ff93c116800 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=8652, stack(0x00007ff933cfd000,0x00007ff933dfe000)]
+  0x00007ff93c114000 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=8651, stack(0x00007ff933dfe000,0x00007ff933eff000)]
+  0x00007ff93c109800 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=8650, stack(0x00007ff933eff000,0x00007ff934000000)]
+  0x00007ff93c0f2800 JavaThread "Finalizer" daemon [_thread_blocked, id=8649, stack(0x00007ff9386f7000,0x00007ff9387f8000)]
+  0x00007ff93c0ee800 JavaThread "Reference Handler" daemon [_thread_blocked, id=8648, stack(0x00007ff9387f8000,0x00007ff9388f9000)]
+=>0x00007ff93c00a000 JavaThread "main" [_thread_in_vm, id=8644, stack(0x00007ff944ca6000,0x00007ff944da7000)]
+
+Other Threads:
+  0x00007ff93c0ec800 VMThread [stack: 0x00007ff9388f9000,0x00007ff9389fa000] [id=8647]
+  0x00007ff93c124000 WatcherThread [stack: 0x00007ff933afb000,0x00007ff933bfc000] [id=8654]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap
+ PSYoungGen      total 56832K, used 21735K [0x00000000f5500000, 0x00000000f9400000, 0x0000000100000000)
+  eden space 49152K, 44% used [0x00000000f5500000,0x00000000f6a39f88,0x00000000f8500000)
+  from space 7680K, 0% used [0x00000000f8c80000,0x00000000f8c80000,0x00000000f9400000)
+  to   space 7680K, 0% used [0x00000000f8500000,0x00000000f8500000,0x00000000f8c80000)
+ ParOldGen       total 128000K, used 0K [0x00000000e0000000, 0x00000000e7d00000, 0x00000000f5500000)
+  object space 128000K, 0% used [0x00000000e0000000,0x00000000e0000000,0x00000000e7d00000)
+ PSPermGen       total 131072K, used 7672K [0x00000000d8000000, 0x00000000e0000000, 0x00000000e0000000)
+  object space 131072K, 5% used [0x00000000d8000000,0x00000000d877e2c0,0x00000000e0000000)
+
+Card table byte_map: [0x00007ff941e67000,0x00007ff941fa8000] byte_map_base: 0x00007ff9417a7000
+
+Polling page: 0x00007ff944dc9000
+
+Code Cache  [0x00007ff939000000, 0x00007ff939270000, 0x00007ff93c000000)
+ total_blobs=235 nmethods=19 adapters=171 free_code_cache=48707Kb largest_free_block=49856384
+
+Compilation events (10 events):
+Event: 0.287 Thread 0x00007ff93c116800   15             java.util.jar.Manifest$FastInputStream::readLine (167 bytes)
+Event: 0.294 Thread 0x00007ff93c114000   16 %           sun.nio.cs.UTF_8$Decoder::decode @ 20 (640 bytes)
+Event: 0.310 Thread 0x00007ff93c116800 nmethod 15 0x00007ff939068d90 code [0x00007ff939068ee0, 0x00007ff939069308]
+Event: 0.348 Thread 0x00007ff93c114000 nmethod 16% 0x00007ff93906f490 code [0x00007ff93906f7e0, 0x00007ff9390708d0]
+Event: 0.351 Thread 0x00007ff93c116800   17             sun.nio.cs.UTF_8$Decoder::decode (640 bytes)
+Event: 0.360 Thread 0x00007ff93c114000   18             java.lang.String::indexOf (7 bytes)
+Event: 0.371 Thread 0x00007ff93c114000 nmethod 18 0x00007ff9390658d0 code [0x00007ff939065a20, 0x00007ff939065b88]
+Event: 0.385 Thread 0x00007ff93c114000   19             java.io.UnixFileSystem::normalize (75 bytes)
+Event: 0.389 Thread 0x00007ff93c116800 nmethod 17 0x00007ff939071f10 code [0x00007ff939072200, 0x00007ff939072fb0]
+Event: 0.389 Thread 0x00007ff93c114000 nmethod 19 0x00007ff9390694d0 code [0x00007ff939069640, 0x00007ff939069898]
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Internal exceptions (10 events):
+Event: 0.384 Thread 0x00007ff93c00a000 Threw 0x00000000f64a7f50 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 0.392 Thread 0x00007ff93c00a000 Threw 0x00000000f64c22c8 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 0.392 Thread 0x00007ff93c00a000 Threw 0x00000000f64c2678 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 0.392 Thread 0x00007ff93c00a000 Threw 0x00000000f64c2e10 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 0.392 Thread 0x00007ff93c00a000 Threw 0x00000000f64c6890 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 0.393 Thread 0x00007ff93c00a000 Threw 0x00000000f64c6d80 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 0.393 Thread 0x00007ff93c00a000 Threw 0x00000000f64c7958 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 0.396 Thread 0x00007ff93c00a000 Threw 0x00000000f64ef7d8 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 0.396 Thread 0x00007ff93c00a000 Threw 0x00000000f64efbd8 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 0.396 Thread 0x00007ff93c00a000 Threw 0x00000000f64f0480 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+
+Events (10 events):
+Event: 0.383 loading class 0x00007ff93c3e2570
+Event: 0.383 loading class 0x00007ff93c3e2570 done
+Event: 0.384 loading class 0x00007ff93c3e0b40
+Event: 0.384 loading class 0x00007ff93c3e0b40 done
+Event: 0.392 loading class 0x00007ff93c3e05e0
+Event: 0.392 loading class 0x00007ff93c3e05e0 done
+Event: 0.392 loading class 0x00007ff93c3ff770
+Event: 0.392 loading class 0x00007ff93c3ff770 done
+Event: 0.396 loading class 0x00007ff93c3ff7b0
+Event: 0.396 loading class 0x00007ff93c3ff7b0 done
+
+
+Dynamic libraries:
+00400000-00401000 r-xp 00000000 08:11 404792                             /usr/lib/jvm/java-7-oracle/jre/bin/java
+00600000-00601000 rw-p 00000000 08:11 404792                             /usr/lib/jvm/java-7-oracle/jre/bin/java
+01dcf000-01df0000 rw-p 00000000 00:00 0                                  [heap]
+d8000000-e7d00000 rw-p 00000000 00:00 0 
+e7d00000-f5500000 rw-p 00000000 00:00 0 
+f5500000-f9400000 rw-p 00000000 00:00 0 
+f9400000-100000000 rw-p 00000000 00:00 0 
+7ff90c000000-7ff90c021000 rw-p 00000000 00:00 0 
+7ff90c021000-7ff910000000 ---p 00000000 00:00 0 
+7ff910000000-7ff910021000 rw-p 00000000 00:00 0 
+7ff910021000-7ff914000000 ---p 00000000 00:00 0 
+7ff914000000-7ff9141cf000 rw-p 00000000 00:00 0 
+7ff9141cf000-7ff918000000 ---p 00000000 00:00 0 
+7ff918000000-7ff918137000 rw-p 00000000 00:00 0 
+7ff918137000-7ff91c000000 ---p 00000000 00:00 0 
+7ff91c000000-7ff91c021000 rw-p 00000000 00:00 0 
+7ff91c021000-7ff920000000 ---p 00000000 00:00 0 
+7ff920000000-7ff920021000 rw-p 00000000 00:00 0 
+7ff920021000-7ff924000000 ---p 00000000 00:00 0 
+7ff924000000-7ff924021000 rw-p 00000000 00:00 0 
+7ff924021000-7ff928000000 ---p 00000000 00:00 0 
+7ff928000000-7ff928021000 rw-p 00000000 00:00 0 
+7ff928021000-7ff92c000000 ---p 00000000 00:00 0 
+7ff92c000000-7ff92c021000 rw-p 00000000 00:00 0 
+7ff92c021000-7ff930000000 ---p 00000000 00:00 0 
+7ff9332ca000-7ff93350f000 rw-p 00000000 00:00 0 
+7ff93350f000-7ff933512000 r--s 00018000 08:12 1310938                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/logging-0.13.0.jar
+7ff933512000-7ff933516000 r--s 0001d000 08:12 1310968                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/task-system-0.13.0.jar
+7ff933516000-7ff933518000 r--s 00004000 08:12 1310950                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/test-agent-0.13.0.jar
+7ff933518000-7ff93351c000 r--s 00022000 08:12 1310948                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/sbinary_2.10-0.4.2.jar
+7ff93351c000-7ff933521000 r--s 0003b000 08:12 1310929                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/incremental-compiler-0.13.0.jar
+7ff933521000-7ff933523000 r--s 00002000 08:12 1310975                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/test-interface-1.0.jar
+7ff933523000-7ff933526000 r--s 0001d000 08:12 1310960                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/tasks-0.13.0.jar
+7ff933526000-7ff93352c000 r--s 00042000 08:12 1310958                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/api-0.13.0.jar
+7ff93352c000-7ff933541000 r--s 00114000 08:12 1310956                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/ivy-2.3.0-rc1.jar
+7ff933541000-7ff933564000 r--s 001c3000 08:12 1310945                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/main-0.13.0.jar
+7ff933564000-7ff9335d6000 r--s 00659000 08:12 1310792                    /home/joarley/.sbt/boot/scala-2.10.2/lib/scala-library.jar
+7ff9335d6000-7ff9336d3000 r--s 00cc2000 08:12 1310795                    /home/joarley/.sbt/boot/scala-2.10.2/lib/scala-compiler.jar
+7ff9336d3000-7ff9336e3000 r-xp 00000000 08:11 404857                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/libnio.so
+7ff9336e3000-7ff9338e3000 ---p 00010000 08:11 404857                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/libnio.so
+7ff9338e3000-7ff9338e4000 rw-p 00010000 08:11 404857                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/libnio.so
+7ff9338e4000-7ff9338fa000 r-xp 00000000 08:11 404880                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/libnet.so
+7ff9338fa000-7ff933afa000 ---p 00016000 08:11 404880                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/libnet.so
+7ff933afa000-7ff933afb000 rw-p 00016000 08:11 404880                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/libnet.so
+7ff933afb000-7ff933afc000 ---p 00000000 00:00 0 
+7ff933afc000-7ff933bfc000 rw-p 00000000 00:00 0                          [stack:8654]
+7ff933bfc000-7ff933bff000 ---p 00000000 00:00 0 
+7ff933bff000-7ff933cfd000 rw-p 00000000 00:00 0                          [stack:8653]
+7ff933cfd000-7ff933d00000 ---p 00000000 00:00 0 
+7ff933d00000-7ff933dfe000 rw-p 00000000 00:00 0                          [stack:8652]
+7ff933dfe000-7ff933e01000 ---p 00000000 00:00 0 
+7ff933e01000-7ff933eff000 rw-p 00000000 00:00 0                          [stack:8651]
+7ff933eff000-7ff933f02000 ---p 00000000 00:00 0 
+7ff933f02000-7ff934000000 rw-p 00000000 00:00 0                          [stack:8650]
+7ff934000000-7ff934021000 rw-p 00000000 00:00 0 
+7ff934021000-7ff938000000 ---p 00000000 00:00 0 
+7ff938001000-7ff938005000 r--s 00031000 08:12 1310973                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/command-0.13.0.jar
+7ff938005000-7ff938007000 r--s 00001000 08:12 1310947                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/cross-0.13.0.jar
+7ff938007000-7ff938009000 r--s 00001000 08:12 1310957                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/launcher-interface-0.13.0.jar
+7ff938009000-7ff93800c000 r--s 00019000 08:12 1310963                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/compile-0.13.0.jar
+7ff93800c000-7ff93800e000 r--s 00013000 08:12 1310939                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/classpath-0.13.0.jar
+7ff93800e000-7ff938011000 r--s 00013000 08:12 1310965                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/testing-0.13.0.jar
+7ff938011000-7ff938014000 r--s 00012000 08:12 1310959                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/classfile-0.13.0.jar
+7ff938014000-7ff9386f7000 r--p 00000000 08:11 397067                     /usr/lib/locale/locale-archive
+7ff9386f7000-7ff9386fa000 ---p 00000000 00:00 0 
+7ff9386fa000-7ff9387f8000 rw-p 00000000 00:00 0                          [stack:8649]
+7ff9387f8000-7ff9387fb000 ---p 00000000 00:00 0 
+7ff9387fb000-7ff9388f9000 rw-p 00000000 00:00 0                          [stack:8648]
+7ff9388f9000-7ff9388fa000 ---p 00000000 00:00 0 
+7ff9388fa000-7ff939000000 rw-p 00000000 00:00 0                          [stack:8647]
+7ff939000000-7ff939270000 rwxp 00000000 00:00 0 
+7ff939270000-7ff93c48e000 rw-p 00000000 00:00 0 
+7ff93c48e000-7ff940000000 ---p 00000000 00:00 0 
+7ff940001000-7ff940004000 r--s 0001b000 08:12 1310951                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/process-0.13.0.jar
+7ff940004000-7ff940008000 r--s 00034000 08:12 1310966                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/jsch-0.1.46.jar
+7ff940008000-7ff940010000 r--s 0005e000 08:12 1310927                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/actions-0.13.0.jar
+7ff940010000-7ff940045000 r--s 002d2000 08:12 1310791                    /home/joarley/.sbt/boot/scala-2.10.2/lib/scala-reflect.jar
+7ff940045000-7ff94005f000 r--s 000fc000 08:12 658133                     /home/joarley/.bin/apps/activator-1.0.8/activator-launch-1.0.8.jar
+7ff94005f000-7ff9403ad000 rw-p 00000000 00:00 0 
+7ff9403ad000-7ff940569000 r--s 039b2000 08:11 404911                     /usr/lib/jvm/java-7-oracle/jre/lib/rt.jar
+7ff940569000-7ff941b7a000 rw-p 00000000 00:00 0 
+7ff941b7a000-7ff941b7b000 ---p 00000000 00:00 0 
+7ff941b7b000-7ff941c7b000 rw-p 00000000 00:00 0                          [stack:8646]
+7ff941c7b000-7ff941c7c000 ---p 00000000 00:00 0 
+7ff941c7c000-7ff941dfb000 rw-p 00000000 00:00 0                          [stack:8645]
+7ff941dfb000-7ff941e67000 rw-p 00000000 00:00 0 
+7ff941e67000-7ff941ee6000 rw-p 00000000 00:00 0 
+7ff941ee6000-7ff941f51000 rw-p 00000000 00:00 0 
+7ff941f51000-7ff941f71000 rw-p 00000000 00:00 0 
+7ff941f71000-7ff941fa7000 rw-p 00000000 00:00 0 
+7ff941fa7000-7ff941fa8000 rw-p 00000000 00:00 0 
+7ff941fa8000-7ff941fc2000 r-xp 00000000 08:11 404897                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/libzip.so
+7ff941fc2000-7ff9421c2000 ---p 0001a000 08:11 404897                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/libzip.so
+7ff9421c2000-7ff9421c3000 rw-p 0001a000 08:11 404897                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/libzip.so
+7ff9421c3000-7ff9421cf000 r-xp 00000000 08:11 265923                     /lib/x86_64-linux-gnu/libnss_files-2.17.so
+7ff9421cf000-7ff9423ce000 ---p 0000c000 08:11 265923                     /lib/x86_64-linux-gnu/libnss_files-2.17.so
+7ff9423ce000-7ff9423cf000 r--p 0000b000 08:11 265923                     /lib/x86_64-linux-gnu/libnss_files-2.17.so
+7ff9423cf000-7ff9423d0000 rw-p 0000c000 08:11 265923                     /lib/x86_64-linux-gnu/libnss_files-2.17.so
+7ff9423d0000-7ff9423db000 r-xp 00000000 08:11 265927                     /lib/x86_64-linux-gnu/libnss_nis-2.17.so
+7ff9423db000-7ff9425da000 ---p 0000b000 08:11 265927                     /lib/x86_64-linux-gnu/libnss_nis-2.17.so
+7ff9425da000-7ff9425db000 r--p 0000a000 08:11 265927                     /lib/x86_64-linux-gnu/libnss_nis-2.17.so
+7ff9425db000-7ff9425dc000 rw-p 0000b000 08:11 265927                     /lib/x86_64-linux-gnu/libnss_nis-2.17.so
+7ff9425dc000-7ff9425f3000 r-xp 00000000 08:11 265917                     /lib/x86_64-linux-gnu/libnsl-2.17.so
+7ff9425f3000-7ff9427f2000 ---p 00017000 08:11 265917                     /lib/x86_64-linux-gnu/libnsl-2.17.so
+7ff9427f2000-7ff9427f3000 r--p 00016000 08:11 265917                     /lib/x86_64-linux-gnu/libnsl-2.17.so
+7ff9427f3000-7ff9427f4000 rw-p 00017000 08:11 265917                     /lib/x86_64-linux-gnu/libnsl-2.17.so
+7ff9427f4000-7ff9427f6000 rw-p 00000000 00:00 0 
+7ff9427f6000-7ff9427fe000 r-xp 00000000 08:11 265919                     /lib/x86_64-linux-gnu/libnss_compat-2.17.so
+7ff9427fe000-7ff9429fd000 ---p 00008000 08:11 265919                     /lib/x86_64-linux-gnu/libnss_compat-2.17.so
+7ff9429fd000-7ff9429fe000 r--p 00007000 08:11 265919                     /lib/x86_64-linux-gnu/libnss_compat-2.17.so
+7ff9429fe000-7ff9429ff000 rw-p 00008000 08:11 265919                     /lib/x86_64-linux-gnu/libnss_compat-2.17.so
+7ff9429ff000-7ff942a28000 r-xp 00000000 08:11 404856                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/libjava.so
+7ff942a28000-7ff942c28000 ---p 00029000 08:11 404856                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/libjava.so
+7ff942c28000-7ff942c2a000 rw-p 00029000 08:11 404856                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/libjava.so
+7ff942c2a000-7ff942c37000 r-xp 00000000 08:11 404877                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/libverify.so
+7ff942c37000-7ff942e36000 ---p 0000d000 08:11 404877                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/libverify.so
+7ff942e36000-7ff942e38000 rw-p 0000c000 08:11 404877                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/libverify.so
+7ff942e38000-7ff942e3f000 r-xp 00000000 08:11 265970                     /lib/x86_64-linux-gnu/librt-2.17.so
+7ff942e3f000-7ff94303e000 ---p 00007000 08:11 265970                     /lib/x86_64-linux-gnu/librt-2.17.so
+7ff94303e000-7ff94303f000 r--p 00006000 08:11 265970                     /lib/x86_64-linux-gnu/librt-2.17.so
+7ff94303f000-7ff943040000 rw-p 00007000 08:11 265970                     /lib/x86_64-linux-gnu/librt-2.17.so
+7ff943040000-7ff943143000 r-xp 00000000 08:11 265898                     /lib/x86_64-linux-gnu/libm-2.17.so
+7ff943143000-7ff943342000 ---p 00103000 08:11 265898                     /lib/x86_64-linux-gnu/libm-2.17.so
+7ff943342000-7ff943343000 r--p 00102000 08:11 265898                     /lib/x86_64-linux-gnu/libm-2.17.so
+7ff943343000-7ff943344000 rw-p 00103000 08:11 265898                     /lib/x86_64-linux-gnu/libm-2.17.so
+7ff943344000-7ff943ea6000 r-xp 00000000 08:11 404874                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/server/libjvm.so
+7ff943ea6000-7ff9440a6000 ---p 00b62000 08:11 404874                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/server/libjvm.so
+7ff9440a6000-7ff944169000 rw-p 00b62000 08:11 404874                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/server/libjvm.so
+7ff944169000-7ff9441aa000 rw-p 00000000 00:00 0 
+7ff9441aa000-7ff944367000 r-xp 00000000 08:11 265847                     /lib/x86_64-linux-gnu/libc-2.17.so
+7ff944367000-7ff944567000 ---p 001bd000 08:11 265847                     /lib/x86_64-linux-gnu/libc-2.17.so
+7ff944567000-7ff94456b000 r--p 001bd000 08:11 265847                     /lib/x86_64-linux-gnu/libc-2.17.so
+7ff94456b000-7ff94456d000 rw-p 001c1000 08:11 265847                     /lib/x86_64-linux-gnu/libc-2.17.so
+7ff94456d000-7ff944572000 rw-p 00000000 00:00 0 
+7ff944572000-7ff944575000 r-xp 00000000 08:11 265862                     /lib/x86_64-linux-gnu/libdl-2.17.so
+7ff944575000-7ff944774000 ---p 00003000 08:11 265862                     /lib/x86_64-linux-gnu/libdl-2.17.so
+7ff944774000-7ff944775000 r--p 00002000 08:11 265862                     /lib/x86_64-linux-gnu/libdl-2.17.so
+7ff944775000-7ff944776000 rw-p 00003000 08:11 265862                     /lib/x86_64-linux-gnu/libdl-2.17.so
+7ff944776000-7ff94478c000 r-xp 00000000 08:11 404854                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/jli/libjli.so
+7ff94478c000-7ff94498c000 ---p 00016000 08:11 404854                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/jli/libjli.so
+7ff94498c000-7ff94498d000 rw-p 00016000 08:11 404854                     /usr/lib/jvm/java-7-oracle/jre/lib/amd64/jli/libjli.so
+7ff94498d000-7ff9449a4000 r-xp 00000000 08:11 265962                     /lib/x86_64-linux-gnu/libpthread-2.17.so
+7ff9449a4000-7ff944ba4000 ---p 00017000 08:11 265962                     /lib/x86_64-linux-gnu/libpthread-2.17.so
+7ff944ba4000-7ff944ba5000 r--p 00017000 08:11 265962                     /lib/x86_64-linux-gnu/libpthread-2.17.so
+7ff944ba5000-7ff944ba6000 rw-p 00018000 08:11 265962                     /lib/x86_64-linux-gnu/libpthread-2.17.so
+7ff944ba6000-7ff944baa000 rw-p 00000000 00:00 0 
+7ff944baa000-7ff944bcd000 r-xp 00000000 08:11 265823                     /lib/x86_64-linux-gnu/ld-2.17.so
+7ff944bcd000-7ff944bce000 rw-p 00000000 00:00 0 
+7ff944bce000-7ff944bcf000 r--s 00005000 08:12 1310962                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/sbt-0.13.0.jar
+7ff944bcf000-7ff944bd2000 r--s 0001a000 08:12 1310967                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/cache-0.13.0.jar
+7ff944bd2000-7ff944bd9000 r--s 00058000 08:12 1310974                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/collections-0.13.0.jar
+7ff944bd9000-7ff944be0000 r--s 00053000 08:12 1310946                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/completion-0.13.0.jar
+7ff944be0000-7ff944be6000 r--s 0003d000 08:12 1310971                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/io-0.13.0.jar
+7ff944be6000-7ff944bf0000 rw-p 00000000 00:00 0 
+7ff944bf0000-7ff944ca6000 rw-p 00000000 00:00 0 
+7ff944ca6000-7ff944ca9000 ---p 00000000 00:00 0 
+7ff944ca9000-7ff944dab000 rw-p 00000000 00:00 0                          [stack:8644]
+7ff944dab000-7ff944dac000 r--s 0000a000 08:12 1310944                    /home/joarley/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/tracking-0.13.0.jar
+7ff944dac000-7ff944daf000 r--s 00018000 08:12 1310794                    /home/joarley/.sbt/boot/scala-2.10.2/lib/jansi.jar
+7ff944daf000-7ff944db3000 r--s 00025000 08:12 1310797                    /home/joarley/.sbt/boot/scala-2.10.2/lib/jline.jar
+7ff944db3000-7ff944dc0000 rw-p 00000000 00:00 0 
+7ff944dc0000-7ff944dc8000 rw-s 00000000 08:11 273322                     /tmp/hsperfdata_joarley/8639
+7ff944dc8000-7ff944dc9000 rw-p 00000000 00:00 0 
+7ff944dc9000-7ff944dca000 r--p 00000000 00:00 0 
+7ff944dca000-7ff944dcc000 rw-p 00000000 00:00 0 
+7ff944dcc000-7ff944dcd000 r--p 00022000 08:11 265823                     /lib/x86_64-linux-gnu/ld-2.17.so
+7ff944dcd000-7ff944dcf000 rw-p 00023000 08:11 265823                     /lib/x86_64-linux-gnu/ld-2.17.so
+7fffaeec2000-7fffaeee3000 rw-p 00000000 00:00 0                          [stack]
+7fffaeffe000-7fffaf000000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+
+VM Arguments:
+jvm_args: -Xss1024K -Xmx512M -XX:PermSize=128M -XX:+CMSClassUnloadingEnabled -Dsbt.boot.properties=file:/tmp/sbtrc8263146039029390831properties -Dsbtrc.control-port=38779 
+java_command: /home/joarley/.bin/apps/activator-1.0.8/activator-launch-1.0.8.jar apply -cp """/home/joarley/.sbt/boot/scala-2.10.2/com.typesafe.sbtrc/sbt-rc-probe-0-13/1.0-056f4f25fbde18cfcf42b324eaedaca8a8062e31/sbt-rc-props-1.0-056f4f25fbde18cfcf42b324eaedaca8a8062e31.jar:/home/joarley/.sbt/boot/scala-2.10.2/com.typesafe.sbtrc/sbt-rc-probe-0-13/1.0-056f4f25fbde18cfcf42b324eaedaca8a8062e31/sbt-rc-probe-0-13-1.0-056f4f25fbde18cfcf42b324eaedaca8a8062e31.jar""" com.typesafe.sbtrc.SetupSbtChild listen
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=/home/joarley/.bin:/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+SHELL=/bin/bash
+DISPLAY=:0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0x9935b0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGBUS: [libjvm.so+0x9935b0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGFPE: [libjvm.so+0x810330], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGPIPE: [libjvm.so+0x810330], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGXFSZ: [libjvm.so+0x810330], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGILL: [libjvm.so+0x810330], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGUSR1: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGUSR2: [libjvm.so+0x811820], sa_mask[0]=0x00000004, sa_flags=0x10000004
+SIGHUP: [libjvm.so+0x812790], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGINT: [libjvm.so+0x812790], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGTERM: [libjvm.so+0x812790], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGQUIT: [libjvm.so+0x812790], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+
+
+---------------  S Y S T E M  ---------------
+
+OS:wheezy/sid
+
+uname:Linux 3.11.0-13-generic #20-Ubuntu SMP Wed Oct 23 07:38:26 UTC 2013 x86_64
+libc:glibc 2.17 NPTL 2.17 
+rlimit: STACK 8192k, CORE 0k, NPROC 95964, NOFILE 4096, AS infinity
+load average:0.16 1.16 1.44
+
+/proc/meminfo:
+MemTotal:       12303588 kB
+MemFree:         6025992 kB
+Buffers:          477364 kB
+Cached:          3358744 kB
+SwapCached:            0 kB
+Active:          4127196 kB
+Inactive:        1595972 kB
+Active(anon):    1888392 kB
+Inactive(anon):    20372 kB
+Active(file):    2238804 kB
+Inactive(file):  1575600 kB
+Unevictable:         640 kB
+Mlocked:             640 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+Dirty:              1596 kB
+Writeback:             0 kB
+AnonPages:       1887696 kB
+Mapped:           308676 kB
+Shmem:             21720 kB
+Slab:             361428 kB
+SReclaimable:     324104 kB
+SUnreclaim:        37324 kB
+KernelStack:        4408 kB
+PageTables:        38976 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     6151792 kB
+Committed_AS:    6665756 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:      130412 kB
+VmallocChunk:   34359593980 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:      421504 kB
+DirectMap2M:    12161024 kB
+
+
+CPU:total 2 (2 cores per cpu, 1 threads per core) family 6 model 23 stepping 10, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, tsc
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Pentium(R) Dual-Core  CPU      E5400  @ 2.70GHz
+stepping	: 10
+microcode	: 0xa07
+cpu MHz		: 2700.111
+cache size	: 2048 KB
+physical id	: 0
+siblings	: 2
+core id		: 0
+cpu cores	: 2
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good nopl aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm xsave lahf_lm dtherm tpr_shadow vnmi flexpriority
+bogomips	: 5400.22
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Pentium(R) Dual-Core  CPU      E5400  @ 2.70GHz
+stepping	: 10
+microcode	: 0xa07
+cpu MHz		: 2700.111
+cache size	: 2048 KB
+physical id	: 0
+siblings	: 2
+core id		: 1
+cpu cores	: 2
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good nopl aperfmperf pni dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm xsave lahf_lm dtherm tpr_shadow vnmi flexpriority
+bogomips	: 5400.22
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+
+
+Memory: 4k page, physical 12303588k(6025992k free), swap 0k(0k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (24.45-b08) for linux-amd64 JRE (1.7.0_45-b18), built on Oct  8 2013 05:44:25 by "java_re" with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)
+
+time: Sat Nov 30 12:21:59 2013
+elapsed time: 0 seconds
+

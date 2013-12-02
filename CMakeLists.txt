@@ -8,8 +8,8 @@ set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost COMPONENTS thread system date_time REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 
-find_package(AngelScript REQUIRED)
-include_directories(${AngelScript_INCLUDE_DIR})
+find_package(Lua REQUIRED)
+include_directories(${LUA_INCLUDE_DIR})
 
 include_directories(./shared)
 
