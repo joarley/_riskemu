@@ -1,0 +1,71 @@
+@main("Live Capture") {
+
+<link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("slick.grid.css"))'>
+<link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("slick-default-theme.css"))'>
+<link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("css/smoothness/jquery-ui-1.8.16.custom.css"))'>
+<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("lib/jquery.event.drag-2.2.js"))'></script>
+<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("slick.core.js"))'></script>
+<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("slick.grid.js"))'></script>
+<style>
+	#grid, #grid *, #grid:before, #grid:after, #grid *:before, #grid *:after {
+  		box-sizing: content-box !important;
+  		-moz-box-sizing: content-box !important;
+	}
+	.remove-padding
+	{
+		padding-left:  0px !important;
+    	padding-right:  0px !important;
+    }
+</style>
+<script>
+	$(document).ready(function(){
+		var grid;
+	  	var columns = [
+	    	{id: "title", name: "Title", field: "title"},
+	    	{id: "duration", name: "Duration", field: "duration"},
+	    	{id: "%", name: "% Complete", field: "percentComplete"},
+	    	{id: "start", name: "Start", field: "start"},
+	    	{id: "finish", name: "Finish", field: "finish"},
+	    	{id: "effort-driven", name: "Effort Driven", field: "effortDriven"}
+	  	];
+
+	  	var options = {
+	    	enableCellNavigation: true,
+	    	enableColumnReorder: false,
+	    	forceFitColumns: true
+	  	};
+	  
+	    var data = [];
+	    for (var i = 0; i < 500; i++) {
+	    	data[i] = {
+	        	title: "Task " + i,
+	        	duration: "5 days",
+	        	percentComplete: Math.round(Math.random() * 100),
+	        	start: "01/01/2009",
+	        	finish: "01/05/2009",
+	        	effortDriven: (i % 5 == 0)
+	      	};
+	    }
+
+	    grid = new Slick.Grid("#grid", data, columns, options);
+
+	    $(window).resize(function() {
+	    	grid.resizeCanvas();
+	    });
+	});
+</script>
+
+<div class="col-md-1 lateral-box fill-height remove-padding">
+	<ul class="nav nav-pills nav-stacked">
+  		<li class="active"><a href="#"><span class="glyphicon glyphicon-play"></span> Start Capture</a></li>
+  		<li><a href="#"><span class="glyphicon glyphicon-filter"></span> Filter Capture</a></li>  		
+  		<li class="active"><a href="#"><span class="glyphicon glyphicon-filter"></span> Auto Scroll</a></li>
+	</ul>
+</div>
+<div class="col-md-7 fill-height remove-padding">
+	<div id="grid" class="fill-height"></div>
+</div>
+<div class="col-md-4 lateral-box fill-height remove-padding">
+</div>    	
+
+}

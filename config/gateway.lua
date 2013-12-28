@@ -16,7 +16,7 @@ gateway = {
         listen_address = {
             address = "localhost",
 		    port = 1808,
-		    max_Connections = 10
+		    max_connections = 10
 		}
     }
 }

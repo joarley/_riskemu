@@ -84,6 +84,9 @@ private:
 	std::list<OnlineAuth*> onlineAuths;
 	std::map<Client*, UnauthorizedAuthDetails> unauthorizedAuths;	
 	ScriptContext &configuration;
+    string user;
+    string pass;
+    int32 maxAuthConnectios;
 };
 
 uint8 OnlineAuth::GetSlot() const

@@ -23,7 +23,7 @@ struct ServiceContainer
 		if(this->thread.joinable()) this->thread.join();
 	}
 
-	io_service ioservice;    
+	io_service ioservice;
     io_service::work *work;
 	boost::thread thread;
 };

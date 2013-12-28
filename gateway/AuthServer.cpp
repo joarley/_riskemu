@@ -9,11 +9,16 @@ AuthServer::AuthServer(ScriptContext &configuration):
 
 bool AuthServer::Start()
 {
+    this->configuration.GetVariableValue("global.user", this->user);
+	this->configuration.GetVariableValue("global.pass", this->pass);
+    this->configuration.GetVariableValue("gateway.authserver.listen_address.max_connections", this->maxAuthConnectios);
+    
 	uint16 port;
 	std::string address;
 
-	this->configuration.GetVariableValue("string Gateway::AuthServerListen::Address", address);
-	this->configuration.GetVariableValue("uint16 Gateway::AuthServerListen::Port", port);
+	this->configuration.GetVariableValue("gateway.authserver.listen_address.address", address);
+	this->configuration.GetVariableValue("gateway.authserver.listen_address.port", port);
+    
 
 	this->authListen.SetAcceptCallback(boost::bind(&AuthServer::UnauthorizedAuthAccept, this, _1, _2));
 	return this->authListen.BindAndListen(address, port);
@@ -130,17 +135,7 @@ uint8 AuthServer::GetFreeSlot(uint8 slot)
 
 bool AuthServer::ValidateUserPass(std::string &user, std::string &pass)  const
 {
-	std::string u, p;
-	this->configuration.GetVariableValue("string Global::User", u);
-	this->configuration.GetVariableValue("string Global::Pass", p);	
-	return user.compare(u) == 0 && pass.compare(p) == 0;
-}
-
-uint32 AuthServer::GetMaxAuthConnections() const
-{
-	uint32 max;
-	this->configuration.GetVariableValue("uint32 Gateway::AuthServerListen::MaxAuthConnections", max);
-	return max;
+	return user.compare(this->user) == 0 && pass.compare(this->pass) == 0;
 }
 
 void AuthServer::ReleaseAuth(OnlineAuth *auth)
