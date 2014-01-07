@@ -135,7 +135,12 @@ uint8 AuthServer::GetFreeSlot(uint8 slot)
 
 bool AuthServer::ValidateUserPass(std::string &user, std::string &pass)  const
 {
-	return user.compare(this->user) == 0 && pass.compare(this->pass) == 0;
+    return user.compare(this->user) == 0 && pass.compare(this->pass) == 0;
+}
+
+uint32 AuthServer::GetMaxAuthConnections() const
+{
+    return 10;
 }
 
 void AuthServer::ReleaseAuth(OnlineAuth *auth)
