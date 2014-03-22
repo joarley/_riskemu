@@ -42,7 +42,7 @@ Logger::LogFile_ptr Logger::CreateLogFile(const char* path, bool truncateExistin
 #if defined(_WIN32) || defined(_WIN64)
 	char dir[1024];
 	const char* pos;
-	int offset = 0;
+	size_t offset = 0;
 	while((pos = strchr(path + offset, '/')) != NULL 
 		|| (pos = strchr(path  + offset, '\\')) != NULL) 
 	{

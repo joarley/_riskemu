@@ -24,8 +24,7 @@ add_subdirectory(./shared)
 add_subdirectory(./gateway)
 
 
-option(COMPILER_PROTOCOL_ANALYZER "Compiler Protocol Analyzer" ON)
+option(COMPILER_PROTOCOL_ANALYZER "Compiler Protocol Analyzer Server" ON)
 if(COMPILER_PROTOCOL_ANALYZER)
     add_subdirectory("./tools/protocol analyzer/server")
-    add_subdirectory("./tools/protocol analyzer/client")
 endif()

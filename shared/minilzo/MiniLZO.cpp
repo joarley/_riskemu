@@ -14,9 +14,9 @@ bool MiniLZO::Compress(byte *src, size_t srcLen, byte *&dst, size_t &dstLen)
 #ifdef MINILZO_USE_ORIGINAL_C_LIBRARY
 	if (lzo_init() != LZO_E_OK) return false;
 	byte work[LZO1X_1_MEM_COMPRESS];
-	lzo_uint tmp = *dstLen;
-	int ret = lzo1x_1_compress(src, srcLen, *dst, &tmp, work);
-	*dstLen = tmp;
+	lzo_uint tmp = dstLen;
+	int ret = lzo1x_1_compress(src, srcLen, dst, &tmp, work);
+	dstLen = tmp;
 	return ret == LZO_E_OK;
 #else
     size_t tmp;
@@ -223,9 +223,9 @@ bool MiniLZO::Decompress(byte *src, size_t srcLen, byte*& dst, size_t &dstLen)
 	dstLen = srcLen * 20;
     dst = new byte[dstLen];
 #ifdef MINILZO_USE_ORIGINAL_C_LIBRARY
-	lzo_uint tmp = *dstLen;
-	int ret = lzo1x_decompress(src, srcLen, *dst, &tmp, NULL);
-	*dstLen = tmp;
+	lzo_uint tmp = dstLen;
+	int ret = lzo1x_decompress(src, srcLen, dst, &tmp, NULL);
+	dstLen = tmp;
 	return ret == LZO_E_OK;
 #else
     uint32 t = 0;
