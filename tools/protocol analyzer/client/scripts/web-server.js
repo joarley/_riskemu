@@ -28,10 +28,11 @@ function createServlet(Class) {
 }
 
 /**
- * An Http server implementation that uses a map of methods to decide
- * action routing.
- *
- * @param {Object} Map of method => Handler function
+ * An Http server implementation that uses a map of methods to decide action
+ * routing.
+ * 
+ * @param {Object}
+ *            Map of method => Handler function
  */
 function HttpServer(handlers) {
   this.handlers = handlers;
@@ -90,16 +91,14 @@ StaticServlet.prototype.handleRequest = function(req, res) {
   var path = ('./' + req.url.pathname).replace('//','/').replace(/%(..)/g, function(match, hex){
     return String.fromCharCode(parseInt(hex, 16));
   });
-  var parts = path.split('/');
-  if (parts[parts.length-1].charAt(0) === '.')
-    return self.sendForbidden_(req, res, path);
-  fs.stat(path, function(err, stat) {
-    if (err)
-      return self.sendMissing_(req, res, path);
-    if (stat.isDirectory())
-      return self.sendDirectory_(req, res, path);
-    return self.sendFile_(req, res, path);
-  });
+
+  util.puts(path);
+  var isInDir = function(d, p){return p.indexOf(d) == 0}
+  
+  if(isInDir("./css/", path) || isInDir("./js/", path) || 
+		  isInDir("./img/", path) || isInDir("./lib/", path)|| isInDir("./view/", path))
+	  return self.sendFile_(req, res, path);  
+  return self.sendFile_(req, res, 'index.html');
 }
 
 StaticServlet.prototype.sendError_ = function(req, res, error) {
