@@ -155,9 +155,9 @@ void Client::SendBuffer(Buffer_ptr buff)
 {
 	if(!this->runing) return;
 
-	this->sendMutex.lock();
-
 	PacketBase::CryptPacket(buff);
+
+	this->sendMutex.lock();
 
 	if(this->sendQueue.empty())
 		async_write(*this->socket, buffer(buff->Data(), buff->Length()), 
@@ -173,7 +173,6 @@ void Client::HandlerSend(size_t bytes_transferred, const boost::system::error_co
 {
 	if(!this->runing) return;
 
-	this->sendMutex.lock();
 	if(error)
 	{
 		Stop();
@@ -183,11 +182,12 @@ void Client::HandlerSend(size_t bytes_transferred, const boost::system::error_co
 		return;
 	}
 
+	this->sendMutex.lock();
 	this->sendQueue.pop();	
 
 	if(!this->sendQueue.empty())
 		async_write(*this->socket, buffer(this->sendQueue.front()->Data(), this->sendQueue.front()->Length()),
-			boost::bind(&Client::HandlerSend, this, 
+			boost::bind(&Client::HandlerSend, this,
 				boost::asio::placeholders::bytes_transferred, boost::asio::placeholders::error));
 
 	this->sendMutex.unlock();

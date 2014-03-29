@@ -13,9 +13,15 @@ rylPacketAnalizeClientApp.config([ '$routeProvider', '$locationProvider',
 			}).when('/capture', {
 				templateUrl : 'views/capture.html',
 				controller : 'captureCtrl'
-			}).when('/packets', {
-				templateUrl : 'views/packets.html',
-				controller : 'packetsCtrl'
+			}).when('/protocol', {
+				templateUrl : 'views/protocol.html',
+				controller : 'protocolCtrl'
+			}).when('/packet/create', {
+				templateUrl : 'views/packetCreate.html',
+				controller : 'packetCreateCtrl'
+			}).when('/packet/modify', {
+				templateUrl : 'views/packetModify.html',
+				controller : 'packetModifyCtrl'
 			}).otherwise({
 				redirectTo : '/home'
 			});

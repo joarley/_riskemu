@@ -96,7 +96,8 @@ StaticServlet.prototype.handleRequest = function(req, res) {
   var isInDir = function(d, p){return p.indexOf(d) == 0}
   
   if(isInDir("./css/", path) || isInDir("./js/", path) || 
-		  isInDir("./img/", path) || isInDir("./lib/", path)|| isInDir("./view/", path))
+		  isInDir("./img/", path) || isInDir("./lib/", path) || isInDir("./views/", path)
+      || isInDir("./favicon.ico", path))
 	  return self.sendFile_(req, res, path);  
   return self.sendFile_(req, res, 'index.html');
 }
