@@ -8,19 +8,19 @@ rylPacketAnalizeClientApp.config([ '$routeProvider', '$locationProvider',
 			$routeProvider.when('/', {
 				redirectTo : '/home'
 			}).when('/home', {
-				templateUrl : 'views/home.html',
+				templateUrl : '/views/home.html',
 				controller : 'homeCtrl'
 			}).when('/capture', {
-				templateUrl : 'views/capture.html',
+				templateUrl : '/views/capture.html',
 				controller : 'captureCtrl'
 			}).when('/protocol', {
-				templateUrl : 'views/protocol.html',
+				templateUrl : '/views/protocol.html',
 				controller : 'protocolCtrl'
 			}).when('/packet/create', {
-				templateUrl : 'views/packetCreate.html',
+				templateUrl : '/views/packetCreate.html',
 				controller : 'packetCreateCtrl'
 			}).when('/packet/modify', {
-				templateUrl : 'views/packetModify.html',
+				templateUrl : '/views/packetModify.html',
 				controller : 'packetModifyCtrl'
 			}).otherwise({
 				redirectTo : '/home'
